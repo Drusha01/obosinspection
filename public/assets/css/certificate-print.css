@@ -1,0 +1,17 @@
+.annual-container {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    border: 1px solid black;
+}
+
+
+.annual-container .annual-sheet {
+    height: 100% !important;
+    margin: 0;
+    padding: 0;
+}
+@page { size: auto;  margin: 0mm; padding: 0mm;}

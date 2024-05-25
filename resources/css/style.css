@@ -1,0 +1,496 @@
+.msgalert {
+    min-width: 14.0625rem;
+    position: absolute;
+    top: 30px;
+    right: 0.8125rem;
+    padding: 1rem;
+    border-radius: 0.625rem;
+    box-shadow: 0px 3px 18px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    z-index: 10;
+    -webkit-animation: show 1s ease;
+    animation: show 1s ease;
+  }
+  
+  .alert--success {
+    background: #f7fffb;
+    border-left: 0.25rem solid #02b854;
+  }
+  
+  .alert--success .alert__message {
+    color: #02b854;
+  }
+  
+  .alert--danger {
+    background: #fff7f7;
+    border-left: 0.25rem solid #f94f51;
+  }
+  
+  .alert--danger .alert__message {
+    color: #f94f51;
+  }
+  
+  .alert__message {
+    font-size: 0.875rem;
+  }
+  
+  @-webkit-keyframes show {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+  
+    50% {
+        transform: translateX(-40px);
+        opacity: 0.7;
+    }
+  
+    to {
+        opacity: 1;
+    }
+  }
+  
+  @keyframes show {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+  
+    50% {
+        transform: translateX(-40px);
+        opacity: 0.7;
+    }
+  
+    to {
+        opacity: 1;
+    }
+  }
+
+.squared-border {
+  border-radius: 0 !important;
+}
+
+.sub-title {
+  font-size: 0.9rem;
+}
+
+label, 
+select,
+select > option,
+input::placeholder {
+  font-size: 1rem !important; 
+}
+
+.select-container { 
+  height: 50px;
+  
+}
+
+select {
+  height: 100% !important;
+}
+
+.flex-gap {
+  gap: 10px;
+}
+
+
+td .text {
+  font-size: clamp(0.8rem, 0.68rem + 0.48vw, 1.1rem);
+}
+
+td .image-container {
+  width: 50px;
+  height: 50px;
+}
+
+.header-image{
+  width: 50px;
+  height: 50px;
+}
+
+img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: fill;
+}
+
+form .image-container {
+  width: 110px;
+  height: 110px;
+}
+
+input[disabled],
+input[readonly] {
+  background: #FFFFFF !important;
+  cursor: not-allowed;
+}
+
+.carousel-button {
+  border-radius: 5px;
+}
+
+.carousel-indicators > button {
+  background-color: #42444E !important;
+  height: 5px !important;
+}
+
+/* List of Equipment */
+.sheet-container {
+  width: 216mm;
+  height: 356mm;
+  background: rgb(255, 255, 255);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  font-family: Calibri, 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif;
+  font-size: 10pt;
+  color: rgb(0,0,0);
+  z-index: 10;
+}
+
+.sheet-container .sheet, 
+.sheet-container .sheet {
+  width: 100%;
+  height: 100%;
+
+}
+
+.sheet-container .sheet {
+  position: relative;
+}
+
+.sheet-container .section {
+  width: 100%;
+  height: 84%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-top: 4.42cm;
+  padding: 0 0.70cm;
+
+}
+
+.sheet-container .owner-container {
+  width: 87%;
+}
+
+.sheet-container .owner-name {
+  width: 50%;
+  border-bottom: 2px solid black;
+  line-height: 1;
+  margin: 0;
+  text-align: center;
+}
+
+.sheet-container .underline {
+  border-bottom: 1px solid black; 
+  flex-grow: 1;
+} 
+
+.sheet-container table {
+  border: 1px solid black;
+}
+
+.sheet-container table td, 
+.sheet-container table th {
+  padding: 0;
+  text-align: center;
+  border: 1px solid black !important;
+}
+
+.section-footer {
+  gap: 30px;
+}
+
+.section-footer .inspector-container,
+.section-footer .inspected-payment-container {
+  width: 372px;
+  border: 3px solid black;
+
+}
+
+.section-footer .violation-container {
+  width: 364px;
+  border: 3px solid black;
+}
+.section-footer .inspector-container, 
+.section-footer .violation-container {
+  height: 106px;
+}
+.section-footer .inspected-payment-container {
+  height: 117px;
+}
+
+.section-footer .address-notice{
+  font-size: 9pt;
+  font-weight: bold;
+}
+
+.section-footer .inspector-names > *:not(:first-child), 
+.section-footer .date-inspected > *:not(:first-child) {
+  width: 100%;
+  border-bottom: 1px solid black;
+  height: 20px;
+}
+
+.section-footer .inspected-title {
+  letter-spacing: 20px;
+  font-size: 22pt;
+  line-height: 1;
+}
+
+.section-footer .payment-title {
+  font-size: 16pt;
+  line-height: 1;
+}
+
+.section-footer .city-building-official {
+  font-size: 11pt;
+  font-weight: bold;
+}
+
+.section-footer .city-building-title,
+.section-footer .date {
+  font-size: 9pt;
+}
+
+.section-footer .date {
+  font-weight: bold;
+}
+
+.section-footer .other-fee, 
+.section-footer .assessment-fee-title { 
+  font-size: 10pt;
+}
+.section-footer .other-fee {
+  padding-right: 37px;
+}
+
+.section-footer .assessment-fee-title {
+  padding-right: 27px;
+  font-weight: bold;
+}
+
+.section-footer .number {
+  font-size: 8pt;
+}
+
+/* Annual Certificate */
+
+.annual-container {
+  width: 297mm;
+  height: 209mm;
+  color: rgb(0,0,0);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  z-index: 10;
+}
+
+.annual-container .annual-data, 
+.annual-sheet-right .lessee-name,
+.annual-sheet-right .location,
+.annual-sheet-right table.table-one td,
+.annual-sheet-right .inspector span {
+  color: rgb(63, 84, 255);
+}
+
+.annual-container .annual-sheet,
+.annual-container .annual-sheet-image{
+  width: 100%;
+  height: 100%;
+}
+
+.annual-container .annual-sheet {
+  position: relative;
+}
+
+/* LEFT */
+.annual-container .annual-sheet-left,
+.annual-container .annual-sheet-right {
+  position: absolute;
+}
+
+.annual-container .annual-sheet-left {
+  width: 442px;
+  left: 30px;
+  top: 105px;
+  padding: 0 13px;
+  font-weight: bold;
+}
+
+.annual-sheet-left .annual-header,
+.annual-sheet-left .verified-by-names {
+  border-bottom: 2px solid black;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.annual-sheet-left .annual-business-name {
+  font-size: 13.5pt;
+}
+
+.annual-sheet-left .annual-business-address,
+.annual-sheet-right .official-bin {
+  font-size: 8pt;
+}
+
+
+.annual-sheet-left .annual-owner-wrapper {
+   margin-bottom: 14px;
+}
+
+.annual-sheet-left .annual-owner,
+.annual-sheet-left .annual-group,
+.annual-sheet-left .chief-name {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 8pt;
+}
+
+.annual-sheet-left .annual-owner,
+.annual-sheet-left .annual-group {
+  border-bottom: 2px solid black;
+}
+
+.annual-sheet-left .annual-owner-title,
+.annual-sheet-left .annual-group-title,
+.annual-sheet-left .annual-recommended-description,
+.annual-sheet-left .annual-certification-description,
+.annual-sheet-left .verified-by-position,
+.annual-sheet-left .inspection-division-title, 
+.annual-sheet-left .annual-date {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.annual-sheet-left .annual-owner-title,
+.annual-sheet-left .annual-group-title,
+.annual-sheet-left .signature-title {
+  font-size: 7pt;
+}
+
+.annual-sheet-left .annual-certification-description, 
+.annual-sheet-left .annual-recommended-description {
+  text-indent: 24.5px;
+  font-size: 8pt;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.annual-sheet-left .annual-certification-description {
+  margin-bottom: 15px;
+}
+
+.annual-sheet-left .annual-recommended-description {
+  margin-bottom: 10px;
+}
+
+.annual-sheet-left .verified-title {
+  font-size: 10pt;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.annual-sheet-left .verified-by-wrapper {
+  column-gap: 20px;
+}
+
+.annual-sheet-left .verified-by-container {
+  width: 30%;
+}
+
+.annual-sheet-left .verified-by-position,
+.annual-sheet-left .inspection-division-title,
+.annual-sheet-left .annual-date {
+  font-size: 6pt;
+}
+.annual-sheet-left .verified-by-names,
+.annual-sheet-left .chief-title {
+  font-size: 10.5pt;
+}
+
+
+.annual-sheet-left .chief-title,
+.annual-sheet-left .signature-title {
+  font-family: Calibri, 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif;
+}
+
+.annual-sheet-left .chief-title {
+  font-size: 10pt;
+}
+
+.annual-date-underline {
+  border-bottom: 2px solid black;
+  width: 50%;
+}
+
+/* RIGHT */
+.annual-container .annual-sheet-right {
+  width: 571px;
+  left: 502px;
+  top: 152px;
+  padding: 0 19.6px;
+  font-weight: bolder;
+}
+
+.annual-sheet-right .official-bin {
+  font-family: 'Times New Roman', Times, serif;
+  margin-bottom: 10px;
+}
+
+.annual-sheet-right table {
+  width: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.annual-sheet-right table th
+.annual-sheet-right table td {
+  font-family: Arial, Helvetica, sans-serif;
+  
+}
+
+.annual-sheet-right tbody td:not(.no-data) {
+  padding: 0 !important;
+  vertical-align: middle;
+}
+
+.annual-sheet-right .font-seven,
+.annual-sheet-right table td, 
+.annual-sheet-right .inspector {
+  font-size: 7pt;
+}
+
+.annual-sheet-right .lessee-name {
+  font-size: 14.5pt;
+}
+
+.annual-sheet-right .location,
+.annual-sheet-right .checkbox-container {
+  font-size: 8pt;
+}
+
+.annual-sheet-right tbody.inspector_body tr,
+.annual-sheet-right thead tr.inspector_head{
+  text-align: center;
+}
+
+.annual-sheet-right .checkbox-container{
+  margin-bottom: 40px;
+}
+
+.annual-sheet-right .inspector {
+  margin-bottom: 17px;
+}
+
+.annual-sheet-right .box {
+  border: 2px solid black;
+  width: 26px;
+  height: 20px;
+  
+}
+
+/* Billing */
+
+.billing-container {
+  height: 85vh;
+}
+
+.billing-link-container {
+  padding: 30px 40px;
+}
