@@ -1,5 +1,6 @@
-<div>
+
 <div id="wrapper">
+
     <ul class="navbar-nav bg-sidebar-primary sidebar sidebar-dark accordion d-print-none" id="accordionSidebar">
         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/inspection/dashboard/">
             <div class="sidebar-brand-icon rotate-n-15" style="width: 50px; height: 50px">
