@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
 class Unauthenticated
@@ -15,6 +16,10 @@ class Unauthenticated
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $session = $request->session()->all();
+        if(isset($session['id'])){ 
+            return redirect('/');
+        }
         return $next($request);
     }
 }

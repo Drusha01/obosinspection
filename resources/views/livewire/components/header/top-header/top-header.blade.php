@@ -10,7 +10,7 @@
                     <span class="mr-2 d-none d-lg-inline text-gray-600 small">Username</span>
                     <div class="header-image">
                         <img class="img-profile rounded-circle"
-                            src="inspection/inspector/images/">
+                            src="@if(0) {{asset('storage/profile/lgu_logo.png')}} @else {{asset('storage/profile/default.png')}} @endif">
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

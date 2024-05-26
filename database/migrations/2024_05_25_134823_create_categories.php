@@ -23,6 +23,12 @@ return new class extends Migration
         DB::statement('CREATE INDEX idx_categories_name ON categories(name(10));');
         DB::statement('CREATE INDEX idx_categories_img_url ON categories(img_url(10));');
 
+        DB::statement("INSERT INTO `categories` (`id`, `name`, `img_url`) VALUES
+        (1, 'Mechanical', 'default.png'),
+        (2, 'Electronics', 'default.png'),
+        (3, 'Electrical', 'default.png');");
+
+        
     }
 
     /**

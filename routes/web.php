@@ -42,26 +42,26 @@ Route::middleware([Unauthenticated::class])->group(function () {
     Route::get('/login', AuthenticationLogin::class)->name('login');
 });
 
-Route::get('/', function () {})->middleware([IsValid::class,checkRoles::class]);
+Route::get('/', function () {})->middleware([Authenticated::class,IsValid::class,checkRoles::class]);
 
 
 
 // inspector
-Route::middleware([IsValid::class,IsInspector::class])->group(function () {
+Route::middleware([Authenticated::class,IsValid::class,IsInspector::class])->group(function () {
     Route::prefix('inspector')->group(function () {
-        Route::get('/dashboard', InspectorDashboard::class)->name('admin-dashboard');
+        Route::get('/dashboard', InspectorDashboard::class)->name('inspector-dashboard');
     });
 });
 
 // team leader
-Route::middleware([IsValid::class,IsInspectorTeamLeader::class])->group(function () {
+Route::middleware([Authenticated::class,IsValid::class,IsInspectorTeamLeader::class])->group(function () {
     Route::prefix('inspector-team-leader')->group(function () {
         Route::get('/dashboard', InspectorTeamLeaderDashboard::class)->name('inspector-team-leader-dashboard');
     });
 });
 // administrator
-Route::middleware([IsValid::class,IsAdministrator::class])->group(function () {
-    Route::prefix('adminitrator')->group(function () {
-        Route::get('/dashboard', AdministratorDashboard::class)->name('adminitrator-dashboard');
+Route::middleware([Authenticated::class,IsValid::class,IsAdministrator::class])->group(function () {
+    Route::prefix('administrator')->group(function () {
+        Route::get('/dashboard', AdministratorDashboard::class)->name('administrator-dashboard');
     });
 });

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
 class Logout
@@ -15,6 +16,12 @@ class Logout
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        $session = $request->session()->all();
+        if(isset($session['id'])){
+           
+        }
+        $request->session()->invalidate();
+
+        return redirect('/login');
     }
 }
