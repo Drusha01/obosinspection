@@ -14,7 +14,15 @@
         <link rel="icon" type="image/x-icon" href="{{url('/assets')}}/img/lgu_logo.ico">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-
+        <!-- Bootstrap core JavaScript-->
+        <script src="
+        https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
+        "></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+        </script>
+        <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+      
         <!-- Custom styles for this template-->
         <link href="{{url('/assets')}}/css/style.css" rel="stylesheet">
         <link href="{{url('/assets')}}/css/sb-admin-2.min.css" rel="stylesheet">
@@ -25,6 +33,15 @@
 
         <link href="{{url('/assets')}}/css/certificate-print.css" rel="stylesheet" media="print">
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" />
+
+        <!-- Page level plugins -->
+        <!-- <script src="vendor/chart.js/Chart.min.js"></script>
+        <script src="assets/js/demo/chart-area-demo.js"></script>
+        <script src="assets/js/demo/chart-pie-demo.js"></script>
+        <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+        <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+        <script src="asets/js/demo/datatables-demo.js"></script> -->
+
     </head>
 
     <body id="page-top">
