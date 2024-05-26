@@ -19,7 +19,8 @@ return new class extends Migration
             img_url varchar(50) DEFAULT "default.png" ,
             is_active BOOL DEFAULT 1 NOT NULL,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
-            date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            FOREIGN KEY (category_id) REFERENCES categories(id)
         );');
 
         DB::statement('CREATE INDEX idx_items_name ON items(name(10));');
