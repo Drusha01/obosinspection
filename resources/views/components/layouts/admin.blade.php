@@ -48,6 +48,7 @@
     <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/js/demo/datatables-demo.js') }}"></script>
+    
 </head>
 
 <body id="page-top">
@@ -55,17 +56,20 @@
     @livewire('components.header.top-header.top-header')
     {{ $slot }}
 
-      <!-- Scripts -->
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <script>
-    $(document).ready(function() {
-            $('#sidebarToggleTop').on('click', function() {
-                $('.sidebar').toggleClass('toggled');
-            });
+        $(document).ready(function() {
+        $('#sidebarToggleTop, #sidebarToggle').on('click', function() {
+            $('.sidebar').toggleClass('toggled');
         });
+
         window.addEventListener('refresh-page', event => {
             window.location.reload(false); 
         });
+
         window.addEventListener('swal:message', event => {
             Swal.fire({
                 position: event.detail.position,
@@ -82,32 +86,30 @@
 
         window.addEventListener('swal:redirect', event => {
             Swal.fire({
-                    position: event.detail.position,
-                    icon: event.detail.icon,
-                    title: event.detail.title,
-                    text: event.detail.text,
-                    showConfirmButton: false,
-                    timer: event.detail.timer,
-                    timerProgressBar: true,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                    })
-                .then(function() {
-                    window.location.href = `${event.detail.link}`;
-                });
+                position: event.detail.position,
+                icon: event.detail.icon,
+                title: event.detail.title,
+                text: event.detail.text,
+                showConfirmButton: false,
+                timer: event.detail.timer,
+                timerProgressBar: true,
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then(function() {
+                window.location.href = `${event.detail.link}`;
+            });
         });
 
         window.addEventListener('swal:confirm', event => {
             Swal.fire({
-                    position: event.detail.position,
-                    icon: event.detail.icon,
-                    title: event.detail.title,
-                    text: event.detail.text,
-                    showConfirmButton: true,
-                    })
-                .then(function() {
-                    window.location.href = `${event.detail.link}`;
-                });
+                position: event.detail.position,
+                icon: event.detail.icon,
+                title: event.detail.title,
+                text: event.detail.text,
+                showConfirmButton: true,
+            }).then(function() {
+                window.location.href = `${event.detail.link}`;
+            });
         });
 
         window.addEventListener('swal:accessrole', event => {
@@ -122,32 +124,30 @@
 
         window.addEventListener('swal:redirect-link', event => {
             Swal.fire({
-                    position: event.detail.position,
-                    icon: event.detail.icon,
-                    title: event.detail.title,
-                    html: event.detail.html,
-                    timer: event.detail.timer
-                })
-                .then(function() {
-                    window.location.href = `${event.detail.link}`;
-                });
+                position: event.detail.position,
+                icon: event.detail.icon,
+                title: event.detail.title,
+                html: event.detail.html,
+                timer: event.detail.timer
+            }).then(function() {
+                window.location.href = `${event.detail.link}`;
+            });
         });
 
         window.addEventListener('swal:refresh', event => {
             Swal.fire({
-                    position: event.detail.position,
-                    icon: event.detail.icon,
-                    title: event.detail.title,
-                    text: event.detail.text,
-                    showConfirmButton: false,
-                    timer: event.detail.timer,
-                    timerProgressBar: true,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                })
-                .then(function() {
-                    location.reload();
-                });
+                position: event.detail.position,
+                icon: event.detail.icon,
+                title: event.detail.title,
+                text: event.detail.text,
+                showConfirmButton: false,
+                timer: event.detail.timer,
+                timerProgressBar: true,
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then(function() {
+                location.reload();
+            });
         });
 
         window.addEventListener('swal:confirmation', event => {
@@ -159,34 +159,37 @@
                 showDenyButton: event.detail.showDenyButton,
                 showCancelButton: event.detail.showCancelButton,
                 confirmButtonText: event.detail.confirmButtonText,
-                denyButtonText: event.detail.denyButtonText
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.livewire.emit('confirm');
-                } else if (result.isDenied) {
-                    Swal.fire(event.detail.fail_message);
-                }
+                    denyButtonText: event.detail.denyButtonText
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.livewire.emit('confirm');
+                    } else if (result.isDenied) {
+                        Swal.fire(event.detail.fail_message);
+                    }
+                });
             });
-        });
 
-        window.addEventListener('swal:close-current-tab', event => {
-            Swal.fire({
-                position: event.detail.position,
-                icon: event.detail.icon,
-                title: event.detail.title,
-                timer: event.detail.timer
-            }).then(function() {
-                window.close();
-            });
-        });
-
-        window.addEventListener('openModal', function(modal_id){
-            $('#'+modal_id.detail).click();
-        }); 
-        window.addEventListener('closeModal', function(modal_id){
-            $('#'+modal_id.detail).click();
-        }); 
-    </script>
     
+            window.addEventListener('swal:close-current-tab', event => {
+                Swal.fire({
+                    position: event.detail.position,
+                    icon: event.detail.icon,
+                    title: event.detail.title,
+                    timer: event.detail.timer
+                }).then(function() {
+                    window.close();
+                });
+            });
+
+            window.addEventListener('openModal', function(modal_id){
+                $('#'+modal_id.detail).click();
+            }); 
+            
+            window.addEventListener('closeModal', function(modal_id){
+                $('#'+modal_id.detail).click();
+            }); 
+        });
+    </script>
+
 </body>
 </html>
