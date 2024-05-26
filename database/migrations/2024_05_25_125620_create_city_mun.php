@@ -13,11 +13,11 @@ return new class extends Migration
     {
        
 
-        DB::statement("DROP TABLE IF EXISTS `refcitymun`;");
-        DB::statement("CREATE TABLE `refcitymun` ( `id` int(255) NOT NULL AUTO_INCREMENT, `psgcCode` varchar(255) DEFAULT NULL, `citymunDesc` text, `regDesc` varchar(255) DEFAULT NULL,`provCode` varchar(255) DEFAULT NULL,`citymunCode` varchar(255) DEFAULT NULL,PRIMARY KEY (`id`)) ;");
+        DB::statement("DROP TABLE IF EXISTS `citymun`;");
+        DB::statement("CREATE TABLE `citymun` ( `id` int(255) NOT NULL AUTO_INCREMENT, `psgcCode` varchar(255) DEFAULT NULL, `citymunDesc` text, `regDesc` varchar(255) DEFAULT NULL,`provCode` varchar(255) DEFAULT NULL,`citymunCode` varchar(255) DEFAULT NULL,PRIMARY KEY (`id`)) ;");
 
 
-        DB::statement("INSERT INTO `refcitymun` VALUES 
+        DB::statement("INSERT INTO `citymun` VALUES 
 ('1', '012801000', 'ADAMS', '01', '0128', '012801')
 ,('2', '012802000', 'BACARRA', '01', '0128', '012802')
 ,('3', '012803000', 'BADOC', '01', '0128', '012803')

@@ -15,8 +15,8 @@ return new class extends Migration
             id INT PRIMARY KEY AUTO_INCREMENT,
             display_type_id INT NOT NULL,
             sign_type_id INT NOT NULL,
-            is_active BOOL DEFAULT 1 NOT NULL,
             fee DOUBLE NOT NULL,
+            is_active BOOL DEFAULT 1 NOT NULL,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
             date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         );');

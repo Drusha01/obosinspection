@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         
-        DB::statement("DROP TABLE IF EXISTS `refbrgy`;");
-        DB::statement("CREATE TABLE `refbrgy` (
+        DB::statement("DROP TABLE IF EXISTS `brgy`;");
+        DB::statement("CREATE TABLE `brgy` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `brgyCode` varchar(255) DEFAULT NULL,
             `brgyDesc` text,
@@ -23,7 +23,7 @@ return new class extends Migration
             PRIMARY KEY (`id`)
         );");
 
-        DB::statement("INSERT INTO `refbrgy` VALUES 
+        DB::statement("INSERT INTO `brgy` VALUES 
 ('1', '012801001', 'Adams (Pob.)', '01', '0128', '012801')
 ,('2', '012802001', 'Bani', '01', '0128', '012802')
 ,('3', '012802002', 'Buyon', '01', '0128', '012802')

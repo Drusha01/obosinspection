@@ -24,7 +24,9 @@ return new class extends Migration
             img_url varchar(50) DEFAULT "default.png" ,
             is_active BOOL DEFAULT 1,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
-            date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            FOREIGN KEY (person_type_id) REFERENCES person_type(id),
+            FOREIGN KEY (brgy_id) REFERENCES brgy(id)
         );');
 
         DB::statement('CREATE INDEX idx_persons_email ON persons(email(10));');

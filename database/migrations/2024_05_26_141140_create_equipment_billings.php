@@ -14,13 +14,14 @@ return new class extends Migration
         DB::statement('CREATE TABLE equipment_billings(
             id INT PRIMARY KEY AUTO_INCREMENT,
             category_id INT NOT NULL,
-            equipment_billing_section_type_id INT NOT NULL,
+            section_id INT NOT NULL,
             capacity VARCHAR(100) , 
             fee DOUBLE NOT NULL,
+            is_active BOOL DEFAULT 1 NOT NULL,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
             date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         );');
-        DB::statement("INSERT INTO `equipment_billings` (`id`, `category_id`, `equipment_billing_section_type_id`, `capacity`, `fee`) VALUES
+        DB::statement("INSERT INTO `equipment_billings` (`id`, `category_id`, `section_id`, `capacity`, `fee`) VALUES
         (1, 1,1, '5 kVA or less', '50.00'),
         (2, 2, 2, NULL, '2.40'),
         (3, 1, 3, 'Up to 100 tons capacity', '25.00'),
