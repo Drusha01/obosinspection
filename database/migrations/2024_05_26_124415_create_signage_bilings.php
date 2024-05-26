@@ -11,23 +11,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement('CREATE TABLE signage_bilings(
+        DB::statement('CREATE TABLE signage_billings(
             id INT PRIMARY KEY AUTO_INCREMENT,
-            name VARCHAR(100) UNIQUE,
+            display_type_id INT NOT NULL,
+            sign_type_id INT NOT NULL,
+            is_active BOOL DEFAULT 1 NOT NULL,
+            fee DOUBLE NOT NULL,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
             date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         );');
 
-//         INSERT INTO `signage_billing` (`signage_id`, `display_type`, `sign_type`, `signage_fee`) VALUES
-// (1, 'Neon', 'Business Signs', '124.00'),
-// (2, 'Neon', 'Advertising Signs', '200.00'),
-// (3, 'Illuminated', 'Business Signs', '72.00'),
-// (4, 'Illuminated', 'Advertising Signs', '150.00'),
-// (5, 'Painted-on', 'Business Signs', '30.00'),
-// (6, 'Painted-on', 'Advertising Signs', '100.00'),
-// (7, 'Others', 'Business Signs', '40.00'),
-// (8, 'Others', 'Advertising Signs', '110.00');
-// COMMIT;
+        DB::statement("INSERT INTO `signage_billings` (`id`, `display_type_id`, `sign_type_id`, `fee`) VALUES
+        (1, 1, 1, '124.00'),
+        (2, 1, 2, '200.00'),
+        (3, 2, 1, '72.00'),
+        (4, 2, 2, '150.00'),
+        (5, 3, 1, '30.00'),
+        (6, 3, 2, '100.00'),
+        (7, 4, 1, '40.00'),
+        (8, 4, 2, '110.00');");
+
     }
 
     /**
@@ -35,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('signage_bilings');
+        Schema::dropIfExists('signage_billings');
     }
 };

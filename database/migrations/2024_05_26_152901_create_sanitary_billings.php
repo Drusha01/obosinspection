@@ -11,24 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement('CREATE TABLE signage_billing_types(
+        DB::statement('CREATE TABLE sanitary_billings(
             id INT PRIMARY KEY AUTO_INCREMENT,
             name VARCHAR(100) UNIQUE,
             is_active BOOL DEFAULT 1 NOT NULL,
+            fee DOUBLE NOT NULL,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
             date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         );');
 
-        DB::statement('INSERT INTO signage_billing_types(id,name,date_created, date_updated) VALUES(
-            NULL,
-            "Business Signs",
-            NOW(),
-            NOW()
-        );');
-
-        DB::statement('INSERT INTO signage_billing_types(id,name,date_created, date_updated) VALUES(
-            NULL,
-            "Advertising Signs",
+         DB::statement('INSERT INTO sanitary_billings VALUES(
+            1,
+            "Plumbing",
+            1,
+            60,
             NOW(),
             NOW()
         );');
@@ -39,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('signage_billing_types');
+        Schema::dropIfExists('sanitary_billings');
     }
 };
