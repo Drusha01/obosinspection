@@ -1,5 +1,4 @@
-<div>
-    <!-- Top Header -->
+<div class="p-0 m-0">
     <nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow d-print-none" id="topHeader">
         <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
             <i class="fa fa-bars"></i>
@@ -58,4 +57,4 @@
             </div>
         </div>
     </nav>
-    <!-- End of Top Header -->
+</div>

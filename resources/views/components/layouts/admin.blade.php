@@ -52,9 +52,13 @@
 </head>
 
 <body id="page-top">
-    @livewire('components.sidebar.admin-sidebar.admin-sidebar')
-    @livewire('components.header.top-header.top-header')
-    {{ $slot }}
+    <div id="wrapper">
+        @livewire('components.sidebar.admin-sidebar.admin-sidebar')
+        <div class="container-fluid p-0 m-0">
+            @livewire('components.header.top-header.top-header')
+            {{ $slot }}
+        </div>
+    </div>
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

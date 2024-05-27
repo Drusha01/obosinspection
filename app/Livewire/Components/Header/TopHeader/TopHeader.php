@@ -3,6 +3,8 @@
 namespace App\Livewire\Components\Header\TopHeader;
 
 use Livewire\Component;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TopHeader extends Component
 {
