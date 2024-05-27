@@ -54,11 +54,11 @@
 <body id="page-top">
     <div id="wrapper">
         @livewire('components.sidebar.admin-sidebar.admin-sidebar')
-        <div class="container-fluid p-0 m-0">
+        <div id="content-wrapper" class="d-flex flex-column">
             @livewire('components.header.top-header.top-header')
             {{ $slot }}
         </div>
-    </div>
+  
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
