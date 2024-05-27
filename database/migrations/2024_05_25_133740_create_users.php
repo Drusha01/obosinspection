@@ -28,7 +28,7 @@ DB::statement('CREATE INDEX idx_users_username ON users(username(10));');
 DB::statement('CREATE INDEX idx_users_password ON users(password(10));');
 
 DB::statement("INSERT INTO `users` (`id`, `username`, `password`, `role_id`, `person_id`, `is_active`, `date_created`, `date_updated`) VALUES
-(1, 'administrator', '$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO', 3, 0, 1, '2024-05-26 19:00:11', '2024-05-26 19:00:11');");
+(1, 'administrator', '$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO', 3, 1, 1, '2024-05-26 19:00:11', '2024-05-26 19:00:11');");
 
 
 
