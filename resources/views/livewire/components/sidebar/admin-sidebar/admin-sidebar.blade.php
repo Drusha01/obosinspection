@@ -161,7 +161,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('administrator-users-administrators') }}">
+                        <a class="nav-link" href="{{ route('administrator-users-team-leader-inspectors') }}">
                             <i class="fas fa-fw fa-users"></i>
                             <span>Team Leader Inspector</span>
                         </a>
