@@ -1,16 +1,13 @@
 <div>
     <div class="content">
         <div class="container-fluid">
-            <div class="container mt-2 p-0 mx-0">
                 <div class="d-sm-flex align-items-center justify-content-between mt-4 mb-4">
                     <h1 class="h3 mb-0 p-0  text-black" >{{$title}}</h1>
-                    <div class="p-0 m-0" wire:click="add_person('addModaltoggler')">
-                        <button type="button" class="btn btn-primary">
+                    <div class="p-0 m-0" >
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal" wire:click="add_person('addModaltoggler')">
                             Add Inspector
                         </button>
                     </div>
-                    <button  type="button"  data-bs-toggle="modal" data-bs-target="#addModal" id="addModaltoggler" style="display:none;" ></button>
-                </div>
             </div>
             <div class="table-responsive">
                 <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
