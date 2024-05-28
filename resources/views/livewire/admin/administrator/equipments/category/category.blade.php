@@ -40,7 +40,7 @@
                                                     Activate
                                                 </button>
                                             @endif
-                                            <button class="btn btn-primary" wire:click="edit({{$value->id}},'editModaltoggler')">
+                                            <button class="btn btn-secondary" wire:click="edit({{$value->id}},'editModaltoggler')">
                                                 Edit
                                             </button>
                                         </td>
