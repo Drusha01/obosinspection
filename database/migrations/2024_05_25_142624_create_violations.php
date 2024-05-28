@@ -14,6 +14,7 @@ return new class extends Migration
         DB::statement('CREATE TABLE violations(
             id INT PRIMARY KEY AUTO_INCREMENT,
             description VARCHAR(100) UNIQUE NOT NULL,
+            is_active BOOL DEFAULT 1 NOT NULL,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
             date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         );');

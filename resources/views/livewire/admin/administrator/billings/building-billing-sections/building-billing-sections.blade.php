@@ -5,7 +5,7 @@
                 <h1 class="h3 mb-0 text-gray-800">{{$title}}</h1>
                 <div class="p-0 m-0" wire:click="add('addModaltoggler')">
                     <button type="button" class="btn btn-primary">
-                        Add Violation
+                        Add Building billing section
                     </button>
                 </div>
             </div>
@@ -87,14 +87,14 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addModalLabel">Add Violation</h5>
+                        <h5 class="modal-title" id="addModalLabel">Add Building billing section</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form wire:submit.prevent="save_add('addModaltoggler')">
                             <div class="mb-3">
-                                <label for="description" class="form-label">Description</label>
-                                <input type="text" class="form-control" required wire:model="violation.description">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" required wire:model="building_billing_section.name">
                             </div>
                             <button type="submit" class="btn btn-primary">Add</button>
                         </form>
@@ -108,14 +108,14 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel">Edit Violation</h5>
+                        <h5 class="modal-title" id="editModalLabel">Edit Building billing section</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form wire:submit.prevent="save_edit({{$violation['id']}},'editModaltoggler')">
+                        <form wire:submit.prevent="save_edit({{$building_billing_section['id']}},'editModaltoggler')">
                             <div class="mb-3">
-                                <label for="description     " class="form-label">Description</label>
-                                <input type="text" class="form-control" required wire:model="violation.description">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" required wire:model="building_billing_section.name">
                             </div>
                             <button type="submit" class="btn btn-success">Save</button>
                         </form>
@@ -129,12 +129,12 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="deactivateModalLabel">Deactivate Violation</h5>
+                        <h5 class="modal-title" id="deactivateModalLabel">Deactivate Building billing section</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form wire:submit.prevent="save_deactivate({{$violation['id']}},'deactivateModaltoggler')">
-                            <div>Are you sure you want to deactivate this violation?</div>
+                        <form wire:submit.prevent="save_deactivate({{$building_billing_section['id']}},'deactivateModaltoggler')">
+                            <div>Are you sure you want to deactivate this building billing section?</div>
                             <button type="submit" class="btn btn-danger">Deactivate</button>
                         </form>
                     </div>
@@ -147,12 +147,12 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="activateModalLabel">Activate Violation</h5>
+                        <h5 class="modal-title" id="activateModalLabel">Activate Building billing section</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form wire:submit.prevent="save_activate({{$violation['id']}},'activateModaltoggler')">
-                            <div>Are you sure you want to activate this violation?</div>
+                        <form wire:submit.prevent="save_activate({{$building_billing_section['id']}},'activateModaltoggler')">
+                            <div>Are you sure you want to activate this building billing section?</div>
                             <button type="submit" class="btn btn-warning">Activate</button>
                         </form>
                     </div>

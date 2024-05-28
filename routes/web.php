@@ -27,6 +27,7 @@ use App\Livewire\Admin\Inspector\Equipments\Items\Items as InspectorItems;
 use App\Livewire\Admin\Inspector\Inspections\CompletedSchedules\CompletedSchedules as InspectorCompletedSchedules;
 use App\Livewire\Admin\Inspector\Inspections\InspectionSchedules\InspectionSchedules as InspectorInspectionSchedules;
 use App\Livewire\Admin\Inspector\Profile\Profile as InspectorProfile;
+use App\Livewire\Admin\Inspector\Violations\Violations as InspectorViolations;
 
 
 // inspector team leader
@@ -40,13 +41,13 @@ use App\Livewire\Admin\InspectorTeamLeader\Profile\Profile as InspectorTeamLeade
 use App\Livewire\Admin\InspectorTeamLeader\Violations\Violations as InspectorTeamLeaderViolations;
 
 
-
-
 // administrator
 use App\Livewire\Admin\Administrator\ActivityLogs\ActivityLogs as AdministratorActivityLogs;
 use App\Livewire\Admin\Administrator\BarangayLocations\BarangayLocations as AdministratorBarangayLocations;
 use App\Livewire\Admin\Administrator\Billings\BuildingBillings\BuildingBillings as AdministratorBuildingBillings;
+use App\Livewire\Admin\Administrator\Billings\BuildingBillingSections\BuildingBillingSections as AdministratorBuildingBillingSections;
 use App\Livewire\Admin\Administrator\Billings\EquipmentBillings\EquipmentBillings as AdministratorEquipmentBillings;
+use App\Livewire\Admin\Administrator\Billings\EquipmentBillingSections\EquipmentBillingSections as AdministratorEquipmentBillingSections;
 use App\Livewire\Admin\Administrator\Billings\SanitaryBillings\SanitaryBillings as AdministratorSanitaryBillings;
 use App\Livewire\Admin\Administrator\Billings\SignageBillings\SignageBillings as AdministratorSignageBillings;
 use App\Livewire\Admin\Administrator\Dashboard\Dashboard  as AdministratorDashboard;
@@ -86,6 +87,17 @@ Route::get('/', function () {})->middleware([Authenticated::class,IsValid::class
 Route::middleware([Authenticated::class,IsValid::class,IsInspector::class])->group(function () {
     Route::prefix('inspector')->group(function () {
         Route::get('/dashboard', InspectorDashboard::class)->name('inspector-dashboard');
+        Route::prefix('equipments')->group(function () {
+            Route::get('/categories', InspectorCategory::class)->name('inspector-equipments-categories');
+            Route::get('/items', InspectorItems::class)->name('inspector-equipments-items');
+        });
+        Route::get('/violations', InspectorViolations::class)->name('inspector-violations');
+        Route::get('/activity-logs', InspectorActivityLogs::class)->name('inspector-activity-logs');
+        Route::prefix('inspections')->group(function () {
+            Route::get('/inspection-schedules', InspectorInspectionSchedules::class)->name('inspector-inspections-inspection-schedules');
+            Route::get('/completed-inspections', InspectorCompletedSchedules::class)->name('inspector-inspections-completed-inspections');
+        });
+        Route::get('/profile', InspectorProfile::class)->name('inspector-profile');
     });
 });
 
@@ -93,6 +105,17 @@ Route::middleware([Authenticated::class,IsValid::class,IsInspector::class])->gro
 Route::middleware([Authenticated::class,IsValid::class,IsInspectorTeamLeader::class])->group(function () {
     Route::prefix('inspector-team-leader')->group(function () {
         Route::get('/dashboard', InspectorTeamLeaderDashboard::class)->name('inspector-team-leader-dashboard');
+        Route::prefix('equipments')->group(function () {
+            Route::get('/categories', InspectorTeamLeaderCategory::class)->name('inspector-team-leader-equipments-categories');
+            Route::get('/items', InspectorTeamLeaderItems::class)->name('inspector-team-leader-equipments-items');
+        });
+        Route::get('/violations', InspectorTeamLeaderViolations::class)->name('inspector-team-leader-violations');
+        Route::get('/activity-logs', InspectorTeamLeaderActivityLogs::class)->name('inspector-team-leader-activity-logs');
+        Route::prefix('inspections')->group(function () {
+            Route::get('/inspection-schedules', InspectorTeamLeaderInspectionSchedules::class)->name('inspector-team-leader-inspections-inspection-schedules');
+            Route::get('/completed-inspections', InspectorTeamLeaderCompletedInspections::class)->name('inspector-team-leader-inspections-completed-inspections');
+        });
+        Route::get('/profile', InspectorTeamLeaderProfile::class)->name('inspector-team-leader-profile');
     });
 });
 // administrator
@@ -109,7 +132,10 @@ Route::middleware([Authenticated::class,IsValid::class,IsAdministrator::class])-
         });
         Route::prefix('billings')->group(function () {
             Route::get('/equipments-billings', AdministratorEquipmentBillings::class)->name('administrator-billings-equipments-billings');
+            Route::get('/equipments-billing-sections', AdministratorEquipmentBillingSections::class)->name('administrator-billings-equipments-billing-sections');
+           
             Route::get('/building-billings', AdministratorBuildingBillings::class)->name('administrator-billings-building-billings');
+            Route::get('/building-billing-sections', AdministratorBuildingBillingSections::class)->name('administrator-billings-building-billing-sections');
             Route::get('/signage-billings', AdministratorSignageBillings::class)->name('administrator-billings-signage-billings');
             Route::get('/sanitary-billings', AdministratorSanitaryBillings::class)->name('administrator-billings-sanitary-billings');
         });

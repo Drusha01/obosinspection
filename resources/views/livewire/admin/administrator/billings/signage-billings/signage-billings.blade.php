@@ -5,7 +5,7 @@
                 <h1 class="h3 mb-0 text-gray-800">{{$title}}</h1>
                 <div class="p-0 m-0" wire:click="add('addModaltoggler')">
                     <button type="button" class="btn btn-primary">
-                        Add Violation
+                        Add Building billing 
                     </button>
                 </div>
             </div>
@@ -87,14 +87,32 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addModalLabel">Add Violation</h5>
+                        <h5 class="modal-title" id="addModalLabel">Add Building billing </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form wire:submit.prevent="save_add('addModaltoggler')">
                             <div class="mb-3">
-                                <label for="description" class="form-label">Description</label>
-                                <input type="text" class="form-control" required wire:model="violation.description">
+                                <label for="name" class="form-label">Display type</label>
+                                <select class="form-select" aria-label="Default select example" wire:model="signage_billing.display_type_id">
+                                    <option selected value="">Select Category</option>
+                                    @foreach($signage_billing_display_types as $key => $value)
+                                        <option value="{{$value->id}}">{{$value->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Signage type</label>
+                                <select class="form-select" aria-label="Default select example" wire:model="signage_billing.sign_type_id">
+                                    <option selected value="">Select Section</option>
+                                    @foreach($signage_billing_types as $key => $value)
+                                        <option value="{{$value->id}}">{{$value->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fee" class="form-label">Fee</label>
+                                <input type="number" class="form-control" required wire:model="signage_billing.fee" step="0.01" min="0.01">
                             </div>
                             <button type="submit" class="btn btn-primary">Add</button>
                         </form>
@@ -108,14 +126,32 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel">Edit Violation</h5>
+                        <h5 class="modal-title" id="editModalLabel">Edit Building billing </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form wire:submit.prevent="save_edit({{$violation['id']}},'editModaltoggler')">
+                        <form wire:submit.prevent="save_edit({{$signage_billing['id']}},'editModaltoggler')">
                             <div class="mb-3">
-                                <label for="description     " class="form-label">Description</label>
-                                <input type="text" class="form-control" required wire:model="violation.description">
+                                <label for="name" class="form-label">Display type</label>
+                                <select class="form-select" aria-label="Default select example" wire:model="signage_billing.display_type_id">
+                                    <option selected value="">Select Category</option>
+                                    @foreach($signage_billing_display_types as $key => $value)
+                                        <option value="{{$value->id}}">{{$value->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Signage type</label>
+                                <select class="form-select" aria-label="Default select example" wire:model="signage_billing.sign_type_id">
+                                    <option selected value="">Select Section</option>
+                                    @foreach($signage_billing_types as $key => $value)
+                                        <option value="{{$value->id}}">{{$value->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fee" class="form-label">Fee</label>
+                                <input type="number" class="form-control" required wire:model="signage_billing.fee" step="0.01" min="0.01">
                             </div>
                             <button type="submit" class="btn btn-success">Save</button>
                         </form>
@@ -129,12 +165,12 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="deactivateModalLabel">Deactivate Violation</h5>
+                        <h5 class="modal-title" id="deactivateModalLabel">Deactivate Building billing </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form wire:submit.prevent="save_deactivate({{$violation['id']}},'deactivateModaltoggler')">
-                            <div>Are you sure you want to deactivate this violation?</div>
+                        <form wire:submit.prevent="save_deactivate({{$signage_billing['id']}},'deactivateModaltoggler')">
+                            <div>Are you sure you want to deactivate this sanitary billing?</div>
                             <button type="submit" class="btn btn-danger">Deactivate</button>
                         </form>
                     </div>
@@ -147,12 +183,12 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="activateModalLabel">Activate Violation</h5>
+                        <h5 class="modal-title" id="activateModalLabel">Activate Building billing </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form wire:submit.prevent="save_activate({{$violation['id']}},'activateModaltoggler')">
-                            <div>Are you sure you want to activate this violation?</div>
+                        <form wire:submit.prevent="save_activate({{$signage_billing['id']}},'activateModaltoggler')">
+                            <div>Are you sure you want to activate this sanitary billing?</div>
                             <button type="submit" class="btn btn-warning">Activate</button>
                         </form>
                     </div>

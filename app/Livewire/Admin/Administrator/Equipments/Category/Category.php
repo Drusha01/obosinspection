@@ -29,6 +29,7 @@ class Category extends Component
     public function render()
     {
         $table_data = DB::table('categories')
+            ->orderBy('id','desc')
             ->paginate(10);
         return view('livewire.admin.administrator.equipments.category.category',[
             'table_data'=>$table_data
@@ -167,6 +168,9 @@ class Category extends Component
         $this->dispatch('openModal',$modal_id);
     }
     public function save_edit($id,$modal_id){
+        $edit = DB::table('categories')
+            ->where('id','=',$id)
+            ->first();
         if(!strlen($this->category['name'])){
             $this->dispatch('swal:redirect',
                 position         									: 'center',
@@ -178,11 +182,11 @@ class Category extends Component
             );
             return 0;
         }else{
-            $category = DB::table('categories')
+            $instance = DB::table('categories')
             ->where('id','<>',$id)
             ->where('name','=',$this->category['name'])
             ->first();
-            if($category){
+            if($instance){
                 $this->dispatch('swal:redirect',
                     position         									: 'center',
                     icon              									: 'warning',
@@ -194,7 +198,7 @@ class Category extends Component
                 return 0;
             }
         }
-        $category['img_url'] = 'default.png';
+        $category['img_url'] = $edit->img_url;
         if($this->category['img_url']){
             if($this->category['img_url']){
                 $category['img_url'] = self::save_image($this->category['img_url'],'category','categories','img_url');
