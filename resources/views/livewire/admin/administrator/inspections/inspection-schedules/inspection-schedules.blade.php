@@ -23,6 +23,7 @@
                             <th scope="col">ID</th>
                             <th scope="col">Business Name</th>
                             <th scope="col">Inspection Date</th>
+                            <th>Inspection status</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
@@ -31,6 +32,7 @@
                             <th scope="row">1</th>
                             <td>Diwata pares</td>
                             <td>08/25/2024</td>
+                            <td>Ongoing</td>
                             <td>
                                 <button class="btn btn-danger">
                                     deactivate
@@ -47,6 +49,7 @@
                         <th scope="row">1</th>
                             <td>Diwata pares</td>
                             <td>08/25/2024</td>
+                            <td>Ongoing</td>
                             <td>
                                 <button class="btn btn-danger">
                                     deactivate
@@ -63,6 +66,7 @@
                         <th scope="row">1</th>
                             <td>Diwata pares</td>
                             <td>08/25/2024</td>
+                            <td>Ongoing</td>
                             <td>
                                 <button class="btn btn-danger">
                                     deactivate

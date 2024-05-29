@@ -40,6 +40,9 @@ class Inspectors extends Component
         'contact_number' => NULL,
         'email' => NULL,
         'img_url' => NULL,
+        'current_password'=>NULL,
+        'password'=>NULL,
+        'cpassword'=> NULL,
     ];
     public function mount(){
         $city_mun = DB::table('citymun')
@@ -302,7 +305,7 @@ class Inspectors extends Component
             $this->dispatch('swal:redirect',
                 position         									: 'center',
                 icon              									: 'warning',
-                title             									: 'Please enter emailname!',
+                title             									: 'Please enter email!',
                 showConfirmButton 									: 'true',
                 timer             									: '1000',
                 link              									: '#'
@@ -444,6 +447,9 @@ class Inspectors extends Component
                 'email' => $edit->email,
                 'contact_number' => $edit->contact_number,
                 'img_url' => NULL,
+                'current_password'=>NULL,
+                'password'=>NULL,
+                'cpassword'=> NULL,
             ];
             $this->dispatch('openModal',$modal_id);
         }
@@ -661,6 +667,94 @@ class Inspectors extends Component
             $this->dispatch('openModal',$modal_id);
         }
     }
+    public function save_recover_password($id,$modal_id){
+        if(strlen($this->person['password'])< 8){
+            $this->dispatch('swal:redirect',
+                    position         									: 'center',
+                    icon              									: 'warning',
+                    title             									: 'Password must be at least 8!',
+                    showConfirmButton 									: 'true',
+                    timer             									: '1000',
+                    link              									: '#'
+                );
+            return 0;
+        }
+        if($this->person['cpassword'] != $this->person['password']){
+            $this->dispatch('swal:redirect',
+                    position         									: 'center',
+                    icon              									: 'warning',
+                    title             									: 'Password doesn\'t match!',
+                    showConfirmButton 									: 'true',
+                    timer             									: '1000',
+                    link              									: '#'
+                );
+            return 0;
+        }
+        if(strlen($this->person['current_password'])< 8){
+            $this->dispatch('swal:redirect',
+                    position         									: 'center',
+                    icon              									: 'warning',
+                    title             									: 'Password must be at least 8!',
+                    showConfirmButton 									: 'true',
+                    timer             									: '1000',
+                    link              									: '#'
+                );
+            return 0;
+        }
+
+        $edit = DB::table('users as u')
+            ->select(
+                'u.id as id',
+                'u.password as password',
+                )
+            ->join('persons as p','p.id','u.person_id')
+            ->join('person_types as pt', 'pt.id','p.person_type_id')
+            ->where('pt.name','=','Inspector')
+            ->where('u.id','=',$id)
+            ->first();
+        if(password_verify($this->person['current_password'],$edit->password)){
+            if($this->person['current_password'] == $this->person['password']){
+                $this->dispatch('swal:redirect',
+                position         									: 'center',
+                    icon              									: 'warning',
+                    title             									: 'New password must not be the current password!',
+                    showConfirmButton 									: 'true',
+                    timer             									: '1000',
+                    link              									: '#'
+                );
+                return 0;
+            }else{
+                if(
+                    DB::table('users as u')
+                    ->where('u.id','=',$id)
+                    ->update([
+                    'password' =>password_hash($this->person['password'], PASSWORD_ARGON2I) 
+                ])){
+                    $this->dispatch('swal:redirect',
+                        position         									: 'center',
+                        icon              									: 'success',
+                        title             									: 'Passsword successfully updated!',
+                        showConfirmButton 									: 'true',
+                        timer             									: '1000',
+                        link              									: '#'
+                    );
+                    $this->dispatch('openModal',$modal_id);
+                    return 0;
+                }
+            }
+        }else{
+            $this->dispatch('swal:redirect',
+                    position         									: 'center',
+                    icon              									: 'warning',
+                    title             									: 'Invalid current password!',
+                    showConfirmButton 									: 'true',
+                    timer             									: '1000',
+                    link              									: '#'
+                );
+            return 0;
+        }
+    }
+
     public function save_deactivate($id,$modal_id){
         if(
             DB::table('users')

@@ -35,7 +35,7 @@
                                             <button class="btn btn-outline-primary" wire:click="add_designation({{$value->id}},'addDesignationModaltoggler')">
                                                 Add Designation
                                             </button>
-                                            <button class="btn btn-outline-primary" wire:click="viewBarangays({{$value->id}},'editModaltoggler')">
+                                            <button class="btn btn-outline-primary" wire:click="add_designation({{$value->id}},'viewDesignationModaltoggler')">
                                                 View
                                             </button>
                                         </td>
@@ -92,7 +92,7 @@
         <button type="button" data-bs-toggle="modal" data-bs-target="#activateModal" id="activateModaltoggler" style="display:none;"></button>
 
         <button type="button" data-bs-toggle="modal" data-bs-target="#addDesignationModal" id="addDesignationModaltoggler" style="display:none;"></button>
-        
+        <button type="button" data-bs-toggle="modal" data-bs-target="#viewDesignationModal" id="viewDesignationModaltoggler" style="display:none;"></button>
 
         
         
@@ -166,10 +166,89 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form wire:submit.prevent="save_add('addModaltoggler')">
-                            @foreach($designations as $key =>$value)
+                        <form wire:submit.prevent="save_add_designation()">
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="mb-3">
+                                        <select class="form-select" aria-label="Select Barangay" required wire:model="inspector_team.brgy_id">
+                                            <option value="">Select Designated Barangay</option>
+                                            @foreach($brgy as $key => $value)
+                                                <option value="{{$value->id}}">{{$value->brgyDesc}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-3 mx-3" >
+                                    <button class="btn btn-primary" type="submit">Add</button>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
+                                    <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                                        <tr>
+                                            <th class="align-middle text-center"></th>
+                                            <th class="align-middle"> Barangay</th>
+                                            <th class="align-middle text-center">Action </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($designations as $key =>$value)
+                                        <tr>
+                                            <td class="align-middle text-center">{{$key+1}}</td>
+                                            <td class="mx-2">
+                                                {{$value->brgyDesc}}
+                                            </td>
+                                            <td class="align-middle text-center">
+                                                <button class="btn btn-danger" type="button" wire:click="delete_designation({{$value->id}})">
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                            @endforeach
+        <div wire:ignore.self class="modal fade" id="viewDesignationModal" tabindex="-1" aria-labelledby="viewDesignationModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addDesignationModalLabel">View Designation</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form wire:submit.prevent="save_add_designation()">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
+                                    <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                                        <tr>
+                                            <th class="align-middle text-center"></th>
+                                            <th class="align-middle"> Barangay</th>
+                                            <th class="align-middle text-center">Action </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($designations as $key =>$value)
+                                        <tr>
+                                            <td class="align-middle text-center">{{$key+1}}</td>
+                                            <td class="mx-2">
+                                                {{$value->brgyDesc}}
+                                            </td>
+                                            <td class="align-middle text-center">
+                                                <button class="btn btn-danger" type="button" wire:click="delete_designation({{$value->id}})">
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </form>
                     </div>
                 </div>

@@ -32,8 +32,10 @@ class InspectorGroups extends Component
     public $unassigned_inspectors;
     public $all_inspectors;
     public $designations = [];
+    public $brgy = []; 
+    public $unassigned_brgy;
     public function mount(){
-
+        
     }
     public function render()
     {
@@ -339,7 +341,100 @@ class InspectorGroups extends Component
     }
    
     public function add_designation($id,$modal_id){
+        $city_mun = DB::table('citymun')
+            ->where('citymunDesc','=','GENERAL SANTOS CITY (DADIANGAS)')
+            ->first();
         
+        $this->brgy = DB::table('brgy')
+            ->where('citymunCode','=',$city_mun->citymunCode)
+            ->get()
+            ->toArray();
+        $this->designations = DB::table('team_target_barangays as ttb')
+            ->select(
+                'ttb.id',
+                'b.brgyDesc'
+                )
+            ->join('brgy as b','b.id','ttb.brgy_id')
+            ->where('ttb.inspector_team_id','=',$id)
+            ->get()
+            ->toArray();
+        if($edit =  DB::table('inspector_teams as it')
+            ->select(
+                'it.id',
+                'it.name',
+                'it.team_leader_id',
+                'p.first_name',
+                'p.middle_name',
+                'p.last_name',
+                'p.suffix',
+                'wr.id as work_role_id',
+                'wr.name as work_role_name',
+                'it.is_active'
+                )
+            ->join('persons as p','p.id','it.team_leader_id')
+            ->join('person_types as pt', 'pt.id','p.person_type_id')
+            ->join('work_roles as wr', 'wr.id','p.work_role_id')
+            ->where('it.id','=',$id)
+            ->first()){
+                $this->inspector_team = [
+                    'id'=>$edit->id,
+                    'name'=>$edit->name,
+                    'team_leader_id'=>$edit->team_leader_id,
+                    'brgy_id'=>NULL,
+                    'is_active'=>$edit->is_active,
+                ];
+                $this->dispatch('openModal',$modal_id);  
+            }
         $this->dispatch('openModal',$modal_id);
+    }
+    public function save_add_designation(){
+        if(intval($this->inspector_team['brgy_id'])){
+            $temp = DB::table('team_target_barangays as ttb')
+            ->where('ttb.inspector_team_id','=',$this->inspector_team['id'])
+            ->where('ttb.brgy_id','=',$this->inspector_team['brgy_id'])
+            ->first();
+            if($temp){
+
+            }else{
+                DB::table('team_target_barangays')
+                    ->insert([
+                    'brgy_id'=>$this->inspector_team['brgy_id'],
+                    'inspector_team_id'=>$this->inspector_team['id']
+                ]);
+            }
+        }else{
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'No barangay selected!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return;
+        }
+        $this->designations = DB::table('team_target_barangays as ttb')
+            ->select(
+                'ttb.id',
+                'b.brgyDesc'
+                )
+            ->join('brgy as b','b.id','ttb.brgy_id')
+            ->where('ttb.inspector_team_id','=',$this->inspector_team['id'])
+            ->get()
+            ->toArray();
+    }
+    public function delete_designation($id){
+            DB::table('team_target_barangays')
+            ->where('id','=',$id)
+            ->delete();
+        $this->designations = DB::table('team_target_barangays as ttb')
+            ->select(
+                'ttb.id',
+                'b.brgyDesc'
+                )
+            ->join('brgy as b','b.id','ttb.brgy_id')
+            ->where('ttb.inspector_team_id','=',$this->inspector_team['id'])
+            ->get()
+            ->toArray();
     }
 }

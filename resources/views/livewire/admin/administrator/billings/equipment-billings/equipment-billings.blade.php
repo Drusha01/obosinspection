@@ -110,10 +110,12 @@
                                     @endforeach
                                 </select>
                             </div>
+                            @if($equipment_billing['category_id'] != 2)
                             <div class="mb-3">
                                 <label for="capacity" class="form-label">Capacity</label>
                                 <input type="text" class="form-control" wire:model="equipment_billing.capacity">
                             </div>
+                            @endif
                             <div class="mb-3">
                                 <label for="fee" class="form-label">Fee</label>
                                 <input type="number" class="form-control" required wire:model="equipment_billing.fee" step="0.01" min="0.01">

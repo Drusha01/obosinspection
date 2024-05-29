@@ -42,7 +42,7 @@
                                             <button class="btn btn-secondary" wire:click="edit({{$value->id}},'editModaltoggler')">
                                                 Edit
                                             </button>
-                                            <button class="btn btn-outline-danger" wire:click="edit({{$value->id}},'editModaltoggler')">
+                                            <button class="btn btn-outline-danger" wire:click="edit({{$value->id}},'recoverModaltoggler')">
                                                 Change Password
                                             </button>
                                         </td>
@@ -86,6 +86,8 @@
         <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="editModaltoggler" style="display:none;"></button>
         <button type="button" data-bs-toggle="modal" data-bs-target="#deactivateModal" id="deactivateModaltoggler" style="display:none;"></button>
         <button type="button" data-bs-toggle="modal" data-bs-target="#activateModal" id="activateModaltoggler" style="display:none;"></button>
+        <button type="button" data-bs-toggle="modal" data-bs-target="#recoverModal" id="recoverModaltoggler" style="display:none;"></button>
+        
 
         
         
@@ -168,6 +170,37 @@
                 </div>
             </div>
         </div>
+
+                                                                  
+        <div wire:ignore.self class="modal fade" id="recoverModal" tabindex="-1" aria-labelledby="recoverModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="recoverModalLabel">Recover Password</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form wire:submit.prevent="save_recover_password({{$person['id']}},'recoverModaltoggler')">
+                            <h5 class="m-3">@if($person['id']) {{$person['first_name'].' '.$person['middle_name'].' '.$person['last_name'].' '.$person['suffix']}} @endif</h5>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Current Password</label>
+                                <input type="password" class="form-control" required wire:model="person.current_password">
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" required wire:model="person.password">
+                            </div>
+                            <div class="mb-3">
+                                <label for="cpassword" class="form-label">Confirm Password</label>
+                                <input type="password" class="form-control"required wire:model="person.cpassword">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Change</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div wire:ignore.self class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md modal-dialog-centered">
                 <div class="modal-content">
@@ -275,8 +308,6 @@
                 </div>
             </div>
         </div>
-
-        
 
     </div>
 </div>
