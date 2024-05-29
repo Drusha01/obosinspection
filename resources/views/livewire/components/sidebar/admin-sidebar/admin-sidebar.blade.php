@@ -16,7 +16,7 @@
                 <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Establishmentsdropdown" aria-expanded="false" aria-controls="Establishmentsdropdown">
                     <span class="d-flex justify-content-between align-items-center">
                         <span>
-                            <i class="fas fa-fw fa-circle-user"></i>
+                            <i class="fas fa-fw fa-building"></i>
                             Establishments 
                         </span>
                         <i class="fas fa-chevron-down"></i> 
@@ -32,7 +32,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-establishments-businesses') }}">
-                                <i class="fas fa-fw fa-business-time"></i>
+                                <i class="fas fa-fw fa-briefcase"></i>
                                 <span>Businesses</span>
                             </a>
                         </li>
@@ -56,7 +56,7 @@
                 <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Equipmentsdropdown" aria-expanded="false" aria-controls="Equipmentsdropdown">
                     <span class="d-flex justify-content-between align-items-center">
                         <span>
-                            <i class="fas fa-fw fa-circle-user"></i>
+                            <i class="fas fa-fw fa-tools"></i>
                             Equipments
                         </span>
                         <i class="fas fa-chevron-down"></i> 
@@ -66,13 +66,13 @@
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-equipments-categories') }}">
-                                <i class="fa-solid fa-layer-group"></i>
+                                <i class="fas fa-fw fa-th-list"></i>
                                 <span>Category</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-equipments-items') }}">
-                                <i class="fa-solid fa-screwdriver-wrench"></i>
+                                <i class="fas fa-fw fa-cogs"></i>
                                 <span>Items</span>
                             </a>
                         </li>
@@ -84,7 +84,7 @@
                 <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Billingsdropdown" aria-expanded="false" aria-controls="Billingsdropdown">
                     <span class="d-flex justify-content-between align-items-center">
                         <span>
-                            <i class="fas fa-fw fa-circle-user"></i>
+                            <i class="fas fa-fw fa-file-invoice-dollar"></i>
                             Billings
                         </span>
                         <i class="fas fa-chevron-down"></i> 
@@ -94,37 +94,37 @@
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-billings-equipments-billings') }}">
-                                <i class="fa-solid fa-layer-group"></i>
+                                <i class="fas fa-fw fa-toolbox"></i>
                                 <span>Equipments billings</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-billings-equipments-billing-sections') }}">
-                                <i class="fa-solid fa-layer-group"></i>
+                                <i class="fas fa-fw fa-folder"></i>
                                 <span>Equipments billing sections</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-billings-building-billings') }}">
-                                <i class="fa-solid fa-screwdriver-wrench"></i>
+                                <i class="fas fa-fw fa-building"></i>
                                 <span>Building billings</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-billings-building-billing-sections') }}">
-                                <i class="fa-solid fa-screwdriver-wrench"></i>
+                                <i class="fas fa-fw fa-columns"></i>
                                 <span>Building billing sections</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-billings-signage-billings') }}">
-                                <i class="fa fa-credit-card-alt"></i>
+                                <i class="fas fa-fw fa-sign"></i>
                                 <span>Signage billings</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-billings-sanitary-billings') }}">
-                                <i class="fa fa-credit-card-alt"></i>
+                                <i class="fas fa-fw fa-bath"></i>
                                 <span>Sanitary billings</span>
                             </a>
                         </li>
@@ -136,7 +136,7 @@
                 <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Inspectionsdropdown" aria-expanded="false" aria-controls="Inspectionsdropdown">
                     <span class="d-flex justify-content-between align-items-center">
                         <span>
-                            <i class="fas fa-fw fa-circle-user"></i>
+                            <i class="fas fa-fw fa-clipboard-check"></i>
                             Inspections
                         </span>
                         <i class="fas fa-chevron-down"></i> 
@@ -146,19 +146,19 @@
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-inspections-inspection-schedules') }}">
-                                <i class="fa-solid fa-layer-group"></i>
+                                <i class="fas fa-fw fa-calendar-check"></i>
                                 <span>Inspection schedules</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-inspections-completed-inspections') }}">
-                                <i class="fa-solid fa-screwdriver-wrench"></i>
+                                <i class="fas fa-fw fa-check-circle"></i>
                                 <span>Completed inspections</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/inspection/billing/">
-                                <i class="fa fa-credit-card-alt"></i>
+                                <i class="fas fa-fw fa-certificate"></i>
                                 <span>Certificates here???</span>
                             </a>
                         </li>
@@ -170,7 +170,7 @@
                 <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Userdropdown" aria-expanded="false" aria-controls="Userdropdown">
                     <span class="d-flex justify-content-between align-items-center">
                         <span>
-                            <i class="fas fa-fw fa-circle-user"></i>
+                            <i class="fas fa-fw fa-users"></i>
                             User
                         </span>
                         <i class="fas fa-chevron-down"></i> 
@@ -180,7 +180,7 @@
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-users-administrators') }}">
-                                <i class="fas fa-fw fa-user-tie"></i>
+                                <i class="fas fa-fw fa-user-shield"></i>
                                 <span>Administrator</span>
                             </a>
                         </li>
@@ -192,13 +192,13 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-users-inspectors') }}">
-                                <i class="fas fa-fw fa-user"></i>
+                                <i class="fas fa-fw fa-user-tie"></i>
                                 <span>Inspector</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-users-group-inspectors') }}">
-                                <i class="fas fa-fw fa-user"></i>
+                                <i class="fas fa-fw fa-users"></i>
                                 <span>Inspector Groups</span>
                             </a>
                         </li>
