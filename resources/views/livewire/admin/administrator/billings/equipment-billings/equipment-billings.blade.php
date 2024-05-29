@@ -5,7 +5,7 @@
                 <h1 class="h3 mb-0 text-gray-800">{{$title}}</h1>
                 <div class="p-0 m-0" wire:click="add('addModaltoggler')">
                     <button type="button" class="btn btn-primary">
-                        Add Building billing 
+                        Add Equipment billing 
                     </button>
                 </div>
             </div>
@@ -87,14 +87,14 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addModalLabel">Add Building billing </h5>
+                        <h5 class="modal-title" id="addModalLabel">Add Equipment billing </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form wire:submit.prevent="save_add('addModaltoggler')">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Category</label>
-                                <select class="form-select" aria-label="Default select example" wire:model="equipment_billing.category_id">
+                                <select class="form-select" aria-label="Default select example" required wire:model.live="equipment_billing.category_id">
                                     <option selected value="">Select Category</option>
                                     @foreach($categories as $key => $value)
                                         <option value="{{$value->id}}">{{$value->name}}</option>
@@ -103,7 +103,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="name" class="form-label">Section</label>
-                                <select class="form-select" aria-label="Default select example" wire:model="equipment_billing.section_id">
+                                <select class="form-select" aria-label="Default select example" required wire:model="equipment_billing.section_id">
                                     <option selected value="">Select Section</option>
                                     @foreach($equipment_billing_sections as $key => $value)
                                         <option value="{{$value->id}}">{{$value->name}}</option>
@@ -130,14 +130,14 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel">Edit Building billing </h5>
+                        <h5 class="modal-title" id="editModalLabel">Edit Equipment billing </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form wire:submit.prevent="save_edit({{$equipment_billing['id']}},'editModaltoggler')">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Category</label>
-                                <select class="form-select" aria-label="Default select example" wire:model="equipment_billing.category_id">
+                                <select class="form-select" aria-label="Default select example" required wire:model.live="equipment_billing.category_id">
                                     <option selected value="">Select Category</option>
                                     @foreach($categories as $key => $value)
                                         <option value="{{$value->id}}">{{$value->name}}</option>
@@ -146,7 +146,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="name" class="form-label">Section</label>
-                                <select class="form-select" aria-label="Default select example" wire:model="equipment_billing.section_id">
+                                <select class="form-select" aria-label="Default select example"  required wire:model="equipment_billing.section_id">
                                     <option selected value="">Select Section</option>
                                     @foreach($equipment_billing_sections as $key => $value)
                                         <option value="{{$value->id}}">{{$value->name}}</option>
@@ -173,7 +173,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="deactivateModalLabel">Deactivate Building billing </h5>
+                        <h5 class="modal-title" id="deactivateModalLabel">Deactivate Equipment billing </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -191,7 +191,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="activateModalLabel">Activate Building billing </h5>
+                        <h5 class="modal-title" id="activateModalLabel">Activate Equipment billing </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">

@@ -101,7 +101,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-billings-equipments-billing-sections') }}">
                                 <i class="fas fa-fw fa-folder"></i>
-                                <span>Equipments billing sections</span>
+                                <span>Equipment billing sections</span>
                             </a>
                         </li>
                         <li class="nav-item">

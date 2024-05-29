@@ -31,7 +31,7 @@ class InspectorGroups extends Component
     ];
     public $unassigned_inspectors;
     public $all_inspectors;
-    public $designations;
+    public $designations = [];
     public function mount(){
 
     }

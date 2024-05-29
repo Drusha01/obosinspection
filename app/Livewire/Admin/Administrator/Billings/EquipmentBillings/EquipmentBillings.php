@@ -32,15 +32,11 @@ class EquipmentBillings extends Component
         'is_active' => NULL,
     ];
 
-    public $equipment_billing_sections;
     public $categories;
 
 
     public function mount(){
-        $this->equipment_billing_sections = DB::table('equipment_billing_sections')
-            ->where('is_active','=',1)
-            ->get()
-            ->toArray();
+       
         $this->categories = DB::table('categories')
             ->where('is_active','=',1)
             ->get()
@@ -48,6 +44,18 @@ class EquipmentBillings extends Component
     }
     public function render()
     {
+        // dd($this->equipment_billing['category_id']);
+        
+        if($this->equipment_billing['category_id']){
+            $equipment_billing_sections = DB::table('equipment_billing_sections')
+                ->where('is_active','=',1)
+                ->where('category_id','=',$this->equipment_billing['category_id'])
+                ->get()
+                ->toArray();
+        }else{
+            $equipment_billing_sections = [];
+        }
+        
         $table_data = DB::table('equipment_billings as eb')
             ->select(
                 'eb.id' ,
@@ -64,7 +72,8 @@ class EquipmentBillings extends Component
             ->orderBy('eb.id','desc')
             ->paginate(10);
         return view('livewire.admin.administrator.billings.equipment-billings.equipment-billings',[
-            'table_data'=>$table_data
+            'table_data'=>$table_data,
+            'equipment_billing_sections'=>$equipment_billing_sections
         ])
         ->layout('components.layouts.admin',[
             'title'=>$this->title]);

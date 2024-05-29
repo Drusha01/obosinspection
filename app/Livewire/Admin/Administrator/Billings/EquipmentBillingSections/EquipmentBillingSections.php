@@ -19,18 +19,27 @@ class EquipmentBillingSections extends Component
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
         ['column_name'=> 'name','active'=> true,'name'=>'Name'],
+        ['column_name'=> 'category_name','active'=> true,'name'=>'Category name'],
         ['column_name'=> 'id','active'=> true,'name'=>'Action'],
     ];
     public $equipment_billing_section = [
         'id'=> NULL,
         'name'=>NULL,
+        'category_id'=>NULL,
         'is_active'=>NULL,
     ];
 
 
     public function render()
     {
-        $table_data = DB::table('equipment_billing_sections')
+        $table_data = DB::table('equipment_billing_sections as ebs')
+            ->select(
+                'ebs.id',
+                'ebs.name',
+                'ebs.category_id',
+                'c.name as category_name'
+            )
+            ->join('categories as c','c.id','ebs.category_id')
             ->orderBy('id','desc')
             ->paginate(10);
         return view('livewire.admin.administrator.billings.equipment-billing-sections.equipment-billing-sections',[
