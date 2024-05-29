@@ -32,6 +32,12 @@ return new class extends Migration
             NOW(),
             NOW()
         );');
+        DB::statement('INSERT INTO person_types VALUES(
+            NULL,
+            "Administrator",
+            NOW(),
+            NOW()
+        );');
     }
 
     /**

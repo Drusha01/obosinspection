@@ -5,7 +5,7 @@
                     <h1 class="h3 mb-0 p-0  text-black" >{{$title}}</h1>
                     <div class="p-0 m-0" >
                         <button type="button" class="btn btn-primary" wire:click="add('addModaltoggler')">
-                            Add Inspector Group
+                            Add Work roles
                         </button>
                     </div>
             </div>
@@ -16,8 +16,6 @@
                             @foreach($filter as $filter_key => $filter_value)
                                 @if($filter_value['name'] == 'Action')
                                     <th scope="col" class="text-center">{{$filter_value['name']}}</th>
-                                @elseif($filter_value['name'] == 'Designated Barangays')
-                                <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                 @else 
                                     <th scope="col">{{$filter_value['name']}}</th>
                                 @endif
@@ -30,15 +28,6 @@
                                 @foreach($filter as $filter_key => $filter_value)
                                     @if($filter_value['name'] == '#' && $filter_value['active'])
                                         <th class="align-middle">{{($table_data->currentPage()-1)*$table_data->perPage()+$key+1 }}</th>
-                                    @elseif($filter_value['name'] == 'Designated Barangays' && $filter_value['active'])
-                                        <td class="text-center align-middle">
-                                            <button class="btn btn-outline-primary" wire:click="add_designation({{$value->id}},'addDesignationModaltoggler')">
-                                                Add Designation
-                                            </button>
-                                            <button class="btn btn-outline-primary" wire:click="viewBarangays({{$value->id}},'editModaltoggler')">
-                                                View
-                                            </button>
-                                        </td>
                                     @elseif($filter_value['name'] == 'Action' && $filter_value['active'])
                                         <td class="text-center align-middle">
                                             @if($value->is_active)
@@ -54,8 +43,12 @@
                                                 Edit
                                             </button>
                                         </td>
-                                    @elseif ($filter_value['name'] == 'Suffix'  && $filter_value['active'])
-                                        <td class="align-middle">{{ $value->suffix }}</td>
+                                    @elseif ($filter_value['name'] == 'Image'  && $filter_value['active'])
+                                        <td class="text-center align-middle">
+                                            <a href="{{asset('storage/content/profile/'.$value->{$filter_value['column_name']})}}" target="blank">
+                                                <img class="img-fluid"src="{{asset('storage/content/profile/'.$value->{$filter_value['column_name']})}}" alt="" style="max-height:50px;max-width:50px; ">
+                                            </a>
+                                        </td>
                                     @else
                                         @if($filter_value['active'])
                                             <td class="align-middle">{{ $value->{$filter_value['column_name']} }}</td>
@@ -91,32 +84,20 @@
         <button type="button" data-bs-toggle="modal" data-bs-target="#deactivateModal" id="deactivateModaltoggler" style="display:none;"></button>
         <button type="button" data-bs-toggle="modal" data-bs-target="#activateModal" id="activateModaltoggler" style="display:none;"></button>
 
-        <button type="button" data-bs-toggle="modal" data-bs-target="#addDesignationModal" id="addDesignationModaltoggler" style="display:none;"></button>
-        
-
         
         
         <div wire:ignore.self class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addModalLabel">Add Inspector Group</h5>
+                        <h5 class="modal-title" id="addModalLabel">Add Work roles</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form wire:submit.prevent="save_add('addModaltoggler')">
                             <div class="mb-3">
-                                <label for="username" class="form-label">Group name</label>
-                                <input type="text" class="form-control" required wire:model="inspector_team.name">
-                            </div>
-                            <div class="mb-3">
-                                <label for="brgy_id" class="form-label">Team Leader</label>
-                                <select class="form-select" aria-label="Select Barangay" required wire:model="inspector_team.team_leader_id">
-                                    <option value="">Select Team Leader</option>
-                                    @foreach($unassigned_inspectors as $key => $value)
-                                        <option value="{{$value->id}}">{{'( '.$value->first_name.' ) '.$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix}}</option>
-                                    @endforeach
-                                </select>
+                                <label for="name" class="form-label">Work Role name</label>
+                                <input type="text" class="form-control" required wire:model="work_role.name">
                             </div>
                             <button type="submit" class="btn btn-primary">Add</button>
                         </form>
@@ -124,52 +105,20 @@
                 </div>
             </div>
         </div>
-
         <div wire:ignore.self class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel">Edit Inspector Group</h5>
+                        <h5 class="modal-title" id="editModalLabel">Edit Work roles</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form wire:submit.prevent="save_edit({{$inspector_team['id']}},'editModaltoggler')">
+                        <form wire:submit.prevent="save_edit({{$work_role['id']}},'editModaltoggler')">
                             <div class="mb-3">
-                                <label for="username" class="form-label">Group name</label>
-                                <input type="text" class="form-control" required wire:model="inspector_team.name">
-                            </div>
-                            <div class="mb-3">
-                                <label for="brgy_id" class="form-label">Team Leader</label>
-                                <select class="form-select" aria-label="Select Barangay" required wire:model="inspector_team.team_leader_id">
-                                    <option value="">Select Team Leader</option>
-                                    @foreach($all_inspectors as $key => $value)
-                                        @if($value->team_leader_id && $inspector_team['team_leader_id'] ==  $value->team_leader_id)
-                                            <option selected value="{{$value->id}}">{{'( '.$value->first_name.' ) '.$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix}}</option>
-                                        @elseif(!isset($value->team_leader_id))
-                                            <option value="{{$value->id}}">{{'( '.$value->first_name.' ) '.$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix}}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
+                                <label for="name" class="form-label">Work Role name</label>
+                                <input type="text" class="form-control" required wire:model="work_role.name">
                             </div>
                             <button type="submit" class="btn btn-primary">Save</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div wire:ignore.self class="modal fade" id="addDesignationModal" tabindex="-1" aria-labelledby="addDesignationModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-md modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addDesignationModalLabel">Add Designation</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form wire:submit.prevent="save_add('addModaltoggler')">
-                            @foreach($designations as $key =>$value)
-
-                            @endforeach
                         </form>
                     </div>
                 </div>
@@ -181,12 +130,12 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="deactivateModalLabel">Deactivate Inspector Group </h5>
+                        <h5 class="modal-title" id="deactivateModalLabel">Deactivate Work roles </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form wire:submit.prevent="save_deactivate({{$inspector_team['id']}},'deactivateModaltoggler')">
-                            <div>Are you sure you want to deactivate this inspector?</div>
+                        <form wire:submit.prevent="save_deactivate({{$work_role['id']}},'deactivateModaltoggler')">
+                            <div>Are you sure you want to deactivate this work roles?</div>
                             <button type="submit" class="btn btn-danger">Deactivate</button>
                         </form>
                     </div>
@@ -199,12 +148,12 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="activateModalLabel">Activate Inspector Group </h5>
+                        <h5 class="modal-title" id="activateModalLabel">Activate Work roles </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form wire:submit.prevent="save_activate({{$inspector_team['id']}},'activateModaltoggler')">
-                            <div>Are you sure you want to activate this inspector?</div>
+                        <form wire:submit.prevent="save_activate({{$work_role['id']}},'activateModaltoggler')">
+                            <div>Are you sure you want to activate this work roles?</div>
                             <button type="submit" class="btn btn-warning">Activate</button>
                         </form>
                     </div>

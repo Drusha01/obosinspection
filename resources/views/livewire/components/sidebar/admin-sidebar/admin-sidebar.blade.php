@@ -101,7 +101,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-billings-equipments-billing-sections') }}">
                                 <i class="fa-solid fa-layer-group"></i>
-                                <span>Equipments billing sections</span>
+                                <span>Equipment billing sections</span>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -184,12 +184,12 @@
                                 <span>Administrator</span>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-users-team-leader-inspectors') }}">
                                 <i class="fas fa-fw fa-users"></i>
                                 <span>Team Leader Inspector</span>
                             </a>
-                        </li>
+                        </li> -->
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-users-inspectors') }}">
                                 <i class="fas fa-fw fa-user"></i>
@@ -200,6 +200,12 @@
                             <a class="nav-link" href="{{ route('administrator-users-group-inspectors') }}">
                                 <i class="fas fa-fw fa-user"></i>
                                 <span>Inspector Groups</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('administrator-users-work-roles') }}">
+                                <i class="fas fa-fw fa-user"></i>
+                                <span>Work Roles</span>
                             </a>
                         </li>
                     </ul>

@@ -62,6 +62,7 @@ use App\Livewire\Admin\Administrator\Users\Administrator\Administrator as Admini
 use App\Livewire\Admin\Administrator\Users\InspectorGroups\InspectorGroups as AdministratorInspectorGroups;
 use App\Livewire\Admin\Administrator\Users\Inspectors\Inspectors as AdministratorInspectors;
 use App\Livewire\Admin\Administrator\Users\TeamLeaderInspector\TeamLeaderInspector as AdministratorTeamLeaderInspector;
+use App\Livewire\Admin\Administrator\Users\WorkRoles\WorkRoles as AdministratorWorkRoles;
 use App\Livewire\Admin\Administrator\Violations\Violations as AdministratorViolations;
 
 
@@ -148,6 +149,8 @@ Route::middleware([Authenticated::class,IsValid::class,IsAdministrator::class])-
             Route::get('/team-leader-inspectors', AdministratorTeamLeaderInspector::class)->name('administrator-users-team-leader-inspectors');
             Route::get('/inspectors', AdministratorInspectors::class)->name('administrator-users-inspectors');
             Route::get('/group-inspectors', AdministratorInspectorGroups::class)->name('administrator-users-group-inspectors');
+            Route::get('/work-roles', AdministratorWorkRoles::class)->name('administrator-users-work-roles');
+            
         });
         Route::get('/violations', AdministratorViolations::class)->name('administrator-violations');
         Route::get('/barangay-locations', AdministratorBarangayLocations::class)->name('administrator-barangay-locations');

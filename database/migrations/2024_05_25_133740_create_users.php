@@ -29,7 +29,34 @@ DB::statement('CREATE INDEX idx_users_password ON users(password(10));');
 
 DB::statement("INSERT INTO `users` (`id`, `username`, `password`, `role_id`, `person_id`, `is_active`, `date_created`, `date_updated`) VALUES
 (1, 'administrator', '$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO', 3, 1, 1, '2024-05-26 19:00:11', '2024-05-26 19:00:11');");
+DB::statement("INSERT INTO `users` VALUES 
+(NULL,'DianaLopez', '$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,2,1,NOW(),NOW()),
+(NULL,'JonhdeeVillanueva','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,3,1,NOW(),NOW()),
+(NULL,'PolicarpioSobretodo','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,4,1,NOW(),NOW()),
 
+(NULL,'RodolfoErnesto','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,5,1,NOW(),NOW()),
+(NULL,'EliayVinson','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,6,1,NOW(),NOW()),
+(NULL,'DandyToyogon','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,7,1,NOW(),NOW()),
+
+(NULL,'AlgaderPangolima','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,8,1,NOW(),NOW()),
+(NULL,'IvanVillafuerte','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,9,1,NOW(),NOW()),
+(NULL,'JeanMalaran','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,1,1,NOW(),NOW()),
+
+(NULL,'TeejieBenavides','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,10,1,NOW(),NOW()),
+(NULL,'AdelbertNeis','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,11,1,NOW(),NOW()),
+(NULL,'Allen MaeValiente','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,12,1,NOW(),NOW()),
+
+(NULL,'MarrionRosales','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,13,1,NOW(),NOW()),
+(NULL,'VizzleBaliguat','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,14,1,NOW(),NOW()),
+(NULL,'JohnLargo','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,15,1,NOW(),NOW()),
+
+(NULL,'JorixGalido','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,16,1,NOW(),NOW()),
+(NULL,'AmielFernandez','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,17,1,NOW(),NOW()),
+(NULL,'AlbarSaway','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,18,1,NOW(),NOW()),
+
+(NULL,'JamesRegalado','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,19,1,NOW(),NOW()),
+(NULL,'JoanneDutaro','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,20,1,NOW(),NOW())
+");
 
 
     }
