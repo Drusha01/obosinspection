@@ -184,12 +184,12 @@
                 </a>
                 <div id="Userdropdown" class="collapse">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-users-administrators') }}">
                                 <i class="fas fa-fw fa-user-shield"></i>
                                 <span>Administrator</span>
                             </a>
-                        </li>
+                        </li> -->
                         <!-- <li class="nav-item">
                             <a class="nav-link" href="{{ route('administrator-users-team-leader-inspectors') }}">
                                 <i class="fas fa-fw fa-users"></i>
