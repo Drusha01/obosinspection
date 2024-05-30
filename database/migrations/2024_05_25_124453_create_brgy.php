@@ -20,10 +20,11 @@ return new class extends Migration
             `regCode` varchar(255) DEFAULT NULL,
             `provCode` varchar(255) DEFAULT NULL,
             `citymunCode` varchar(255) DEFAULT NULL,
+            `is_active` BOOL DEFAULT 1,
             PRIMARY KEY (`id`)
         );");
 
-        DB::statement("INSERT INTO `brgy` VALUES 
+        DB::statement("INSERT INTO `brgy`(`id`,`brgyCode`,`brgyDesc`,`regCode`,`provCode`,`citymunCode`) VALUES 
 ('1', '012801001', 'Adams (Pob.)', '01', '0128', '012801')
 ,('2', '012802001', 'Bani', '01', '0128', '012802')
 ,('3', '012802002', 'Buyon', '01', '0128', '012802')

@@ -9,34 +9,38 @@
             </div>
             <div class="row">
                 <div class="col-md-4 text-center">
-                    <img src="https://via.placeholder.com/150" class="img-thumbnail rounded-circle" alt="Profile Picture">
+                    <img src="{{asset('storage/content/profile/'.$user_info['img_url'])}}" class="img-thumbnail rounded-circle" alt="Profile Picture">
                 </div>
                 <div class="col-md-8">
                     <table class="table table-borderless">
                         <tbody>
                             <tr>
                                 <th>First Name</th>
-                                <td>kezoru</td>
+                                <td>{{$user_info['first_name']}}</td>
                             </tr>
                             <tr>
                                 <th>Middle Name</th>
-                                <td>ikari</td>
+                                <td>{{$user_info['middle_name']}}</td>
                             </tr>
                             <tr>
                                 <th>Family Name</th>
-                                <td>sai</td>
+                                <td>{{$user_info['last_name']}}</td>
+                            </tr>
+                            <tr>
+                                <th>Suffix</th>
+                                <td>{{$user_info['suffix']}}</td>
                             </tr>
                             <tr>
                                 <th>Email</th>
-                                <td>kezoru@gmail.com</td>
+                                <td>{{$user_info['email']}}</td>
                             </tr>
                             <tr>
                                 <th>Contact Number</th>
-                                <td>+1234567890</td>
+                                <td>{{$user_info['contact_number']}}</td>
                             </tr>
                             <tr>
                                 <th>Role</th>
-                                <td>Team-leader</td>
+                                <td>{{$user_info['role_name']}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -46,7 +50,7 @@
     </div>
 
     <!-- Edit Profile Modal -->
-    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div wire:ignore.self class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
@@ -54,30 +58,30 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/update-profile" method="post">
+                    <form wire:submit.prevent="save_edit()">
                         <div class="mb-3">
                             <label for="editFirstName" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="editFirstName" name="firstName" value="John">
+                            <input type="text" class="form-control" required wire:model="user_info.first_name">
                         </div>
                         <div class="mb-3">
                             <label for="editMiddleName" class="form-label">Middle Name</label>
-                            <input type="text" class="form-control" id="editMiddleName" name="middleName" value="Doe">
+                            <input type="text" class="form-control" wire:model="user_info.middle_name">
                         </div>
                         <div class="mb-3">
                             <label for="editFamilyName" class="form-label">Family Name</label>
-                            <input type="text" class="form-control" id="editFamilyName" name="familyName" value="Smith">
+                            <input type="text" class="form-control" wire:model="user_info.last_name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editFamilyName" class="form-label">Suffix</label>
+                            <input type="text" class="form-control" wire:model="user_info.suffix">
                         </div>
                         <div class="mb-3">
                             <label for="editEmail" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="editEmail" name="email" value="john.doe@example.com">
+                            <input type="email" class="form-control" disabled wire:model="user_info.email">
                         </div>
                         <div class="mb-3">
                             <label for="editContactNumber" class="form-label">Contact Number</label>
-                            <input type="text" class="form-control" id="editContactNumber" name="contactNumber" value="+1234567890">
-                        </div>
-                        <div class="mb-3">
-                            <label for="editRole" class="form-label">Role</label>
-                            <input type="text" class="form-control" id="editRole" name="role" value="Admin">
+                            <input type="text" class="form-control" wire:model="user_info.contact_number">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

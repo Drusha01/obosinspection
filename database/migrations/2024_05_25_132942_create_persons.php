@@ -37,7 +37,7 @@ return new class extends Migration
         DB::statement('CREATE INDEX idx_persons_fullname ON persons(first_name(10),middle_name(10),last_name(10));');
 
         DB::statement('INSERT INTO `persons` VALUES 
-        (NULL,3,34717,2,"Admin","","Trator",NULL,"09265827342","drusha01@gmail.com","default.png",1,NOW(),NOW());');
+        (NULL,3,34717,2,"Admin","","Trator",NULL,"09265827342","DavePanizal@gmail.com","default.png",1,NOW(),NOW());');
 
         DB::statement('INSERT INTO `persons` VALUES 
         (NULL,1,34717,3,"Diana Jane","G.","Lopez",NULL,"09265827342","DianajaneLopez@gmail.com","default.png",1,NOW(),NOW()),
