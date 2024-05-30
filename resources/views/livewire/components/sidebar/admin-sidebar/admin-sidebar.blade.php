@@ -157,13 +157,19 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/inspection/billing/">
-                                <i class="fas fa-fw fa-certificate"></i>
-                                <span>Certificates here???</span>
+                            <a class="nav-link" href="{{ route('administrator-inspections-deleted-inspections') }}">
+                                <i class="fas fa-fw fa-times-circle"></i>
+                                <span>Deleted inspections</span>
                             </a>
                         </li>
                     </ul>
                 </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('administrator-certifications') }}">
+                    <i class="fa-solid fa-fw fa-triangle-exclamation"></i>
+                    <span>Certificates</span>
+                </a>
             </li>
 
             <li class="nav-item">

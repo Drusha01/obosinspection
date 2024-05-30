@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Admin\Administrator\Inspections\CompletedInspections;
+namespace App\Livewire\Admin\Administrator\Inspections\DeletedInspections;
 
 use Livewire\Component;
 use Illuminate\Http\Request;
@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 
-class CompletedInspections extends Component
+class DeletedInspections extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $title = "Completed inspections";
+    public $title = "Deleted Inspections";
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
         ['column_name'=> 'img_url','active'=> true,'name'=>'Image'],
@@ -81,10 +81,10 @@ class CompletedInspections extends Component
             ->join('brgy as brg','brg.id','b.brgy_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-            ->where('st.name','=','Completed')
+            ->where('st.name','=','Deleted')
             ->orderBy('id','desc')
             ->paginate(10);
-        return view('livewire.admin.administrator.inspections.completed-inspections.completed-inspections',[
+        return view('livewire.admin.administrator.inspections.deleted-inspections.deleted-inspections',[
             'table_data'=>$table_data
         ])
         ->layout('components.layouts.admin',[

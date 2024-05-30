@@ -365,7 +365,7 @@ class Businesses extends Component
         $business['img_url'] = 'default.png';
         if($this->business['img_url']){
             if($this->business['img_url']){
-                $business['img_url'] = self::save_image($this->business['img_url'],'profile','businesses','img_url');
+                $business['img_url'] = self::save_image($this->business['img_url'],'business','businesses','img_url');
                 if($business['img_url'] == 0){
                     return;
                 }
@@ -658,7 +658,7 @@ class Businesses extends Component
         $business['img_url'] = $edit->img_url;
         if($this->business['img_url']){
             if($this->business['img_url']){
-                $business['img_url'] = self::save_image($this->business['img_url'],'profile','businesses','img_url');
+                $business['img_url'] = self::save_image($this->business['img_url'],'business','businesses','img_url');
                 if($business['img_url'] == 0){
                     return;
                 }

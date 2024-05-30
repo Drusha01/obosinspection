@@ -68,11 +68,11 @@ class Inspectors extends Component
                 'p.first_name',
                 'p.middle_name',
                 'p.last_name',
-                'wr.id as work_role_id',
-                'wr.name as work_role_name',
                 'p.img_url',
                 "u.date_created",
                 "u.date_updated",
+                'wr.id as work_role_id',
+                'wr.name as work_role_name',
                 )
             ->join('persons as p','p.id','u.person_id')
             ->join('person_types as pt', 'pt.id','p.person_type_id')

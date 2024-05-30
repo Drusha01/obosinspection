@@ -15,6 +15,7 @@ class InspectorGroups extends Component
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
         ['column_name'=> 'name','active'=> true,'name'=>'Group Name'],
+        ['column_name'=> 'username','active'=> true,'name'=>'Username'],
         ['column_name'=> 'first_name','active'=> true,'name'=>'Firstname'],
         ['column_name'=> 'middle_name','active'=> true,'name'=>'Middlename'],
         ['column_name'=> 'last_name','active'=> true,'name'=>'Lastname'],
@@ -81,6 +82,7 @@ class InspectorGroups extends Component
             ->toArray();
         $table_data = DB::table('inspector_teams as it')
             ->select(
+                'u.username',
                 'it.id',
                 'it.name',
                 'it.team_leader_id',
@@ -94,6 +96,7 @@ class InspectorGroups extends Component
                 )
             ->join('persons as p','p.id','it.team_leader_id')
             ->join('person_types as pt', 'pt.id','p.person_type_id')
+            ->join('users as u','u.person_id','p.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
             ->orderBy('id','desc')
             ->paginate(10);

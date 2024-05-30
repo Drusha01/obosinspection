@@ -50,12 +50,14 @@ use App\Livewire\Admin\Administrator\Billings\EquipmentBillings\EquipmentBilling
 use App\Livewire\Admin\Administrator\Billings\EquipmentBillingSections\EquipmentBillingSections as AdministratorEquipmentBillingSections;
 use App\Livewire\Admin\Administrator\Billings\SanitaryBillings\SanitaryBillings as AdministratorSanitaryBillings;
 use App\Livewire\Admin\Administrator\Billings\SignageBillings\SignageBillings as AdministratorSignageBillings;
+use App\Livewire\Admin\Administrator\Certifications\Certification\Certification as AdministratorCertification;
 use App\Livewire\Admin\Administrator\Dashboard\Dashboard  as AdministratorDashboard;
 use App\Livewire\Admin\Administrator\Equipments\Category\Category as AdministratorCategory;
 use App\Livewire\Admin\Administrator\Equipments\Items\Items as AdministratorItems;
 use App\Livewire\Admin\Administrator\Establishments\Businesses\Businesses as AdministratorBusinesses;
 use App\Livewire\Admin\Administrator\Establishments\Owner\Owner as AdministratorOwner;
 use App\Livewire\Admin\Administrator\Inspections\CompletedInspections\CompletedInspections as AdministratorCompletedInspections;
+use App\Livewire\Admin\Administrator\Inspections\DeletedInspections\DeletedInspections as AdministratorDeletedInspections;
 use App\Livewire\Admin\Administrator\Inspections\InspectionSchedules\InspectionSchedules as AdministratorInspectionSchedules;
 use App\Livewire\Admin\Administrator\Profile\Profile as AdministratorProfile;
 use App\Livewire\Admin\Administrator\Users\Administrator\Administrator as AdministratorAdministrator;
@@ -142,6 +144,7 @@ Route::middleware([Authenticated::class,IsValid::class,IsAdministrator::class])-
         });
         Route::prefix('inspections')->group(function () {
             Route::get('/inspection-schedules', AdministratorInspectionSchedules::class)->name('administrator-inspections-inspection-schedules');
+            Route::get('/deleted-inspections', AdministratorDeletedInspections::class)->name('administrator-inspections-deleted-inspections');
             Route::get('/completed-inspections', AdministratorCompletedInspections::class)->name('administrator-inspections-completed-inspections');
         });
         Route::prefix('users')->group(function () {
@@ -152,6 +155,7 @@ Route::middleware([Authenticated::class,IsValid::class,IsAdministrator::class])-
             Route::get('/work-roles', AdministratorWorkRoles::class)->name('administrator-users-work-roles');
             
         });
+        Route::get('/certifications', AdministratorCertification::class)->name('administrator-certifications');
         Route::get('/violations', AdministratorViolations::class)->name('administrator-violations');
         Route::get('/barangay-locations', AdministratorBarangayLocations::class)->name('administrator-barangay-locations');
         Route::get('/activity-logs', AdministratorActivityLogs::class)->name('administrator-activity-logs');
