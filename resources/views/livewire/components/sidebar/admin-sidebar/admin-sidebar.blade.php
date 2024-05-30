@@ -306,13 +306,19 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/inspection/billing/">
-                                <i class="fa fa-credit-card-alt"></i>
-                                <span>Certificates here???</span>
+                            <a class="nav-link" href="{{ route('inspector-team-leader-inspections-deleted-inspections') }}">
+                                <i class="fas fa-fw fa-times-circle"></i>
+                                <span>Deleted inspections</span>
                             </a>
                         </li>
                     </ul>
                 </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('administrator-certifications') }}">
+                    <i class="fa-solid fa-fw fa-triangle-exclamation"></i>
+                    <span>Certificates</span>
+                </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('inspector-team-leader-profile') }}">
@@ -386,13 +392,19 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/inspection/billing/">
-                                <i class="fa fa-credit-card-alt"></i>
-                                <span>Certificates here???</span>
+                            <a class="nav-link" href="{{ route('inspector-inspections-deleted-inspections') }}">
+                                <i class="fas fa-fw fa-times-circle"></i>
+                                <span>Deleted inspections</span>
                             </a>
                         </li>
                     </ul>
                 </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('administrator-certifications') }}">
+                    <i class="fa-solid fa-fw fa-triangle-exclamation"></i>
+                    <span>Certificates</span>
+                </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('inspector-profile') }}">

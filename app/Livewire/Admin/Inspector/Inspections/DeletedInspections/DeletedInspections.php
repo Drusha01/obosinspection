@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Admin\InspectorTeamLeader\Inspections\CompletedInspections;
+namespace App\Livewire\Admin\Inspector\Inspections\DeletedInspections;
 
 use Livewire\Component;
 use Illuminate\Http\Request;
@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 
-class CompletedInspections extends Component
+class DeletedInspections extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $title = "Completed inspections";
+    public $title = "Deleted Inspections";
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
         ['column_name'=> 'img_url','active'=> true,'name'=>'Image'],
@@ -21,7 +21,6 @@ class CompletedInspections extends Component
         ['column_name'=> 'barangay','active'=> true,'name'=>'Brgy'],
         ['column_name'=> 'business_type_name','active'=> true,'name'=>'Business Type'],
         ['column_name'=> 'schedule_date','active'=> true,'name'=>'Schedule'],
-        ['column_name'=> 'id','active'=> true,'name'=>'Generate'],
         ['column_name'=> 'id','active'=> true,'name'=>'Inspection Details'],
     ];
     public $issue_inspection = [
@@ -81,18 +80,18 @@ class CompletedInspections extends Component
                 'i.schedule_date',
 
             )
-            ->join('inspection_inspector_team_leaders as iitl','iitl.inspection_id','i.id')
+            ->join('inspection_inspector_members as iim','iim.inspection_id','i.id')
             ->join('inspection_status as st','st.id','i.status_id')
             ->join('businesses as b','b.id','i.business_id')
             ->join('persons as p','p.id','b.owner_id')
             ->join('brgy as brg','brg.id','b.brgy_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-            ->where('iitl.person_id','=',$person->person_id)
-            ->where('st.name','=','Completed')
+            ->where('iim.person_id','=',$person->person_id)
+            ->where('st.name','=','Deleted')
             ->orderBy('id','desc')
             ->paginate(10);
-        return view('livewire.admin.inspector-team-leader.inspections.completed-inspections.completed-inspections',[
+        return view('livewire.admin.inspector.inspections.deleted-inspections.deleted-inspections',[
             'table_data'=>$table_data
         ])
         ->layout('components.layouts.admin',[
@@ -484,4 +483,3 @@ class CompletedInspections extends Component
         self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
     }
 }
-

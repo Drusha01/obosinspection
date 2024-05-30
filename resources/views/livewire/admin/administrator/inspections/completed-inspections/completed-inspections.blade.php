@@ -348,7 +348,7 @@
                                 <div class="col d-flex justify-content-center">
                                 @for($i=0; $i < 8; $i++)
                                     @if(($issue_inspection['step']-1) == $i)
-                                        <button type="button" disabled id="prevButton" class="btn btn-secondary mx-2" wire:click="go_issue({{$i+1}})" >{{$i+1}}</button>                                      
+                                        <button type="button" id="prevButton" class="btn btn-secondary mx-2" wire:click="go_issue({{$i+1}})" >{{$i+1}}</button>                                      
                                     @else
                                         <button type="button" id="prevButton" class="btn btn-outline-secondary mx-2" wire:click="go_issue({{$i+1}})" >{{$i+1}}</button>                                      
                                     @endif

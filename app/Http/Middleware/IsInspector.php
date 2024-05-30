@@ -17,26 +17,35 @@ class IsInspector
     public function handle(Request $request, Closure $next): Response
     {
         $session = $request->session()->all();
-        if(isset($session['id']) &&
-        $user_details = DB::table('users as u')
-                ->select(
-                    'u.id',
-                    'u.password',
-                    'u.username',
-                    'r.name as role_name',
-                    )
-                ->where('u.id','=',$session['id'])
-                ->join('roles as r','u.role_id','r.id')
-                ->first()
-                ){
-            if($user_details->role_name == 'Administrator'){
-                return redirect()->route('administrator-dashboard'); 
-            }elseif($user_details->role_name == 'Inspector Team Leader'){
-                return redirect()->route('inspector-team-leader-dashboard'); 
-            }elseif($user_details->role_name == 'Inspector'){
-            }
+        if($user_details = DB::table('inspector_teams as it')
+        ->join('persons as p','p.id','it.team_leader_id')
+        ->join('users as u','u.person_id','p.id')
+        ->where('u.id','=',$session['id'])
+        ->first()){
+            $user_details->role_name = "Inspector Team Leader";
+            return redirect()->route('inspector-team-leader-dashboard'); 
         }else{
-            return redirect()->route('login'); 
+            if(isset($session['id']) &&
+            $user_details = DB::table('users as u')
+                    ->select(
+                        'u.id',
+                        'u.password',
+                        'u.username',
+                        'r.name as role_name',
+                        )
+                    ->where('u.id','=',$session['id'])
+                    ->join('roles as r','u.role_id','r.id')
+                    ->first()
+                    ){
+                if($user_details->role_name == 'Administrator'){
+                    return redirect()->route('administrator-dashboard'); 
+                }elseif($user_details->role_name == 'Inspector Team Leader'){
+                    return redirect()->route('inspector-team-leader-dashboard'); 
+                }elseif($user_details->role_name == 'Inspector'){
+                }
+            }else{
+                return redirect()->route('login'); 
+            }
         }
         return $next($request);
     }

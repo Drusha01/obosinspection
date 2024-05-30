@@ -40,22 +40,22 @@ DB::statement("INSERT INTO `users` VALUES
 
 (NULL,'AlgaderPangolima','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,8,1,NOW(),NOW()),
 (NULL,'IvanVillafuerte','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,9,1,NOW(),NOW()),
-(NULL,'JeanMalaran','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,1,1,NOW(),NOW()),
+(NULL,'JeanMalaran','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,10,1,NOW(),NOW()),
 
-(NULL,'TeejieBenavides','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,10,1,NOW(),NOW()),
-(NULL,'AdelbertNeis','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,11,1,NOW(),NOW()),
-(NULL,'Allen MaeValiente','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,12,1,NOW(),NOW()),
+(NULL,'TeejieBenavides','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,11,1,NOW(),NOW()),
+(NULL,'AdelbertNeis','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,12,1,NOW(),NOW()),
+(NULL,'AllenMaeValiente','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,13,1,NOW(),NOW()),
 
-(NULL,'MarrionRosales','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,13,1,NOW(),NOW()),
-(NULL,'VizzleBaliguat','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,14,1,NOW(),NOW()),
-(NULL,'JohnLargo','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,15,1,NOW(),NOW()),
+(NULL,'MarrionRosales','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,14,1,NOW(),NOW()),
+(NULL,'VizzleBaliguat','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,15,1,NOW(),NOW()),
+(NULL,'JohnLargo','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,16,1,NOW(),NOW()),
 
-(NULL,'JorixGalido','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,16,1,NOW(),NOW()),
-(NULL,'AmielFernandez','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,17,1,NOW(),NOW()),
-(NULL,'AlbarSaway','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,18,1,NOW(),NOW()),
+(NULL,'JorixGalido','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,17,1,NOW(),NOW()),
+(NULL,'AmielFernandez','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,18,1,NOW(),NOW()),
+(NULL,'AlbarSaway','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,19,1,NOW(),NOW()),
 
-(NULL,'JamesRegalado','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,19,1,NOW(),NOW()),
-(NULL,'JoanneDutaro','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,20,1,NOW(),NOW())
+(NULL,'JamesRegalado','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,20,1,NOW(),NOW()),
+(NULL,'JoanneDutaro','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,21,1,NOW(),NOW())
 ");
 
 

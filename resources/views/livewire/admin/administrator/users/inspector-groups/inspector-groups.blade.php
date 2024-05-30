@@ -30,6 +30,12 @@
                                 @foreach($filter as $filter_key => $filter_value)
                                     @if($filter_value['name'] == '#' && $filter_value['active'])
                                         <th class="align-middle">{{($table_data->currentPage()-1)*$table_data->perPage()+$key+1 }}</th>
+                                    @elseif($filter_value['name'] == 'Members' && $filter_value['active'])
+                                        <td class="text-center align-middle">
+                                            <button class="btn btn-outline-primary" wire:click="view_members({{$value->id}},'viewMembersModaltoggler')">
+                                                View
+                                            </button>
+                                        </td>
                                     @elseif($filter_value['name'] == 'Designated Barangays' && $filter_value['active'])
                                         <td class="text-center align-middle">
                                             <button class="btn btn-outline-primary" wire:click="add_designation({{$value->id}},'addDesignationModaltoggler')">
@@ -94,6 +100,7 @@
         <button type="button" data-bs-toggle="modal" data-bs-target="#addDesignationModal" id="addDesignationModaltoggler" style="display:none;"></button>
         <button type="button" data-bs-toggle="modal" data-bs-target="#viewDesignationModal" id="viewDesignationModaltoggler" style="display:none;"></button>
 
+        <button type="button" data-bs-toggle="modal" data-bs-target="#viewMembersModal" id="viewMembersModaltoggler" style="display:none;"></button>
         
         
         <div wire:ignore.self class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
@@ -245,6 +252,62 @@
                                                 </button>
                                             </td>
                                         </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div wire:ignore.self class="modal fade" id="viewMembersModal" tabindex="-1" aria-labelledby="viewMembersModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="viewMembersModalLabel">View Members</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form wire:submit.prevent="save_add_member()">
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="mb-3">
+                                        <select class="form-select" aria-label="Select Member" required wire:model="inspector_team.member_id">
+                                            <option value="">Select Inspector Member</option>
+                                            @foreach($inspector_members as $key => $value)
+                                                <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-3 mx-3" >
+                                    <button class="btn btn-primary" type="submit">Add</button>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
+                                    <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                                        <tr>
+                                            <th class="align-middle text-center"></th>
+                                            <th class="align-middle"> Member</th>
+                                            <th class="align-middle text-center">Action </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($members as $key => $value)
+                                            <tr>
+                                                <td class="align-middle text-center">{{$key+1}}</td>
+                                                <td class="mx-2">
+                                                    {{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix}}
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <button class="btn btn-danger" type="button" wire:click="delete_member({{$value->id}})">
+                                                        Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
