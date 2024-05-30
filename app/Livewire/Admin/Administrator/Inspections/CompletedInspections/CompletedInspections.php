@@ -24,6 +24,28 @@ class CompletedInspections extends Component
         ['column_name'=> 'id','active'=> true,'name'=>'Generate'],
         ['column_name'=> 'id','active'=> true,'name'=>'Inspection Details'],
     ];
+    public $annual_certificate_inspection = [
+        'id' => NULL,
+        'status_id' => NULL,
+        'business_id' => NULL,
+        'application_type_id' => NULL,
+        'bin' => NULL,
+        'occupancy_no' => NULL,
+        'date_compiled' => NULL,
+        'issued_on' => NULL,
+        'step'=> 1,
+        'business'=> NULL,
+
+        'businesses'=> [],
+        'application_types'=> [],
+
+        'inspectors'=>[],
+        'annual_certificate_inspection_inspector' => [],
+        'inspector_id'=>NULL,
+
+        'annual_certificate_categories'=> [],
+        'annual_certificate_category_id'=>NULL,
+    ];
     public $issue_inspection = [
         'id' => NULL,
         'status_id' => NULL,
@@ -90,6 +112,18 @@ class CompletedInspections extends Component
         ])
         ->layout('components.layouts.admin',[
             'title'=>$this->title]);
+    }
+    public function update_complied_violation($id,$remarks){
+        if($remarks == 0){
+            $remarks = NULL;
+        }
+        DB::table('inspection_violations')
+            ->where('id','=',$id)
+            ->where('inspection_id','=',$this->issue_inspection['id'])
+            ->update([
+                'remarks'=>$remarks
+            ]);
+        self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
     }
     public function update_inspection_data($id,$step){
         
@@ -343,7 +377,8 @@ class CompletedInspections extends Component
         $inspection_violations = DB::table('inspection_violations as iv')
             ->select(
                 'iv.id',
-                'description'
+                'description',
+                'remarks'
             )
             ->join('violations as v','v.id','iv.violation_id')
             ->where('inspection_id','=',$id)
@@ -366,6 +401,7 @@ class CompletedInspections extends Component
         foreach ($inspection_violations as $key => $value) {
             array_push($temp,[
                 'description'=> $value->description,
+                'remarks'=> $value->remarks,
                 "id" => $value->id,
             ]);
         }
@@ -475,5 +511,329 @@ class CompletedInspections extends Component
     public function next_issue(){
         $this->issue_inspection['step']++;
         self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
+    }
+    public function generate_cert($id,$modal_id){
+        // validation.... cannot create if it has violation/s
+        $violations = DB::table('inspection_violations as iv')
+            ->where('iv.inspection_id','=',$id)
+            ->whereNull('remarks')
+            ->get()
+            ->toArray();
+        if(count($violations)){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'Inspection has violation/s hence you cannot generate certificate!',
+                showConfirmButton 									: 'true',
+                timer             									: '3000',
+                link              									: '#'
+            );
+            return 0 ;
+        }
+        $application_types = DB::table('application_types')
+            ->get()
+            ->toArray();
+
+        $application_type = DB::table('application_types')
+            ->where('name','=','Annual')
+            ->first();
+
+        $business = DB::table('inspections as i')
+            ->select(
+                'b.id',
+                'b.img_url',
+                'b.name',
+                'p.first_name',
+                'p.middle_name',
+                'p.last_name',
+                'p.suffix',
+                'brg.brgyDesc as barangay',
+                'bt.name as business_type_name',
+                'oc.character_of_occupancy as occupancy_classification_name',
+                'oc.character_of_occupancy_group',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'b.is_active'
+
+            )
+            ->join('businesses as b','b.id','i.business_id')
+            ->join('persons as p','p.id','b.owner_id')
+            ->join('brgy as brg','brg.id','b.brgy_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+            ->where('i.id','=',$id)
+            ->first();
+
+        $inspection_members = DB::table('inspection_inspector_members as iim')
+            ->select(
+                'p.id',
+                'p.first_name',
+                'p.middle_name',
+                'p.last_name',
+                'p.suffix',
+                'p.img_url',
+                'wr.id as work_role_id',
+                'wr.name as work_role_name',
+                )
+            ->join('persons as p','p.id','iim.person_id')
+            ->join('person_types as pt', 'pt.id','p.person_type_id')
+            ->join('work_roles as wr', 'wr.id','p.work_role_id')
+            ->where('iim.inspection_id','=',$id)
+            ->get()
+            ->toArray();
+        
+        $inspection_team_leaders = DB::table('inspection_inspector_team_leaders as iitl')
+            ->select(
+                'p.id',
+                'p.first_name',
+                'p.middle_name',
+                'p.last_name',
+                'p.suffix',
+                'p.img_url',
+                'wr.id as work_role_id',
+                'wr.name as work_role_name',
+                )
+            ->join('persons as p','p.id','iitl.person_id')
+            ->join('person_types as pt', 'pt.id','p.person_type_id')
+            ->join('work_roles as wr', 'wr.id','p.work_role_id')
+            ->where('iitl.inspection_id','=',$id)
+            ->get()
+            ->toArray();
+        $inspectors = [];
+        foreach ($inspection_members as $key => $value) {
+            array_push($inspectors,$value);
+        }
+        foreach ($inspection_team_leaders as $key => $value) {
+            array_push($inspectors,$value);
+        }
+        $annual_certificate_categories = DB::table('annual_certificate_categories as acc')
+            ->get()
+            ->toArray();
+
+        $this->annual_certificate_inspection = [
+            'id' => NULL,
+            'business_id' => $business->id,
+            'application_type_id' => $application_type->id,
+            'bin' => NULL,
+            'occupancy_no' => NULL,
+            'date_compiled' => NULL,
+            'issued_on' => NULL,
+            'step'=> 1,
+            'business'=> $business,
+
+            'application_types'=> $application_types,
+
+            'inspectors'=>$inspectors,
+            'annual_certificate_inspection_inspector' => [],
+            'inspector_id'=>NULL,
+
+            'annual_certificate_categories'=> $annual_certificate_categories,
+            'annual_certificate_category_id'=>NULL,
+        ];
+        
+        $this->dispatch('openModal',$modal_id);
+    }
+
+    public function add_annual_inspector(){
+        if(intval($this->annual_certificate_inspection['inspector_id'])){
+            $valid = true;
+            foreach ($this->annual_certificate_inspection['annual_certificate_inspection_inspector'] as $key => $value) {
+                if($value['content']->id == $this->annual_certificate_inspection['inspector_id']){
+                    $valid = false;
+                    break;
+                }
+            }
+            if($valid){
+                foreach ($this->annual_certificate_inspection['inspectors'] as $key => $value) {
+                    if($value->id == $this->annual_certificate_inspection['inspector_id']){
+                        array_push($this->annual_certificate_inspection['annual_certificate_inspection_inspector'],[
+                            'content'=>$value,
+                            'category_id'=>NULL,
+                            'date_signed'=>NULL,
+                            'time_in' => NULL,
+                            'time_out'=> NULL,
+                        ]);
+                        break;
+                    }
+                }
+                $this->annual_certificate_inspection['inspector_id'] = NULL;
+            }
+        }
+    }
+    public function delete_annual_inspector($id){
+        $temp = [];
+        foreach ($this->annual_certificate_inspection['annual_certificate_inspection_inspector'] as $key => $value) {
+            if($value['content']->id != $id){
+                array_push($temp,[
+                    'content'=>$value['content'],
+                    'category_id'=>$value['category_id'],
+                    'date_signed'=>$value['date_signed'],
+                    'time_in' => $value['time_in'],
+                    'time_out'=> $value['time_out'],
+                ]);
+            }
+        }
+        $this->annual_certificate_inspection['annual_certificate_inspection_inspector'] = $temp;
+    }
+    public function update_business_information(){
+        if($this->annual_certificate_inspection['step'] == 1){
+            if(intval($this->annual_certificate_inspection['business_id'])){
+                $this->annual_certificate_inspection['business'] = DB::table('businesses as b')
+                    ->select(
+                        'b.id',
+                        'b.img_url',
+                        'b.name',
+                        'p.first_name',
+                        'p.middle_name',
+                        'p.last_name',
+                        'p.suffix',
+                        'brg.brgyDesc as barangay',
+                        'bt.name as business_type_name',
+                        'oc.character_of_occupancy as occupancy_classification_name',
+                        'oc.character_of_occupancy_group',
+                        'b.contact_number',
+                        'b.email',
+                        'b.floor_area',
+                        'b.signage_area',
+                        'b.is_active'
+
+                    )
+                    ->join('persons as p','p.id','b.owner_id')
+                    ->join('brgy as brg','brg.id','b.brgy_id')
+                    ->join('business_types as bt','bt.id','b.business_type_id')
+                    ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+                    ->where('b.id','=',$this->annual_certificate_inspection['business_id'])
+                    ->first();
+            }
+        }
+    
+    }
+
+    public function next_annual($modal_id){
+        if($this->annual_certificate_inspection['step'] == 1){
+            if(intval($this->annual_certificate_inspection['business_id'])){
+                $this->annual_certificate_inspection['step']+=1;
+               
+            }else{
+                $this->dispatch('swal:redirect',
+                    position         									: 'center',
+                    icon              									: 'warning',
+                    title             									: 'Please select business!',
+                    showConfirmButton 									: 'true',
+                    timer             									: '1500',
+                    link              									: '#'
+                );
+                return 0;
+            }
+        }elseif($this->annual_certificate_inspection['step'] == 2){
+            if(!count($this->annual_certificate_inspection['annual_certificate_inspection_inspector'])){
+                $this->dispatch('swal:redirect',
+                    position         									: 'center',
+                    icon              									: 'warning',
+                    title             									: 'Please add at least one (1) inspector!',
+                    showConfirmButton 									: 'true',
+                    timer             									: '1000',
+                    link              									: '#'
+                );
+                return 0;
+            }
+            foreach ($this->annual_certificate_inspection['annual_certificate_inspection_inspector'] as $key => $value) {
+                if(!isset($value['category_id'])){
+                    $this->dispatch('swal:redirect',
+                        position         									: 'center',
+                        icon              									: 'warning',
+                        title             									: 'Please category for '.$value['content']->first_name.' '.$value['content']->middle_name.' '.$value['content']->last_name.' '.$value['content']->suffix.' ( '.$value['content']->work_role_name.' ) ',
+                        showConfirmButton 									: 'true',
+                        timer             									: '1500',
+                        link              									: '#'
+                    );
+                    return;
+                }
+                if(!isset($value['date_signed'])){
+                    $this->dispatch('swal:redirect',
+                        position         									: 'center',
+                        icon              									: 'warning',
+                        title             									: 'Please input date signed for '.$value['content']->first_name.' '.$value['content']->middle_name.' '.$value['content']->last_name.' '.$value['content']->suffix.' ( '.$value['content']->work_role_name.' ) ',
+                        showConfirmButton 									: 'true',
+                        timer             									: '1500',
+                        link              									: '#'
+                    );
+                    return;
+                }
+                if(!isset($value['time_in'])){
+                    $this->dispatch('swal:redirect',
+                        position         									: 'center',
+                        icon              									: 'warning',
+                        title             									: 'Please input time in for '.$value['content']->first_name.' '.$value['content']->middle_name.' '.$value['content']->last_name.' '.$value['content']->suffix.' ( '.$value['content']->work_role_name.' ) ',
+                        showConfirmButton 									: 'true',
+                        timer             									: '1500',
+                        link              									: '#'
+                    );
+                    return;
+                }
+                if(!isset($value['time_out'])){
+                    $this->dispatch('swal:redirect',
+                        position         									: 'center',
+                        icon              									: 'warning',
+                        title             									: 'Please input time out for '.$value['content']->first_name.' '.$value['content']->middle_name.' '.$value['content']->last_name.' '.$value['content']->suffix.' ( '.$value['content']->work_role_name.' ) ',
+                        showConfirmButton 									: 'true',
+                        timer             									: '1500',
+                        link              									: '#'
+                    );
+                    return;
+                }
+            }
+            $this->annual_certificate_inspection['step']+=1;
+        }elseif($this->annual_certificate_inspection['step'] == 3){
+            if(!isset( $this->annual_certificate_inspection['date_compiled'])){
+                $this->dispatch('swal:redirect',
+                    position         									: 'center',
+                    icon              									: 'warning',
+                    title             									: 'Please input date compiled!',
+                    showConfirmButton 									: 'true',
+                    timer             									: '1000',
+                    link              									: '#'
+                );
+                return 0;
+            }
+            // insert here
+            if(DB::table('annual_certificate_inspections')
+            ->insert([
+                'business_id'  => $this->annual_certificate_inspection['business_id'],
+                'application_type_id'  => $this->annual_certificate_inspection['application_type_id'],
+                'bin'  => $this->annual_certificate_inspection['bin'],
+                'occupancy_no'  => $this->annual_certificate_inspection['occupancy_no'],
+                'date_compiled'  => $this->annual_certificate_inspection['date_compiled'],
+                'issued_on'  => $this->annual_certificate_inspection['issued_on'],
+            ])){
+                $temp = DB::table('annual_certificate_inspections')
+                ->orderBy('id','desc')
+                ->first();
+                foreach ($this->annual_certificate_inspection['annual_certificate_inspection_inspector'] as $key => $value) {
+                    DB::table('annual_certificate_inspection_inspectors')
+                    ->insert([
+                        'annual_certificate_inspection_id'=> $temp->id,
+                        'person_id' => $value['content']->id,
+                        'category_id' => $value['category_id'],
+                        'date_signed' => $value['date_signed'],
+                        'time_in' => $value['time_in'],
+                        'time_out' => $value['time_out'],
+                    ]);
+                }
+                $this->dispatch('swal:redirect',
+                    position         									: 'center',
+                    icon              									: 'success',
+                    title             									: 'Successfully added!',
+                    showConfirmButton 									: 'true',
+                    timer             									: '1500',
+                    link              									: '/administrator/certifications/generate/'.$temp->id
+                );
+            }
+        }
+    }
+    public function prev_annual(){
+        $this->annual_certificate_inspection['step']-=1;
     }
 }

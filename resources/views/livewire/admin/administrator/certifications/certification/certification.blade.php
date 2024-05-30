@@ -1,389 +1,244 @@
 <div>
     <div class="content">
         <div class="container-fluid">
-        <div class="d-sm-flex align-items-center justify-content-between mt-4 mb-4">
+            <div class="d-sm-flex align-items-center justify-content-between mt-4 mb-4">
                 <h1 class="h3 mb-0 text-gray-800">{{$title}}</h1>
-                <div class="p-0 m-0">
+                <div class="p-0 m-0" wire:click="add('addModaltoggler')" >
                     <button type="button" class="btn btn-primary">
-                        Generate certificate
+                        Add Inspection Schedule
                     </button>
                 </div>
             </div>
-        </div>
-
-        <!-- Outer Row -->
-        <div class="row d-flex align-items-center justify-content-center overflow-hidden">
-            <div class="col-xl-6 col-lg-8 col-md-11 col-sm-11 p-3">
-                <div class="card card-body o-hidden shadow-lg p-4">
-                    <!-- Nested Row within Card Body -->
-                    <div class="d-flex flex-column justify-content-center col-lg-12">
-                        <div class="text-center">
-                            <h1 class="h4 text-gray-900 mb-4">Mockup Title</h1>
-                        </div>
-
-                        <form class="user" id="certificate-form" enctype="multipart/form-data">
-                            <div class="d-flex flex-column align-items-center">
-                                <div class="image-container mb-3">
-                                    <img src="./../business/images/no-image.png" alt="default-item-image" class="img-fluid rounded-circle" id="bus-img" />
-                                </div>
-                            </div>
-
-                            <div id="certificateCarousel" class="carousel slide">
-                                <div class="carousel-indicators">
-                                    <button type="button" data-bs-target="#certificateCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                                    <button type="button" data-bs-target="#certificateCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                                    <button type="button" data-bs-target="#certificateCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                                </div>
-
-                                <div class="carousel-inner">
-                                    <div class="carousel-item active p-2" data-bs-interval="false">
-                                        <p class="text font-weight-bolder">Business Information</p>
-
-                                        <div class="col col-12 p-0 form-group">
-                                            <label>Application Type</label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control p-4" value="Mock Application Type" readonly>
-                                            </div>
-                                        </div>
-
-                                        <div class="col col-12 p-0 form-group">
-                                            <label>Business Name</label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control p-4" value="Mock Business Name" readonly>
-                                            </div>
-                                        </div>
-
-                                        <div class="col col-12 p-0 form-group">
-                                            <label>Owner Name</label>
-                                            <input type="text" class="form-control p-4" value="Mock Owner Name" readonly>
-                                        </div>
-
-                                        <div class="col col-12 p-0 form-group">
-                                            <label>Business Address</label>
-                                            <input type="text" class="form-control p-4" value="Mock Business Address" readonly>
-                                        </div>
-
-                                        <div class="col col-12 p-0 form-group">
-                                            <label>Business Group</label>
-                                            <input type="text" class="form-control p-4" value="Mock Business Group" readonly>
-                                        </div>
-
-                                        <div class="col col-12 p-0 form-group">
-                                            <label>Character of Occupancy</label>
-                                            <input type="text" class="form-control p-4" value="Mock Character of Occupancy" readonly>
-                                        </div>
-                                    </div>
-
-                                    <div class="carousel-item p-2" data-bs-interval="false">
-                                        <div class="d-flex flex-column" id="inspector-certificate-container">
-                                            <div class="d-flex justify-content-between">
-                                                <p class="text font-weight-bolder">Inspector Information</p>
-                                                <p class="text font-weight-bolder">Total Inspector: <span id="total-inspector">3</span></p>
-                                            </div>
-
-                                            <div class="shadow bg-white rounded p-3 mb-2" id="inspector-content-1">
-                                                <a id="inspector-title-1" class="text text-decoration-none" style="cursor: pointer; font-weight: 700;">Inspector 1</a>
-                                                <div class="col col-12 p-0 form-group mb-1">
-                                                    <label>Inspector Name</label>
-                                                    <input type="text" class="form-control p-4" value="Mock Inspector Name 1" readonly>
-                                                </div>
-
-                                                <div class="col col-12 p-0 form-group mb-1">
-                                                    <label>Category</label>
-                                                    <input type="text" class="form-control p-4" value="Mock Category 1" readonly>
-                                                </div>
-
-                                                <div class="col col-12 p-0 form-group mb-1">
-                                                    <label>Date Signed</label>
-                                                    <input type="date" class="form-control p-4" value="2024-01-01" readonly>
-                                                </div>
-                                                <div class="d-md-flex align-items-center justify-content-center p-0">
-                                                    <div class="col col-md-6 p-0 form-group mb-1 flex-md-grow-1">
-                                                        <label>Time In </label>
-                                                        <input type="time" class="form-control p-4" value="09:00" readonly>
-                                                    </div>
-                                                    <div class="col col-md-6 p-0 form-group mb-1 flex-md-grow-1">
-                                                        <label>Time Out </label>
-                                                        <input type="time" class="form-control p-4" value="17:00" readonly>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="shadow bg-white rounded p-3 mb-2" id="inspector-content-2">
-                                                <a id="inspector-title-2" class="text text-decoration-none" style="cursor: pointer; font-weight: 700;">Inspector 2</a>
-                                                <div class="col col-12 p-0 form-group mb-1">
-                                                    <label>Inspector Name</label>
-                                                    <input type="text" class="form-control p-4" value="Mock Inspector Name 2" readonly>
-                                                </div>
-
-                                                <div class="col col-12 p-0 form-group mb-1">
-                                                    <label>Category</label>
-                                                    <input type="text" class="form-control p-4" value="Mock Category 2" readonly>
-                                                </div>
-
-                                                <div class="col col-12 p-0 form-group mb-1">
-                                                    <label>Date Signed</label>
-                                                    <input type="date" class="form-control p-4" value="2024-01-01" readonly>
-                                                </div>
-                                                <div class="d-md-flex align-items-center justify-content-center p-0">
-                                                    <div class="col col-md-6 p-0 form-group mb-1 flex-md-grow-1">
-                                                        <label>Time In </label>
-                                                        <input type="time" class="form-control p-4" value="09:00" readonly>
-                                                    </div>
-                                                    <div class="col col-md-6 p-0 form-group mb-1 flex-md-grow-1">
-                                                        <label>Time Out </label>
-                                                        <input type="time" class="form-control p-4" value="17:00" readonly>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="shadow bg-white rounded p-3 mb-2" id="inspector-content-3">
-                                                <a id="inspector-title-3" class="text text-decoration-none" style="cursor: pointer; font-weight: 700;">Inspector 3</a>
-                                                <div class="col col-12 p-0 form-group mb-1">
-                                                    <label>Inspector Name</label>
-                                                    <input type="text" class="form-control p-4" value="Mock Inspector Name 3" readonly>
-                                                </div>
-
-                                                <div class="col col-12 p-0 form-group mb-1">
-                                                    <label>Category</label>
-                                                    <input type="text" class="form-control p-4" value="Mock Category 3" readonly>
-                                                </div>
-
-                                                <div class="col col-12 p-0 form-group mb-1">
-                                                    <label>Date Signed</label>
-                                                    <input type="date" class="form-control p-4" value="2024-01-01" readonly>
-                                                </div>
-                                                <div class="d-md-flex align-items-center justify-content-center p-0">
-                                                    <div class="col col-md-6 p-0 form-group mb-1 flex-md-grow-1">
-                                                        <label>Time In </label>
-                                                        <input type="time" class="form-control p-4" value="09:00" readonly>
-                                                    </div>
-                                                    <div class="col col-md-6 p-0 form-group mb-1 flex-md-grow-1">
-                                                        <label>Time Out </label>
-                                                        <input type="time" class="form-control p-4" value="17:00" readonly>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="carousel-item p-2" data-bs-interval="false">
-                                        <p class="text font-weight-bolder">Other Certificate Information</p>
-
-                                        <div class="col col-12 p-0 form-group">
-                                            <label>BIN</label>
-                                            <div class="input-group">
-                                                <input type="text" name="bin" class="form-control p-4" value="Mock BIN" readonly>
-                                            </div>
-                                        </div>
-
-                                        <div class="col col-12 p-0 form-group">
-                                            <label>Occupancy No.</label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control p-4" value="Mock Occupancy No." readonly>
-                                            </div>
-                                        </div>
-
-                                        <div class="col col-12 p-0 form-group">
-                                            <label for="date-compiled">Date Complied</label>
-                                            <div class="input-group">
-                                                <input type="date" class="form-control p-4" value="2024-01-01" readonly>
-                                            </div>
-                                        </div>
-
-                                        <div class="col col-12 p-0 form-group">
-                                            <label for="issued-on">Issued On</label>
-                                            <div class="input-group">
-                                                <input type="datetime" class="form-control p-4" value="2024-01-01T12:00" readonly>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex justify-content-between mt-4">
-                                    <div class="previous-container invisible">
-                                        <button class="d-flex justify-content-center align-items-center border-0 bg-dark p-2 previous carousel-button" data-bs-target="#certificateCarousel" role="button" data-bs-slide="prev">
-                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        </button>
-                                    </div>
-                                    <div class="next-container">
-                                        <button class="d-flex justify-content-center align-items-center border-0 bg-dark p-2 next carousel-button" data-bs-target="#certificateCarousel" role="button" data-bs-slide="next">
-                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+            <!-- Table -->
+            <div class="table-responsive">
+                <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
+                    <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                        <tr>
+                            @foreach($filter as $filter_key => $filter_value)
+                                @if($filter_value['name'] == 'Action')
+                                    <th scope="col" class="text-center">{{$filter_value['name']}}</th>
+                                @elseif($filter_value['name'] == 'Inspection Details')
+                                    <th scope="col" class="text-center">{{$filter_value['name']}}</th>
+                                @else 
+                                    <th scope="col">{{$filter_value['name']}}</th>
+                                @endif
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($table_data as $key => $value)
+                            <tr>
+                                @foreach($filter as $filter_key => $filter_value)
+                                    @if($filter_value['name'] == '#' && $filter_value['active'])
+                                        <th class="align-middle">{{($table_data->currentPage()-1)*$table_data->perPage()+$key+1 }}</th>
+                                    @elseif ($filter_value['name'] == 'Image'  && $filter_value['active'])
+                                        <td class="text-center align-middle">
+                                            <a href="{{asset('storage/content/business/'.$value->{$filter_value['column_name']})}}" target="blank">
+                                                <img class="img-fluid"src="{{asset('storage/content/business/'.$value->{$filter_value['column_name']})}}" alt="" style="max-height:50px;max-width:50px; ">
+                                            </a>
+                                        </td>
+                                    @elseif($filter_value['name'] == 'Action' && $filter_value['active'])
+                                        <td class="text-center align-middle">
+                                            <button class="btn btn-outline-secondary" wire:click="edit({{$value->id}},'completeModaltoggler')">
+                                                Complete
+                                            </button>
+                                            @if($value->is_active)
+                                                <button class="btn btn-danger" wire:click="edit({{$value->id}},'deactivateModaltoggler')">
+                                                    Delete
+                                                </button>
+                                            @endif
+                                        </td>
+                                    @elseif($filter_value['name'] == 'Inspection Details' && $filter_value['active'])
+                                        <td class="text-center align-middle">
+                                            <button class="btn btn-primary" wire:click="issue({{$value->id}},'issueModaltoggler')">
+                                                Inspection Details
+                                            </button>
+                                        </td>   
+                                    @elseif($filter_value['name'] == 'Schedule' && $filter_value['active'])
+                                        <td class="align-middle">
+                                            {{date_format(date_create($value->schedule_date),"M d, Y")}}
+                                        </td>
+                                    @else
+                                        @if($filter_value['active'])
+                                            <td class="align-middle">{{ $value->{$filter_value['column_name']} }}</td>
+                                        @endif
+                                    @endif
+                                @endforeach
+                            </tr>
+                        @empty
+                            <tr>
+                                <th colspan="42" class="text-center">NO DATA</th>
+                            </tr>
+                        @endforelse 
+                    </tbody>
+                </table>
             </div>
-        </div>
 
-        <!-- Outer Row -->
-        <div class="row d-flex align-items-center justify-content-center overflow-hidden">
-            <div class="col-xl-6 col-lg-8 col-md-11 col-sm-11 p-3">
-                <div class="card card-body o-hidden shadow-lg p-4">
-                    <!-- Nested Row within Card Body -->
-                    <div class="d-flex flex-column justify-content-center col-lg-12">
-                        <div class="text-center">
-                            <h1 class="h4 text-gray-900 mb-4">title/h1>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#addModal" id="addModaltoggler" style="display:none;"></button>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="editModaltoggler" style="display:none;"></button>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#deactivateModal" id="deactivateModaltoggler" style="display:none;"></button>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#activateModal" id="activateModaltoggler" style="display:none;"></button>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#issueModal" id="issueModaltoggler" style="display:none;"></button>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#completeModal" id="completeModaltoggler" style="display:none;"></button>
+            
+
+            <div wire:ignore.self class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addModalLabel">Add Inspection Schedule</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form action="./generate/annual-certificate.php" method="POST" class="user" id="certificate-form" enctype="multipart/form-data">
-                            <div class="d-flex flex-column align-items-center">
-                                <div class="image-container mb-3">
-                                    <img src="./../business/images/no-image.png" alt="default-item-image" class="img-fluid rounded-circle" id="bus-img" />
+                        <div class="modal-body">
+                            <div class="progress mb-4">
+                                <div id="progressBar" class="progress-bar" role="progressbar" style="width:{{($annual_certificate_inspection['step']/3)*100}}%" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            @if($annual_certificate_inspection['step'] == 1)
+                            <div >
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Business Name</label>
+                                    <div class="mb-3">
+                                        <select class="form-select" aria-label="Select Barangay" wire:change="update_business_information()" required wire:model="annual_certificate_inspection.business_id">
+                                            <option value="">Select Business</option>
+                                            @foreach($businesses as $key => $value)
+                                                <option value="{{$value->id}}">{{$value->name.' ('.$value->business_type_name.') brgy: '.$value->barangay}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="name" class="form-label"> Application type</label>
+                                    <div class="mb-3">
+                                        <select class="form-select" aria-label="Select Application type" disabled required wire:model.live="annual_certificate_inspection.application_type_id">
+                                            <option value="">Select Application type</option>
+                                            @foreach($application_types as $key => $value)
+                                                <option value="{{$value->id}}">{{$value->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                @if($annual_certificate_inspection['business_id'])
+                                    <div class="mb-3">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="mb-3">
+                                                    <label for="name" class="form-label">Owner</label>
+                                                    <input type="text" class="form-control" disabled value="{{$annual_certificate_inspection['business']->first_name.' '.$annual_certificate_inspection['business']->middle_name.' '.$annual_certificate_inspection['business']->last_name.' '.$annual_certificate_inspection['business']->suffix}}">
+                                                </div>  
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="mb-3">
+                                                    <label for="name" class="form-label">Address</label>
+                                                    <input type="text" class="form-control" disabled value="{{$annual_certificate_inspection['business']->barangay}}">
+                                                </div>  
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="mb-3">
+                                                    <label for="name" class="form-label">Group</label>
+                                                    <input type="text" class="form-control" disabled value="{{$annual_certificate_inspection['business']->character_of_occupancy_group}}">
+                                                </div>  
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="mb-3">
+                                                    <label for="name" class="form-label">Character of Occupancy</label>
+                                                    <input type="text" class="form-control" disabled value="{{$annual_certificate_inspection['business']->occupancy_classification_name}}">
+                                                </div>  
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                            @elseif($annual_certificate_inspection['step'] == 2)
+                            <div>
+                                <div class="input-group mb-3">
+                                    <select class="form-select" id="teamLeaderSelect"  wire:model="annual_certificate_inspection.inspector_id">
+                                        <option value="">Select Team Member</option>
+                                        @foreach($annual_certificate_inspection['inspectors'] as $key =>  $value)
+                                            <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</option>
+                                        @endforeach
+                                    </select>
+                                    <button class="btn btn-primary" type="button" wire:click="add_annual_inspector()"><i class="bi bi-plus"></i></button>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
+                                        <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                                            <tr>
+                                                <th>Name</th>
+                                                <th class="align-middle text-center">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($this->annual_certificate_inspection['annual_certificate_inspection_inspector']  as $key =>$value)
+                                                <tr>
+                                                    <td>{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
+                                                    <td class="align-middle text-center">
+                                                        <button class="btn btn-danger ">
+                                                            Delete
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-
-                            <div id="certificateCarousel" class="carousel slide">
-                                <div class="carousel-indicators">
-                                    <button type="button" data-bs-target="#certificateCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                                    <button type="button" data-bs-target="#certificateCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                                    <button type="button" data-bs-target="#certificateCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                            @elseif($annual_certificate_inspection['step'] == 3)
+                            <div>
+                                <div class="input-group mb-3">
+                                    <select class="form-select" id="teamLeaderSelect"  wire:model="annual_certificate_inspection.inspector_member_id">
+                                        <option value="">Select Team Member</option>
+                                        @foreach($inspector_members as $key =>  $value)
+                                            <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</option>
+                                        @endforeach
+                                    </select>
+                                    <button class="btn btn-primary" type="button" wire:click="add_team_member()"><i class="bi bi-plus"></i></button>
                                 </div>
-                                <div class="carousel-inner">
-                                    <div class="carousel-item active p-2" data-bs-interval="false">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
+                                        <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                                            <tr>
+                                                <th>Name</th>
+                                                <th class="align-middle text-center">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($annual_certificate_inspection['inspector_members']  as $key =>$value)
+                                                <tr>
+                                                    <td>{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
+                                                    <td class="align-middle text-center">
+                                                        <button class="btn btn-danger ">
+                                                            Delete
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
 
-                                        <p class="text font-weight-bolder">Business Information</p>
-
-                                        <div class="form-group d-flex flex-column flex-md-grow-1">
-                                            <label for="application-type">Application Type <span class="text-danger">*</span>
-                                            </label>
-                                            <div class="d-flex align-items-center justify-content-center select-container">
-                                                <select name="application_type" id="application-type" class="form-control form-select px-3" required>
-                                                    <option selected disabled hidden value="">Select</option>
-                                                    <option value="Annual">Annual</option>
-                                                    <option value="New">New</option>
-                                                    <option value="Change Address">Change Address</option>
-                                                    <option value="Change Name">Change Name</option>
-
-
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group d-flex flex-column flex-md-grow-1">
-                                            <label for="business-id">Business Name <span class="text-danger">*</span>
-                                            </label>
-                                            <div class="d-flex align-items-center justify-content-center select-container">
-                                                <select name="business_id" id="certificate-business-id" class="form-control form-select px-3" required>
-                                                    <option selected disabled hidden value="">Select</option>
-
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <input type="hidden" name="bus_name" class="form-control p-4" id="bus-name" required readonly>
-
-                                        <div class="col col-12 p-0 form-group d-none">
-                                            <label for="owner-name">Owner Name <span class="text-danger">*</span>
-                                            </label>
-                                            <input type="text" name="owner_name" class="form-control p-4" id="owner-name" required readonly>
-                                            <input type="hidden" id="owner-id" name="owner_id">
-                                        </div>
-
-                                        <div class="col col-12 p-0 form-group d-none">
-                                            <label for="bus-address">Business Address <span class="text-danger">*</span>
-                                            </label>
-                                            <input type="text" name="bus_address" class="form-control p-4" id="bus-address" required readonly>
-                                        </div>
-
-
-                                        <div class="col col-12 p-0 form-group d-none">
-                                            <label for="bus-group">Business Group <span class="text-danger">*</span>
-                                            </label>
-                                            <input type="text" name="occupancy_group" class="form-control p-4" id="bus-group" required readonly>
-                                        </div>
-
-                                        <div class="col col-12 p-0 form-group d-none">
-                                            <label for="character-of-occupancy">Character of Occupancy <span class="text-danger">*</span>
-                                            </label>
-                                            <input type="text" name="character_of_occupancy" class="form-control p-4" id="character-of-occupancy" required readonly>
-                                        </div>
-                                    </div>
-
-                                    <div class="carousel-item p-2" data-bs-interval="false">
-                                        <div class="d-flex flex-column" id="inspector-certificate-container">
-                                            <div class="d-flex justify-content-between">
-                                                <p class="text font-weight-bolder">Inspector Information</p>
-                                                <p class="text font-weight-bolder">Total
-                                                    Inspector: <span id="total-inspector">0</span>
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div class="d-flex justify-content-end my-4">
-                                            <a class="btn btn-primary btn-md-block px-3" data-bs-target="#inspector-list" data-bs-toggle="modal">Add
-                                                Inspector</a>
-                                            <a class="btn btn-danger btn-md-block px-3 d-none" id="delete-inspector">Delete
-                                                Inspector</a>
-                                        </div>
-                                    </div>
-
-                                    <div class="carousel-item p-2" data-bs-interval="false">
-
-                                        <p class="text font-weight-bolder">Other Certificate Information</p>
-
-                                        <div class="col col-12 p-0 form-group">
-                                            <label for="bin">BIN</label>
-
-                                            <div class="input-group">
-                                                <input type="text" name="bin" class="form-control p-4" id="bin" placeholder="Enter BIN...">
-                                            </div>
-                                        </div>
-
-                                        <div class="col col-12 p-0 form-group">
-                                            <label for="occupancy-no">Occupancy No. </label>
-
-                                            <div class="input-group">
-                                                <input type="text" name="occupancy_no" class="form-control p-4" id="occupancy-no" placeholder="Enter Occupancy No...">
-                                            </div>
-                                        </div>
-
-                                        <div class="col col-12 p-0 form-group">
-                                            <label for="date-compiled">Date Complied <span class="text-danger">*</span>
-                                            </label>
-
-                                            <div class="input-group">
-                                                <input type="date" name="date_complied" class="form-control p-4" id="date-complied" max="<?php echo date('Y-m-d') ?>" placeholder="Enter Date Compiled..." required>
-                                            </div>
-                                        </div>
-
-                                        <div class="col col-12 p-0 form-group">
-                                            <label for="issued-on">Issued On</label>
-
-                                            <div class="input-group">
-                                                <input type="date" name="issued_on" class="form-control p-4" id="issued-on" max="<?php echo date('Y-m-d') ?>" placeholder="Enter Issued On...">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex justify-content-between mt-4">
-                                    <div class="previous-container invisible">
-                                        <button class="d-flex justify-content-center align-items-center border-0 bg-dark p-2 previous carousel-button" data-bs-target="#certificateCarousel" role="button" data-bs-slide="prev">
-                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        </button>
-                                    </div>
-                                    <div class="next-container">
-                                        <button class="d-flex justify-content-center align-items-center border-0 bg-dark p-2 next carousel-button" data-bs-target="#certificateCarousel" role="button" data-bs-slide="next">
-                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        </button>
-                                    </div>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-
-                            <div class="text-center mt-4 d-none formSubmit">
-                                <input type="submit" name="submit" class="btn btn-primary btn-user btn-block mt-3" value="Add">
-                            </div>
-                        </form>
+                            @endif
+                        </div>
+                        <div class="modal-footer">
+                            @if($annual_certificate_inspection['step'] != 1)
+                            <button type="button" id="prevButton" class="btn btn-secondary" wire:click="prev()" >Previous</button>
+                            @endif
+                            @if($annual_certificate_inspection['step'] < 3)
+                                <button type="button" id="nextButton" class="btn btn-primary" wire:click="next('addModaltoggler')">Next</button>
+                            @else
+                                <button type="button" id="addButton" class="btn btn-success"  wire:click="next('addModaltoggler')">Add</button>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
 
-        </div>
 
-        <form >
+
+        <form class="d-none">
             <div class="container-fluid d-flex justify-content-center py-5">
                 <div class="annual-container">
                     <div class="annual-sheet">
@@ -665,13 +520,7 @@
             <input type="hidden" name="date_complied" value="">
 
         </form>
-
-        <div class='msgalert alert--success' id='alert'>
-            <div class='alert__message'>
-                Annual Certificate Created Successfully
-        </div>
-
-        <!-- Scroll to Top Button-->
+        
         <a class="scroll-to-top rounded" href="#page-top">
             <i class="fas fa-angle-up"></i>
         </a>

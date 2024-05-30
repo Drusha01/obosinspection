@@ -167,7 +167,7 @@ class InspectionSchedules extends Component
             ->join('brgy as brg','brg.id','b.brgy_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-            ->where('st.name','<>','Deleted')
+            ->where('st.name','=','Pending')
             ->orderBy('id','desc')
             ->paginate(10);
             // dd($table_data);

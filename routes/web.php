@@ -53,6 +53,7 @@ use App\Livewire\Admin\Administrator\Billings\EquipmentBillingSections\Equipment
 use App\Livewire\Admin\Administrator\Billings\SanitaryBillings\SanitaryBillings as AdministratorSanitaryBillings;
 use App\Livewire\Admin\Administrator\Billings\SignageBillings\SignageBillings as AdministratorSignageBillings;
 use App\Livewire\Admin\Administrator\Certifications\Certification\Certification as AdministratorCertification;
+use App\Livewire\Admin\Administrator\Certifications\Generate\Certification  as AdministratorCertificationGenerate;
 use App\Livewire\Admin\Administrator\Dashboard\Dashboard  as AdministratorDashboard;
 use App\Livewire\Admin\Administrator\Equipments\Category\Category as AdministratorCategory;
 use App\Livewire\Admin\Administrator\Equipments\Items\Items as AdministratorItems;
@@ -162,6 +163,7 @@ Route::middleware([Authenticated::class,IsValid::class,IsAdministrator::class])-
             
         });
         Route::get('/certifications', AdministratorCertification::class)->name('administrator-certifications');
+        Route::get('/certifications/generate/{id}', AdministratorCertificationGenerate::class)->name('administrator-generate-certifications');
         Route::get('/violations', AdministratorViolations::class)->name('administrator-violations');
         Route::get('/barangay-locations', AdministratorBarangayLocations::class)->name('administrator-barangay-locations');
         Route::get('/activity-logs', AdministratorActivityLogs::class)->name('administrator-activity-logs');

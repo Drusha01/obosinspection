@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement('CREATE TABLE inspections(
+        DB::statement('CREATE TABLE annual_certificate_inspections(
             id INT PRIMARY KEY AUTO_INCREMENT,
-            status_id INT NOT NULL, 
-            business_id INT NOT NULL, 
-            schedule_date DATE,
-            signage_id INT,
-            building_billing_id INT,
-            application_type_id INT,
-            remarks VARCHAR(1024),
-            date_signed DATE,
+            status_id INT,
+            business_id INT NOT NULL,
+            application_type_id INT NOT NULL,
+            bin VARCHAR(15) DEFAULT "N/A",
+            occupancy_no INT DEFAULT NULL,
+            date_compiled DATE NOT NULL,
+            issued_on DATE DEFAULT NULL,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
             date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            FOREIGN KEY (business_id) REFERENCES businesses(id)
+            FOREIGN KEY (business_id) REFERENCES businesses(id),
+            FOREIGN KEY (application_type_id) REFERENCES application_types(id)
         );');
     }
 
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('inspections');
+        Schema::dropIfExists('annual_certificate_inspections');
     }
 };

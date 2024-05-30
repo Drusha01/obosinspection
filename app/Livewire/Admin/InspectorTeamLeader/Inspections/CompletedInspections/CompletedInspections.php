@@ -98,6 +98,15 @@ class CompletedInspections extends Component
         ->layout('components.layouts.admin',[
             'title'=>$this->title]);
     }
+    public function update_complied_violation($id){
+        DB::table('inspection_violations')
+            ->where('id','=',$id)
+            ->where('inspection_id','=',$this->issue_inspection['id'])
+            ->update([
+                'remarks'=>'complied'
+            ]);
+        self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
+    }
     public function update_inspection_data($id,$step){
         
         $application_types = DB::table('application_types')

@@ -65,7 +65,7 @@ return new class extends Migration
         (NULL,1,34717,7,"Albar","R.","Saway",NULL,"09265827342","AlbarSaway@gmail.com","default.png",1,NOW(),NOW()),
         
         (NULL,1,34717,7,"James Harold","D.","Regalado",NULL,"09265827342","JamesRegalado@gmail.com","default.png",1,NOW(),NOW()),
-        (NULL,1,34717,5,"Joanne","O.","Dutaro",NULL,"09265827342","JoanneDurato@gmail.com","default.png",1,NOW(),NOW()),
+        (NULL,1,34717,5,"Joanne","O.","Dutarot",NULL,"09265827342","JoanneDurato@gmail.com","default.png",1,NOW(),NOW()),
         (22, 2, 34717, 1, "Dave", "E.", "Panizal", NULL, "09265827342", "davepanizal@gmail.com", "default.png", 1, NOW(), NOW()),
         (23, 2, 34717, 1, "Blessie Lou", "", "Gilva", NULL, "09265821232", "blessielou@gmail.com", "default.png", 1, NOW(), NOW())
         ');

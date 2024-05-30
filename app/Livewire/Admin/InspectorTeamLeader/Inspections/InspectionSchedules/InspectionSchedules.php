@@ -180,7 +180,7 @@ class InspectionSchedules extends Component
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
             ->where('iitl.person_id','=',$person->person_id)
-            ->where('st.name','<>','Deleted')
+            ->where('st.name','=','Pending')
             ->orderBy('id','desc')
             ->paginate(10);
         return view('livewire.admin.inspector-team-leader.inspections.inspection-schedules.inspection-schedules',[

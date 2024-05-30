@@ -392,7 +392,7 @@ input[readonly] {
 }
 
 .annual-sheet-left .verified-by-container {
-  width: 30%;
+  width: 50%;
 }
 
 .annual-sheet-left .verified-by-position,
@@ -402,7 +402,7 @@ input[readonly] {
 }
 .annual-sheet-left .verified-by-names,
 .annual-sheet-left .chief-title {
-  font-size: 10.5pt;
+  font-size: 8pt;
 }
 
 

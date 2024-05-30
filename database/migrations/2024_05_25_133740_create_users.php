@@ -55,7 +55,7 @@ DB::statement("INSERT INTO `users` VALUES
 (NULL,'AlbarSaway','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,19,1,NOW(),NOW()),
 
 (NULL,'JamesRegalado','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,20,1,NOW(),NOW()),
-(NULL,'JoanneDutaro','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,21,1,NOW(),NOW())
+(NULL,'JoanneDutarot','$2y$12$56vkcmDMUypKhjW.CZ3AEe7k.ZiSNy3f6KhJysZ4ZuvvACm23pOfO',1,21,1,NOW(),NOW())
 ");
 
 
