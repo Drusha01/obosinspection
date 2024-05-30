@@ -15,6 +15,8 @@
                             @foreach($filter as $filter_key => $filter_value)
                                 @if($filter_value['name'] == 'Action')
                                     <th scope="col" class="text-center">{{$filter_value['name']}}</th>
+                                @elseif($filter_value['name'] == 'Generate')
+                                    <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                 @elseif($filter_value['name'] == 'Inspection Details')
                                     <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                 @else 
@@ -35,6 +37,12 @@
                                                 <img class="img-fluid"src="{{asset('storage/content/business/'.$value->{$filter_value['column_name']})}}" alt="" style="max-height:50px;max-width:50px; ">
                                             </a>
                                         </td>
+                                    @elseif($filter_value['name'] == 'Generate' && $filter_value['active'])
+                                        <td class="text-center align-middle">
+                                            <a class="btn btn-outline-primary" target="_blank"href="/administrator/inspections/generate/{{$value->id}}">
+                                                Generate PDF
+                                            </a>
+                                        </td> 
                                     @elseif($filter_value['name'] == 'Inspection Details' && $filter_value['active'])
                                         <td class="text-center align-middle">
                                             <button class="btn btn-primary" wire:click="issue({{$value->id}},'issueModaltoggler')">

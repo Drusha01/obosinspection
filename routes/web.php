@@ -58,6 +58,7 @@ use App\Livewire\Admin\Administrator\Establishments\Businesses\Businesses as Adm
 use App\Livewire\Admin\Administrator\Establishments\Owner\Owner as AdministratorOwner;
 use App\Livewire\Admin\Administrator\Inspections\CompletedInspections\CompletedInspections as AdministratorCompletedInspections;
 use App\Livewire\Admin\Administrator\Inspections\DeletedInspections\DeletedInspections as AdministratorDeletedInspections;
+use App\Livewire\Admin\Administrator\Inspections\Generate\Generate as AdministratorGenerate;
 use App\Livewire\Admin\Administrator\Inspections\InspectionSchedules\InspectionSchedules as AdministratorInspectionSchedules;
 use App\Livewire\Admin\Administrator\Profile\Profile as AdministratorProfile;
 use App\Livewire\Admin\Administrator\Users\Administrator\Administrator as AdministratorAdministrator;
@@ -145,6 +146,7 @@ Route::middleware([Authenticated::class,IsValid::class,IsAdministrator::class])-
         Route::prefix('inspections')->group(function () {
             Route::get('/inspection-schedules', AdministratorInspectionSchedules::class)->name('administrator-inspections-inspection-schedules');
             Route::get('/deleted-inspections', AdministratorDeletedInspections::class)->name('administrator-inspections-deleted-inspections');
+            Route::get('/generate/{id}', AdministratorGenerate::class)->name('administrator-inspections-generate');
             Route::get('/completed-inspections', AdministratorCompletedInspections::class)->name('administrator-inspections-completed-inspections');
         });
         Route::prefix('users')->group(function () {
