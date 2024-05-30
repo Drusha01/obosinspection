@@ -3,10 +3,8 @@
         <div class="container-fluid">
             <div class="d-sm-flex align-items-center justify-content-between mt-4 mb-4">
                 <h1 class="h3 mb-0 text-gray-800">{{$title}}</h1>
-                <div class="p-0 m-0" wire:click="add('addModaltoggler')" >
-                    <button type="button" class="btn btn-primary">
-                        Add Inspection Schedule
-                    </button>
+                <div class="p-0 m-0"  >
+                   
                 </div>
             </div>
             <!-- Table -->
