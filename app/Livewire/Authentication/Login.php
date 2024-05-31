@@ -50,11 +50,24 @@ class Login extends Component
                     'u.password',
                     'u.username',
                     'r.name as role_name',
+                    'u.is_active'
                     )
                 ->where('u.username','=',$this->user['username'])
                 ->join('roles as r','u.role_id','r.id')
                 ->first();
+           
             if( $user_details && password_verify($this->user['password'],$user_details->password)){
+                if($user_details->is_active == 0){
+                    $this->dispatch('swal:redirect',
+                        position          									: 'center',
+                        icon              									: 'warning',
+                        title            									: 'Account deactivated!',
+                        showConfirmButton 									: 'true',
+                        timer             									: '1000',
+                        link              									: '#'
+                    );
+                    return 0 ;
+                }
                 $request->session()->regenerate();
                 $request->session()->put('id', $user_details->id);
                 $this->dispatch('swal:redirect',

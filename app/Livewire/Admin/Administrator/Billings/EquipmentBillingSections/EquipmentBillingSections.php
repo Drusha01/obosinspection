@@ -37,7 +37,8 @@ class EquipmentBillingSections extends Component
                 'ebs.id',
                 'ebs.name',
                 'ebs.category_id',
-                'c.name as category_name'
+                'c.name as category_name',
+                'ebs.is_active'
             )
             ->join('categories as c','c.id','ebs.category_id')
             ->orderBy('id','desc')

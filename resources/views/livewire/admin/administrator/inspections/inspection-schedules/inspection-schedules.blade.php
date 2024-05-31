@@ -514,7 +514,7 @@
                                 @if($issue_inspection['step'] != 8)
                                     <button type="button" id="nextButton" class="btn btn-primary" wire:click="next_issue()">Next</button>
                                 @else
-                                    <button type="button" disabled id="nextButton" class="btn btn-primary" wire:click="next_issue()">Next</button>
+                                    <button type="button" disabled id="nextButton" class="btn btn-primary opacity-0" wire:click="next_issue()">Next</button>
                                 @endif
                             </div>
                         </div>

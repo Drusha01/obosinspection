@@ -12,6 +12,7 @@ class Generate extends Component
     public $title = "Generate PDF"; 
     public $issue_inspection;
     public function mount($id){
+        
         self::update_inspection_data($id);
         if($this->issue_inspection){
         }else{

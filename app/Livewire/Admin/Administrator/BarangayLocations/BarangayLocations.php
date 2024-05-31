@@ -25,6 +25,15 @@ class BarangayLocations extends Component
         'brgyDesc'=>NULL,
         'is_active'=>NULL,
     ];
+
+    public $user_details = [];
+    public function booted(Request $request){
+        $session = $request->session()->all();
+        dd($session);
+    }
+    public function insert_activity_logs(){
+
+    }
     public function render()
     {
         $city_mun = DB::table('citymun')
