@@ -107,13 +107,14 @@
                                         <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
                                             <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                                                 <tr>
-                                                    <th>Item name</th>
-                                                    <th>Category</th>
-                                                    <th>Section</th>
-                                                    <th colspan="3">Capacity</th>
-                                                    <th colspan="1">Quantity</th>
-                                                    <th>Power Rating</th>
-                                                    <th>Fee</th>
+                                                    <th class="align-middle">Item name</th>
+                                                    <th class="align-middle">Category</th>
+                                                    <th class="align-middle">Section</th>
+                                                    <th class="align-middle" colspan="3" >Capacity</th>
+                                                    <th class="align-middle" colspan="1">Quantity</th>
+                                                    <th class="align-middle"> Power Rating</th>
+                                                    <th class="align-middle">Fee</th>
+                                                    <th class="align-middle text-center">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -121,8 +122,9 @@
                                                     <tr>
                                                         <td class="align-middle">{{$value['name']}}</td>
                                                         <td class="align-middle">{{$value['category_name']}}</td>
-                                                        <td class="align-middle">{{$value['section']}}</td>
+                                                        <td class="align-middle">{{$value['section_name']}}</td>
                                                         <td class="align-middle" colspan="3">
+
                                                             <?php 
                                                                 $equipments_billing = DB::table('equipment_billings as eb')
                                                                     ->select(
@@ -130,12 +132,13 @@
                                                                         'eb.capacity'
                                                                         )
                                                                     ->join('equipment_billing_sections as ebs','ebs.id','eb.section_id')
+                                                                    // ->orderBy('eb.id','desc')
                                                                     ->where('ebs.category_id','=',$value['category_id'])
-                                                                    ->where('ebs.name','=',$value['section'])
+                                                                    ->where('ebs.id','=',$value['section_id'])
                                                                     ->get()
                                                                     ->toArray();
                                                             ?>
-                                                                <select class="form-select" id="teamLeaderSelect" disabled wire:change="update_equipment_billing({{$value['id']}},{{$key}})" wire:model="issue_inspection.inspection_items.{{$key}}.equipment_billing_id">
+                                                                <select class="form-select" id="teamLeaderSelect" wire:change="update_equipment_billing({{$value['id']}},{{$key}})" wire:model="issue_inspection.inspection_items.{{$key}}.equipment_billing_id">
                                                                     <option value="">Select Capacity</option>
                                                                     @foreach($equipments_billing as $eb_key => $eb_value)
                                                                         <option value="{{$eb_value->id}}">{{$eb_value->capacity}}</option>
@@ -143,13 +146,16 @@
                                                                 </select>
                                                         </td>
                                                         <td class="align-middle"  colspan="1">
-                                                            <input type="number" class="form-control"disabled  wire:change="update_item_quantity({{$value['id']}},{{$key}})" min="1" wire:model="issue_inspection.inspection_items.{{$key}}.quantity">
+                                                            <input type="number" class="form-control" wire:change="update_item_quantity({{$value['id']}},{{$key}})" min="1" wire:model="issue_inspection.inspection_items.{{$key}}.quantity">
                                                         </td>
                                                         <td class="align-middle">
-                                                            <input type="number" step="0.01" disabled class="form-control" wire:change="update_item_power_rating({{$value['id']}},{{$key}})" min="0.01" wire:model="issue_inspection.inspection_items.{{$key}}.power_rating">
+                                                            <input type="number" step="0.01" class="form-control" wire:change="update_item_power_rating({{$value['id']}},{{$key}})" min="0.01" wire:model="issue_inspection.inspection_items.{{$key}}.power_rating">
                                                         </td>
                                                         <td class="align-middle">{{$value['fee']*$value['quantity']}}</td>
                                                         <td class="align-middle text-center">
+                                                            <button class="btn btn-danger " wire:click="update_delete_item({{$value['id']}})">
+                                                                Delete
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 @endforeach

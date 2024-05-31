@@ -86,7 +86,7 @@ Route::middleware([Unauthenticated::class])->group(function () {
     Route::get('/login', AuthenticationLogin::class)->name('login');
 });
 
-Route::get('/', function () {})->middleware([Authenticated::class,IsValid::class,checkRoles::class]);
+Route::get('/', function () {})->middleware([Authenticated::class,IsValid::class,checkRoles::class])->name('/');
 
 
 

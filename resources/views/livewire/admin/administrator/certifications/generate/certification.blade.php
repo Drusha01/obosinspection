@@ -14,22 +14,23 @@
                             <img src="./../../../assets/img/annual-certificate.jpg" alt="annual-certificate" class="annual-sheet-image">
                             <div class="annual-sheet-left">
                                 <div class="d-flex justify-content-center annual-header annual-business-name mb-2 pb-1 annual-data">
-                                    {{$generate['annual_certificate_inspections']->first_name.' '.
+                                    {{strtoupper($generate['annual_certificate_inspections']->first_name.' '.
                                         $generate['annual_certificate_inspections']->middle_name.' '.
                                         $generate['annual_certificate_inspections']->last_name.' '.
                                         $generate['annual_certificate_inspections']->suffix
-                                        .' / '.$generate['annual_certificate_inspections']->name.' '}}
+                                        .' / '.$generate['annual_certificate_inspections']->name.' ')}}
                                     
                                 </div>
 
                                 <div class="d-flex justify-content-center annual-header annual-business-address pb-1 mb-1 annual-data">
-                                    @if($generate['annual_certificate_inspections']->street_address) {{$generate['annual_certificate_inspections']->street_address.', '}}@endif {{$generate['annual_certificate_inspections']->barangay}}, General Santos City, South Cotabato
+                                    @if($generate['annual_certificate_inspections']->street_address) {{strtoupper($generate['annual_certificate_inspections']->street_address.', ')}}
+                                    @endif {{strtoupper($generate['annual_certificate_inspections']->barangay)}}, GENERAL SANTOS CITY, SOUTH COTABATO
                                 </div>
 
                                 <div class="w-100 d-flex justify-content-between flex-gap annual-owner-wrapper">
                                     <div class=" w-50 d-flex flex-column justify-content-center align-items-center ">
                                         <div class="w-100 d-flex justify-content-center annual-owner p-1 annual-data">
-                                            {{$generate['annual_certificate_inspections']->occupancy_classification_name}}
+                                            {{strtoupper($generate['annual_certificate_inspections']->occupancy_classification_name)}}
                                         </div>
                                         <p class="w-100 m-0 text-center annual-owner-title">CHARACTER OF OCCUPANCY</p>
                                     </div>
@@ -37,7 +38,7 @@
 
                                     <div class="w-50 d-flex flex-column justify-content-center align-items-center">
                                         <div class="w-100 d-flex justify-content-center annual-group p-1 annual-data">
-                                            {{$generate['annual_certificate_inspections']->character_of_occupancy_group}}
+                                            {{strtoupper($generate['annual_certificate_inspections']->character_of_occupancy_group)}}
                                         </div>
                                         <p class="w-100 m-0 text-center annual-group-title">Group</p>
                                     </div>
@@ -58,23 +59,23 @@
                                         VERIFIED AS TO THE FOLLOWING
                                     </div>
                                     <div class="verified-by-wrapper w-100 d-flex justify-content-center flex-wrap">
-                                        <div class="" style="width:30%;">
-                                                @foreach($generate['annual_certificate_inspection_inspectors'] as $key => $value)
+                                        @foreach($generate['annual_certificate_inspection_inspectors'] as $key => $value)
+                                            <div class="verified-by-container">
                                                 <div class="verified-by-names w-100 d-flex justify-content-center annual-data">
-                                                    {{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix}}
+                                                    {{strtoupper($value->first_name[0].' '.$value->last_name.' '.$value->suffix)}}
                                                 </div>
-                                                <p class="w-100 m-0 text-center verified-by-position">{{$value->category_name}}</p>
-                                                @endforeach
+                                                <p class="w-100 m-0 text-center verified-by-position">{{strtoupper($value->category_name)}}</p>
                                             </div>
+                                            @endforeach
                                         </div>
                                     </div>
-
                                 <div class="annual-recommended-description">
                                     THE ABOVE-DESCRIBED BUILDING/STRUCTURE COVERED BY CERTIFICATE OF OCCUPANCY NO.
                                     <u>
-                                        {{$generate['annual_certificate_inspections']->occupancy_no}}</u>
+                                        {{($generate['annual_certificate_inspections']->occupancy_no ? strtoupper($generate['annual_certificate_inspections']->occupancy_no) : "N/A")}}
+                                    </u>
                                     ISSUED
-                                    ON <u> {{date_format(date_create($generate['annual_certificate_inspections']->issued_on),"M d, Y"); }}</u> HAS BEEN VERIFIED AND
+                                    ON <u> {{($generate['annual_certificate_inspections']->occupancy_no ? strtoupper(date_format(date_create($generate['annual_certificate_inspections']->issued_on),"M d, Y")) : "N/A") }}</u> HAS BEEN VERIFIED AND
                                     FOUND
                                     SUBSTANTIALLY
                                     SATISFACTORY COMPLIED, THEREFORE
@@ -119,27 +120,27 @@
                             </div>
 
                             <div class="annual-sheet-right">
-                                <div class="d-flex justify-content-end official-bin">BIN: {{$generate['annual_certificate_inspections']->bin}}</div>
+                                <div class="d-flex justify-content-end official-bin">BIN: @if($generate['annual_certificate_inspections']->bin){{strtoupper($generate['annual_certificate_inspections']->bin)}} @else N/A @endif</div>
                                 <table class="table table-bordered mb-2 table-one">
                                     <thead>
                                         <tr class="font-seven border-0">
                                             <th colspan="2" class="text-left">CERTIFICATE ANNUAL INSPECTION</th>
-                                            <th colspan="2">DATE INSPECTED: {{date_format(date_create($generate['annual_certificate_inspections']->date_created),"M d, Y"); }}</th>
+                                            <th colspan="2">DATE INSPECTED: {{strtoupper(date_format(date_create($generate['annual_certificate_inspections']->date_updated),"M d, Y")) }}</th>
                                         </tr>
                                         <tr>
                                             <th class="font-seven p-2 text-center">NAME OF LESSEE</th>
                                             <th colspan="3" class="lessee-name text-center">
-                                            {{$generate['annual_certificate_inspections']->first_name.' '.
+                                            {{strtoupper($generate['annual_certificate_inspections']->first_name.' '.
                                                 $generate['annual_certificate_inspections']->middle_name.' '.
                                                 $generate['annual_certificate_inspections']->last_name.' '.
                                                 $generate['annual_certificate_inspections']->suffix
-                                                .' / '.$generate['annual_certificate_inspections']->name.' '}}
+                                                .' / '.$generate['annual_certificate_inspections']->name)}}
                                             </th>
                                         </tr>
                                         <tr>
                                             <th class="font-seven p-3">LOCATION</th>
                                             <th colspan="3" class="location text-center align-middle"> 
-                                            @if($generate['annual_certificate_inspections']->street_address) {{$generate['annual_certificate_inspections']->street_address.', '}}@endif {{$generate['annual_certificate_inspections']->barangay}}, General Santos City, South Cotabato
+                                            @if($generate['annual_certificate_inspections']->street_address) {{strtoupper($generate['annual_certificate_inspections']->street_address.', ')}}@endif {{strtoupper($generate['annual_certificate_inspections']->barangay)}}, GENERAL SANTOS CITY, SOUTH COTABATO
                                             </th>
                                         </tr>
 
@@ -151,12 +152,12 @@
                                         </tr>
                                         </thead>
                                         <tbody class="inspector_body">
-                                            @foreach($generate['annual_certificate_inspection_inspectors'] as $key => $value)
+                                            @foreach($generate['unique_annual_certificate_inspection_inspectors'] as $key => $value)
                                                 <tr>
-                                                    <td>{{date_format(date_create($value->date_signed),"M d, Y"); }}</td>
-                                                    <td> {{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix}}</td>
-                                                    <td>{{date_format(date_create($value->time_in),"h:m a"); }}</td>
-                                                    <td>{{date_format(date_create($value->time_out),"h:m a"); }}</td>
+                                                    <td></td>
+                                                    <td> {{strtoupper($value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix)}}</td>
+                                                    <td></td>
+                                                    <td></td>
                                                 </tr>
                                                 @endforeach
 
@@ -174,7 +175,7 @@
                                     <div>
                                         ANNUAL INSPECTION TEAM:
                                         <b>
-                                            @foreach($generate['annual_certificate_inspection_inspectors'] as $key => $value)
+                                            @foreach($generate['unique_annual_certificate_inspection_inspectors'] as $key => $value)
                                                 @if($loop->last)
                                                     {{strtoupper($value->last_name)}}
                                                 @else 

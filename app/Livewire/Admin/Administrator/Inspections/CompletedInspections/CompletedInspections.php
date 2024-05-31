@@ -125,7 +125,7 @@ class CompletedInspections extends Component
             ]);
         self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
     }
-    public function update_inspection_data($id,$step){
+     public function update_inspection_data($id,$step){
         
         $application_types = DB::table('application_types')
             ->where('is_active','=',1)
@@ -266,7 +266,7 @@ class CompletedInspections extends Component
                 'c.name as category_name',
                 'c.id as category_id',
                 'i.name',
-                'i.section',
+                'i.section_id',
                 'i.img_url',
                 'i.is_active',
                 "ii.id",
@@ -276,8 +276,10 @@ class CompletedInspections extends Component
                 "ii.power_rating",
                 "ii.quantity",
                 "eb.fee",
-            )
+                'ebs.name as section_name',
+                )
             ->join('items as i','i.id','ii.item_id')
+            ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
             ->join('categories as c','c.id','i.category_id')
             ->leftjoin('equipment_billings as eb','eb.id','ii.equipment_billing_id')
             ->where('ii.inspection_id','=',$id)
@@ -289,7 +291,7 @@ class CompletedInspections extends Component
                 'category_name' => $value->category_name,
                 'category_id' => $value->category_id,
                 'name'=> $value->name,
-                'section' => $value->section,
+                'section_id' => $value->section_id,
                 'img_url' => $value->img_url,
                 'is_active' => $value->is_active,
                 "id" => $value->id,
@@ -299,6 +301,7 @@ class CompletedInspections extends Component
                 "power_rating" => $value->power_rating,
                 "quantity" => $value->quantity,
                 "fee" => $value->fee,
+                'section_name'=>$value->section_name
             ]);
         }
         $inspection_items = $temp;
@@ -377,8 +380,7 @@ class CompletedInspections extends Component
         $inspection_violations = DB::table('inspection_violations as iv')
             ->select(
                 'iv.id',
-                'description',
-                'remarks'
+                'description'
             )
             ->join('violations as v','v.id','iv.violation_id')
             ->where('inspection_id','=',$id)
@@ -401,7 +403,6 @@ class CompletedInspections extends Component
         foreach ($inspection_violations as $key => $value) {
             array_push($temp,[
                 'description'=> $value->description,
-                'remarks'=> $value->remarks,
                 "id" => $value->id,
             ]);
         }
@@ -411,10 +412,12 @@ class CompletedInspections extends Component
                 'i.id',
                 'c.name as category_name',
                 'i.name',
-                'i.section',
+                'i.section_id',
                 'i.img_url',
-                'i.is_active'
-            )
+                'i.is_active',
+                'ebs.name as section_name',
+                )
+            ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
             ->join('categories as c','c.id','i.category_id')
             ->where('i.is_active','=',1)
             ->get()
@@ -639,21 +642,18 @@ class CompletedInspections extends Component
     public function add_annual_inspector(){
         if(intval($this->annual_certificate_inspection['inspector_id'])){
             $valid = true;
-            foreach ($this->annual_certificate_inspection['annual_certificate_inspection_inspector'] as $key => $value) {
-                if($value['content']->id == $this->annual_certificate_inspection['inspector_id']){
-                    $valid = false;
-                    break;
-                }
-            }
+            // foreach ($this->annual_certificate_inspection['annual_certificate_inspection_inspector'] as $key => $value) {
+            //     if($value['content']->id == $this->annual_certificate_inspection['inspector_id']){
+            //         $valid = false;
+            //         break;
+            //     }
+            // }
             if($valid){
                 foreach ($this->annual_certificate_inspection['inspectors'] as $key => $value) {
                     if($value->id == $this->annual_certificate_inspection['inspector_id']){
                         array_push($this->annual_certificate_inspection['annual_certificate_inspection_inspector'],[
                             'content'=>$value,
                             'category_id'=>NULL,
-                            'date_signed'=>NULL,
-                            'time_in' => NULL,
-                            'time_out'=> NULL,
                         ]);
                         break;
                     }
@@ -669,9 +669,6 @@ class CompletedInspections extends Component
                 array_push($temp,[
                     'content'=>$value['content'],
                     'category_id'=>$value['category_id'],
-                    'date_signed'=>$value['date_signed'],
-                    'time_in' => $value['time_in'],
-                    'time_out'=> $value['time_out'],
                 ]);
             }
         }
@@ -751,39 +748,6 @@ class CompletedInspections extends Component
                     );
                     return;
                 }
-                if(!isset($value['date_signed'])){
-                    $this->dispatch('swal:redirect',
-                        position         									: 'center',
-                        icon              									: 'warning',
-                        title             									: 'Please input date signed for '.$value['content']->first_name.' '.$value['content']->middle_name.' '.$value['content']->last_name.' '.$value['content']->suffix.' ( '.$value['content']->work_role_name.' ) ',
-                        showConfirmButton 									: 'true',
-                        timer             									: '1500',
-                        link              									: '#'
-                    );
-                    return;
-                }
-                if(!isset($value['time_in'])){
-                    $this->dispatch('swal:redirect',
-                        position         									: 'center',
-                        icon              									: 'warning',
-                        title             									: 'Please input time in for '.$value['content']->first_name.' '.$value['content']->middle_name.' '.$value['content']->last_name.' '.$value['content']->suffix.' ( '.$value['content']->work_role_name.' ) ',
-                        showConfirmButton 									: 'true',
-                        timer             									: '1500',
-                        link              									: '#'
-                    );
-                    return;
-                }
-                if(!isset($value['time_out'])){
-                    $this->dispatch('swal:redirect',
-                        position         									: 'center',
-                        icon              									: 'warning',
-                        title             									: 'Please input time out for '.$value['content']->first_name.' '.$value['content']->middle_name.' '.$value['content']->last_name.' '.$value['content']->suffix.' ( '.$value['content']->work_role_name.' ) ',
-                        showConfirmButton 									: 'true',
-                        timer             									: '1500',
-                        link              									: '#'
-                    );
-                    return;
-                }
             }
             $this->annual_certificate_inspection['step']+=1;
         }elseif($this->annual_certificate_inspection['step'] == 3){
@@ -817,18 +781,15 @@ class CompletedInspections extends Component
                         'annual_certificate_inspection_id'=> $temp->id,
                         'person_id' => $value['content']->id,
                         'category_id' => $value['category_id'],
-                        'date_signed' => $value['date_signed'],
-                        'time_in' => $value['time_in'],
-                        'time_out' => $value['time_out'],
                     ]);
                 }
-                $this->dispatch('swal:redirect',
+                $this->dispatch('swal:new_page',
                     position         									: 'center',
                     icon              									: 'success',
                     title             									: 'Successfully added!',
                     showConfirmButton 									: 'true',
                     timer             									: '1500',
-                    link              									: '/administrator/certifications/generate/'.$temp->id
+                    link              									: ($_SERVER['REMOTE_PORT'] == 80? 'https://': 'http://' ).$_SERVER['SERVER_NAME'].'/administrator/certifications/generate/'.$temp->id
                 );
             }
         }

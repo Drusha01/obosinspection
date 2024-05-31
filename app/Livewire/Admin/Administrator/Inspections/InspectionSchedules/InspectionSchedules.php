@@ -503,7 +503,7 @@ class InspectionSchedules extends Component
                 'c.name as category_name',
                 'c.id as category_id',
                 'i.name',
-                'i.section',
+                'i.section_id',
                 'i.img_url',
                 'i.is_active',
                 "ii.id",
@@ -513,8 +513,10 @@ class InspectionSchedules extends Component
                 "ii.power_rating",
                 "ii.quantity",
                 "eb.fee",
-            )
-            ->join('items as i','i.id','ii.item_id')
+                'ebs.name as section_name',
+                )
+                ->join('items as i','i.id','ii.item_id')
+            ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
             ->join('categories as c','c.id','i.category_id')
             ->leftjoin('equipment_billings as eb','eb.id','ii.equipment_billing_id')
             ->where('ii.inspection_id','=',$id)
@@ -526,7 +528,7 @@ class InspectionSchedules extends Component
                 'category_name' => $value->category_name,
                 'category_id' => $value->category_id,
                 'name'=> $value->name,
-                'section' => $value->section,
+                'section_id' => $value->section_id,
                 'img_url' => $value->img_url,
                 'is_active' => $value->is_active,
                 "id" => $value->id,
@@ -536,6 +538,7 @@ class InspectionSchedules extends Component
                 "power_rating" => $value->power_rating,
                 "quantity" => $value->quantity,
                 "fee" => $value->fee,
+                'section_name'=>$value->section_name
             ]);
         }
         $inspection_items = $temp;
@@ -646,10 +649,12 @@ class InspectionSchedules extends Component
                 'i.id',
                 'c.name as category_name',
                 'i.name',
-                'i.section',
+                'i.section_id',
                 'i.img_url',
-                'i.is_active'
-            )
+                'i.is_active',
+                'ebs.name as section_name',
+                )
+            ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
             ->join('categories as c','c.id','i.category_id')
             ->where('i.is_active','=',1)
             ->get()
@@ -777,13 +782,22 @@ class InspectionSchedules extends Component
         }
     }
     public function update_equipment_billing($id,$key){
-        DB::table('inspection_items')
+        if($this->issue_inspection['inspection_items'][$key]['equipment_billing_id']){
+            DB::table('inspection_items')
+                ->where('id','=',$id)
+                ->where('inspection_id','=',$this->issue_inspection['id'])
+                ->update([
+                    'equipment_billing_id'=> $this->issue_inspection['inspection_items'][$key]['equipment_billing_id']
+                ]);
+        }else{
+            DB::table('inspection_items')
             ->where('id','=',$id)
             ->where('inspection_id','=',$this->issue_inspection['id'])
             ->update([
-                'equipment_billing_id'=> $this->issue_inspection['inspection_items'][$key]['equipment_billing_id']
+                'equipment_billing_id'=> NULL
             ]);
-            self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
+        }
+        self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
 
     }
     public function update_item_quantity($id,$key){

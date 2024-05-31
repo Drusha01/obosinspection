@@ -119,13 +119,13 @@
                                         <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
                                             <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                                                 <tr>
-                                                    <th>Item name</th>
-                                                    <th>Category</th>
-                                                    <th>Section</th>
-                                                    <th colspan="3">Capacity</th>
-                                                    <th colspan="1">Quantity</th>
-                                                    <th>Power Rating</th>
-                                                    <th>Fee</th>
+                                                    <th class="align-middle">Item name</th>
+                                                    <th class="align-middle">Category</th>
+                                                    <th class="align-middle">Section</th>
+                                                    <th class="align-middle" colspan="3" >Capacity</th>
+                                                    <th class="align-middle" colspan="1">Quantity</th>
+                                                    <th class="align-middle"> Power Rating</th>
+                                                    <th class="align-middle">Fee</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -133,8 +133,9 @@
                                                     <tr>
                                                         <td class="align-middle">{{$value['name']}}</td>
                                                         <td class="align-middle">{{$value['category_name']}}</td>
-                                                        <td class="align-middle">{{$value['section']}}</td>
+                                                        <td class="align-middle">{{$value['section_name']}}</td>
                                                         <td class="align-middle" colspan="3">
+
                                                             <?php 
                                                                 $equipments_billing = DB::table('equipment_billings as eb')
                                                                     ->select(
@@ -142,8 +143,9 @@
                                                                         'eb.capacity'
                                                                         )
                                                                     ->join('equipment_billing_sections as ebs','ebs.id','eb.section_id')
+                                                                    // ->orderBy('eb.id','desc')
                                                                     ->where('ebs.category_id','=',$value['category_id'])
-                                                                    ->where('ebs.name','=',$value['section'])
+                                                                    ->where('ebs.id','=',$value['section_id'])
                                                                     ->get()
                                                                     ->toArray();
                                                             ?>
@@ -155,14 +157,12 @@
                                                                 </select>
                                                         </td>
                                                         <td class="align-middle"  colspan="1">
-                                                            <input type="number" class="form-control"disabled  wire:change="update_item_quantity({{$value['id']}},{{$key}})" min="1" wire:model="issue_inspection.inspection_items.{{$key}}.quantity">
+                                                            <input type="number" class="form-control" disabled wire:change="update_item_quantity({{$value['id']}},{{$key}})" min="1" wire:model="issue_inspection.inspection_items.{{$key}}.quantity">
                                                         </td>
                                                         <td class="align-middle">
                                                             <input type="number" step="0.01" disabled class="form-control" wire:change="update_item_power_rating({{$value['id']}},{{$key}})" min="0.01" wire:model="issue_inspection.inspection_items.{{$key}}.power_rating">
                                                         </td>
                                                         <td class="align-middle">{{$value['fee']*$value['quantity']}}</td>
-                                                        <td class="align-middle text-center">
-                                                        </td>
                                                     </tr>
                                                 @endforeach
 
@@ -411,9 +411,6 @@
                                             <tr>
                                                 <th>Name</th>
                                                 <th colspan="1">Category <span class="text-danger">*</span></th>
-                                                <th>Date signed <span class="text-danger">*</span></th>
-                                                <th>Time in <span class="text-danger">*</span></th>
-                                                <th>Time out <span class="text-danger">*</span></th>
                                                 <th class="align-middle text-center">Action</th>
                                             </tr>
                                         </thead>
@@ -428,15 +425,6 @@
                                                                 <option value="{{$cvalue->id}}">{{$cvalue->name}}</option>
                                                             @endforeach
                                                         </select>
-                                                    </td>
-                                                    <td>
-                                                        <input class="form-control" type="date" min="" required wire:model.live="annual_certificate_inspection.annual_certificate_inspection_inspector.{{$key}}.date_signed">
-                                                    </td>
-                                                    <td>
-                                                        <input class="form-control" type="time" required wire:model.live="annual_certificate_inspection.annual_certificate_inspection_inspector.{{$key}}.time_in">
-                                                    </td>
-                                                    <td>
-                                                        <input class="form-control" type="time" required wire:model.live="annual_certificate_inspection.annual_certificate_inspection_inspector.{{$key}}.time_out">
                                                     </td>
                                                     
                                                     <td class="align-middle text-center">

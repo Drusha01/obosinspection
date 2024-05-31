@@ -19,23 +19,26 @@ class Items extends Component
         ['column_name'=> 'img_url','active'=> true,'name'=>'Image'],
         ['column_name'=> 'category_name','active'=> true,'name'=>'Category name'],
         ['column_name'=> 'name','active'=> true,'name'=>'Item name'],
-        ['column_name'=> 'section','active'=> true,'name'=>'Section'],
+        ['column_name'=> 'section_name','active'=> true,'name'=>'Section'],
         ['column_name'=> 'id','active'=> true,'name'=>'Action'],
     ];
     public $item = [
         'id' => NULL,
         'category_id' => NULL,
         'name' => NULL,
-        'section' => NULL,
+        'section_id' => NULL,
         'img_url' => NULL,
         'is_active' => NULL,
     ];
     public $categories;
+    public $equipment_billing_sections = [];
+
     public function mount(){
         $this->categories = DB::table('categories')
             ->where('is_active','=',1)
             ->get()
             ->toArray();
+        
     }
     public function render()
     {
@@ -44,11 +47,12 @@ class Items extends Component
                 'i.id',
                 'c.name as category_name',
                 'i.name',
-                'i.section',
                 'i.img_url',
-                'i.is_active'
+                'i.is_active',
+                'ebs.name as section_name'
             )
             ->join('categories as c','c.id','i.category_id')
+            ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
             ->orderBy('id','desc')
             ->paginate(10);
         return view('livewire.admin.administrator.equipments.items.items',[
@@ -110,12 +114,19 @@ class Items extends Component
         }
         return 0;
     }
+    public function update_equipment_billing_sections(){
+        $this->equipment_billing_sections = DB::table('equipment_billing_sections')
+            ->where('category_id','=',$this->item['category_id'])
+            ->where('is_active','=',1)
+            ->get()
+            ->toArray();
+    }
     public function add($modal_id){
         $this->item = [
             'id' => NULL,
             'category_id' => NULL,
             'name' => NULL,
-            'section' => NULL,
+            'section_id' => NULL,
             'img_url' => NULL,
             'is_active' => NULL,
         ];
@@ -188,7 +199,7 @@ class Items extends Component
             ->insert([
                 'category_id' => $this->item['category_id'],
                 'name' => $this->item['name'],
-                'section' => $this->item['section'],
+                'section_id' => $this->item['section_id'],
                 'img_url' => $item['img_url'],
                 ])){
             $this->dispatch('swal:redirect',
@@ -209,10 +220,12 @@ class Items extends Component
                 'c.name as category_name',
                 'i.category_id',
                 'i.name',
-                'i.section',
+                'i.section_id',
                 'i.img_url',
-                'i.is_active'
+                'i.is_active',
+                'ebs.name as section_name',
             )
+            ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
             ->join('categories as c','c.id','i.category_id')
             ->where('i.id','=',$id)
             ->first()){
@@ -222,7 +235,8 @@ class Items extends Component
             'id' => $item->id,
             'category_id' => $item->category_id,
             'name' => $item->name,
-            'section' => $item->section,
+            'section_id' => $item->section_id,
+            'section_name' => $item->section_name,
             'img_url' => NULL,
             'is_active' => $item->is_active,
         ];
@@ -235,7 +249,7 @@ class Items extends Component
                 'c.name as category_name',
                 'i.category_id',
                 'i.name',
-                'i.section',
+                'i.section_id',
                 'i.img_url',
                 'i.is_active'
             )
@@ -312,7 +326,7 @@ class Items extends Component
                 ->update([
                     'category_id' => $this->item['category_id'],
                     'name' => $this->item['name'],
-                    'section' => $this->item['section'],
+                    'section_id' => $this->item['section_id'],
                     'img_url' => $item['img_url'],
                 ])            
         ){

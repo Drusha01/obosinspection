@@ -35,16 +35,21 @@
                                                 <img class="img-fluid"src="{{asset('storage/content/business/'.$value->{$filter_value['column_name']})}}" alt="" style="max-height:50px;max-width:50px; ">
                                             </a>
                                         </td>
+                                    @elseif ($filter_value['name'] == 'Owner'  && $filter_value['active'])
+                                        <td class="align-middle">
+                                            {{
+                                                $value->first_name.' '.
+                                                $value->middle_name.' '.
+                                                $value->last_name.' '.
+                                                $value->suffix
+                                            }}
+                                        </td>
+                                       
                                     @elseif($filter_value['name'] == 'Action' && $filter_value['active'])
                                         <td class="text-center align-middle">
-                                            <button class="btn btn-outline-secondary" wire:click="edit({{$value->id}},'completeModaltoggler')">
-                                                Complete
-                                            </button>
-                                            @if($value->is_active)
-                                                <button class="btn btn-danger" wire:click="edit({{$value->id}},'deactivateModaltoggler')">
-                                                    Delete
-                                                </button>
-                                            @endif
+                                            <a class="btn btn-outline-primary my-1" target="_blank" href="/administrator/certifications/generate/{{$value->id}}">
+                                                Generate Certificate
+                                            </a>
                                         </td>
                                     @elseif($filter_value['name'] == 'Inspection Details' && $filter_value['active'])
                                         <td class="text-center align-middle">
@@ -52,9 +57,9 @@
                                                 Inspection Details
                                             </button>
                                         </td>   
-                                    @elseif($filter_value['name'] == 'Schedule' && $filter_value['active'])
+                                    @elseif($filter_value['name'] == 'Date Compiled' && $filter_value['active'])
                                         <td class="align-middle">
-                                            {{date_format(date_create($value->schedule_date),"M d, Y")}}
+                                            {{date_format(date_create($value->date_compiled),"M d, Y")}}
                                         </td>
                                     @else
                                         @if($filter_value['active'])

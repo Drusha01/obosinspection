@@ -54,9 +54,6 @@ class Certification extends Component
                 "acii.annual_certificate_inspection_id",
                 "acii.person_id",
                 "acii.category_id",
-                "acii.date_signed",
-                "acii.time_in",
-                "acii.time_out",
                 'acc.name as category_name',
                 'p.first_name',
                 'p.middle_name',
@@ -71,9 +68,35 @@ class Certification extends Component
             ->where('acii.annual_certificate_inspection_id','=',$id)
             ->get()
             ->toArray();
+
+        $unique_annual_certificate_inspection_inspectors = DB::table('annual_certificate_inspection_inspectors as acii')
+            ->select(
+                DB::raw('DISTINCT(p.id)'),
+                'p.first_name',
+                'p.middle_name',
+                'p.last_name',
+                'p.suffix',
+                'p.contact_number',
+                'p.email',
+                'p.img_url',
+            )
+            ->join('persons as p','p.id','acii.person_id')
+            ->where('acii.annual_certificate_inspection_id','=',$id)
+            ->get()
+            ->toArray();
+        $annual_certificate_categories = DB::table('annual_certificate_categories as acc')
+            ->get()
+            ->toArray();
+        if($annual_certificate_inspections){
+
+        }else{
+            return redirect()->route('administrator-certifications');
+        }
+
         $this->generate = [
             'annual_certificate_inspections'=>$annual_certificate_inspections,
-            'annual_certificate_inspection_inspectors'=>$annual_certificate_inspection_inspectors
+            'annual_certificate_inspection_inspectors'=>$annual_certificate_inspection_inspectors,
+            'unique_annual_certificate_inspection_inspectors'=>$unique_annual_certificate_inspection_inspectors
         ];
     }
     public function render()

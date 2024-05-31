@@ -113,7 +113,12 @@
                             @if($equipment_billing['category_id'] != 2)
                             <div class="mb-3">
                                 <label for="capacity" class="form-label">Capacity</label>
-                                <input type="text" class="form-control" wire:model="equipment_billing.capacity">
+                                <input type="text" class="form-control" required wire:model="equipment_billing.capacity">
+                            </div>
+                            @else
+                            <div class="mb-3">
+                                <label for="capacity" class="form-label">Per unit</label>
+                                <input type="text" class="form-control" required wire:model="equipment_billing.capacity">
                             </div>
                             @endif
                             <div class="mb-3">
