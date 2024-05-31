@@ -224,7 +224,6 @@ class InspectionSchedules extends Component
                     'wr.name as work_role_name',
                 )
                 ->join('inspector_teams as it','p.id','it.team_leader_id')
-                ->join('inspector_members as im','im.inspector_team_id','it.id')
                 ->join('person_types as pt','p.person_type_id','pt.id')
                 ->join('work_roles as wr', 'wr.id','p.work_role_id')
                 ->join('users as u','p.id','u.person_id')
