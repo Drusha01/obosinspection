@@ -29,7 +29,7 @@ class BarangayLocations extends Component
     public $user_details = [];
     public function booted(Request $request){
         $session = $request->session()->all();
-        dd($session);
+        // dd($session);
     }
     public function insert_activity_logs(){
 
