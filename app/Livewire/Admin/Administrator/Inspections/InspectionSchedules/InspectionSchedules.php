@@ -515,7 +515,7 @@ class InspectionSchedules extends Component
                 "eb.fee",
                 'ebs.name as section_name',
                 )
-                ->join('items as i','i.id','ii.item_id')
+            ->join('items as i','i.id','ii.item_id')
             ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
             ->join('categories as c','c.id','i.category_id')
             ->leftjoin('equipment_billings as eb','eb.id','ii.equipment_billing_id')

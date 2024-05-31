@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Admin\InspectorTeamLeader\Inspections\Generate;
+namespace App\Livewire\Admin\Inspector\Inspections\Generate;
 
 use Livewire\Component;
 use Illuminate\Http\Request;
@@ -20,7 +20,7 @@ class Generate extends Component
     }
     public function render()
     {
-        return view('livewire.admin.inspector-team-leader.inspections.generate.generate')
+        return view('livewire.admin.inspector.inspections.generate.generate')
             ->layout('components.layouts.admin',[
             'title'=>$this->title]);
     }

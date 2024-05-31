@@ -39,10 +39,10 @@
                                         </td>
                                     @elseif($filter_value['name'] == 'Generate' && $filter_value['active'])
                                         <td class="text-center align-middle">
-                                            <a class="btn btn-outline-primary" target="_blank"href="/administrator/inspections/generate/{{$value->id}}">
-                                                Generate PDF
+                                            <a class="btn btn-outline-primary my-1" target="_blank" href="/inspector/inspections/generate/{{$value->id}}">
+                                                Generate Equipment PDF
                                             </a>
-                                        </td> 
+                                        </td>  
                                     @elseif($filter_value['name'] == 'Inspection Details' && $filter_value['active'])
                                         <td class="text-center align-middle">
                                             <button class="btn btn-primary" wire:click="issue({{$value->id}},'issueModaltoggler')">
@@ -129,7 +129,7 @@
                                                     <tr>
                                                         <td class="align-middle">{{$value['name']}}</td>
                                                         <td class="align-middle">{{$value['category_name']}}</td>
-                                                        <td class="align-middle">{{$value['section']}}</td>
+                                                        <td class="align-middle">{{$value['section_name']}}</td>
                                                         <td class="align-middle" colspan="3">
                                                             <?php 
                                                                 $equipments_billing = DB::table('equipment_billings as eb')
@@ -139,7 +139,7 @@
                                                                         )
                                                                     ->join('equipment_billing_sections as ebs','ebs.id','eb.section_id')
                                                                     ->where('ebs.category_id','=',$value['category_id'])
-                                                                    ->where('ebs.name','=',$value['section'])
+                                                                    ->where('ebs.id','=',$value['section_id'])
                                                                     ->get()
                                                                     ->toArray();
                                                             ?>

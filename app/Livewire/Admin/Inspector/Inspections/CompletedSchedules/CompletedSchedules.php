@@ -98,6 +98,18 @@ class CompletedSchedules extends Component
         ->layout('components.layouts.admin',[
             'title'=>$this->title]);
     }
+    public function update_complied_violation($id,$remarks){
+        if($remarks == 0){
+            $remarks = NULL;
+        }
+        DB::table('inspection_violations')
+            ->where('id','=',$id)
+            ->where('inspection_id','=',$this->issue_inspection['id'])
+            ->update([
+                'remarks'=>$remarks
+            ]);
+        self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
+    }
     public function update_inspection_data($id,$step){
         
         $application_types = DB::table('application_types')
@@ -239,7 +251,7 @@ class CompletedSchedules extends Component
                 'c.name as category_name',
                 'c.id as category_id',
                 'i.name',
-                'i.section',
+                'i.section_id',
                 'i.img_url',
                 'i.is_active',
                 "ii.id",
@@ -249,8 +261,10 @@ class CompletedSchedules extends Component
                 "ii.power_rating",
                 "ii.quantity",
                 "eb.fee",
+                'ebs.name as section_name',
             )
             ->join('items as i','i.id','ii.item_id')
+            ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
             ->join('categories as c','c.id','i.category_id')
             ->leftjoin('equipment_billings as eb','eb.id','ii.equipment_billing_id')
             ->where('ii.inspection_id','=',$id)
@@ -262,7 +276,8 @@ class CompletedSchedules extends Component
                 'category_name' => $value->category_name,
                 'category_id' => $value->category_id,
                 'name'=> $value->name,
-                'section' => $value->section,
+                'section_id' => $value->section_id,
+                'section_name' => $value->section_name,
                 'img_url' => $value->img_url,
                 'is_active' => $value->is_active,
                 "id" => $value->id,
@@ -350,7 +365,8 @@ class CompletedSchedules extends Component
         $inspection_violations = DB::table('inspection_violations as iv')
             ->select(
                 'iv.id',
-                'description'
+                'description',
+                'remarks'
             )
             ->join('violations as v','v.id','iv.violation_id')
             ->where('inspection_id','=',$id)
@@ -373,6 +389,7 @@ class CompletedSchedules extends Component
         foreach ($inspection_violations as $key => $value) {
             array_push($temp,[
                 'description'=> $value->description,
+                'remarks'=> $value->remarks,
                 "id" => $value->id,
             ]);
         }
@@ -382,7 +399,7 @@ class CompletedSchedules extends Component
                 'i.id',
                 'c.name as category_name',
                 'i.name',
-                'i.section',
+                'i.section_id',
                 'i.img_url',
                 'i.is_active'
             )

@@ -315,7 +315,7 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('administrator-certifications') }}">
+                <a class="nav-link" href="{{ route('inspector-team-leader-certifications') }}">
                     <i class="fa-solid fa-fw fa-triangle-exclamation"></i>
                     <span>Certificates</span>
                 </a>
@@ -401,7 +401,7 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('administrator-certifications') }}">
+                <a class="nav-link" href="{{ route('inspector-certifications') }}">
                     <i class="fa-solid fa-fw fa-triangle-exclamation"></i>
                     <span>Certificates</span>
                 </a>

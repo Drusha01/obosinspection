@@ -227,7 +227,7 @@
                                         <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.item_id">
                                             <option value="">Select Item</option>
                                             @foreach($issue_inspection['items'] as $key =>  $value)
-                                                <option selected value="{{$value->id}}">{{$value->name.' ( '.$value->category_name.' )'}}</option>
+                                                <option selected value="{{$value->id}}">{{$value->name.' ( '.$value->category_name.' )'.'( '.$value->section_name.' )'}}</option>
                                             @endforeach
                                         </select>
                                         <button class="btn btn-primary" type="button" wire:click="update_inspection_items()" ><i class="bi bi-plus"></i></button>
@@ -236,13 +236,13 @@
                                         <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
                                             <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                                                 <tr>
-                                                    <th>Item name</th>
-                                                    <th>Category</th>
-                                                    <th>Section</th>
-                                                    <th colspan="3">Capacity</th>
-                                                    <th colspan="1">Quantity</th>
-                                                    <th>Power Rating</th>
-                                                    <th>Fee</th>
+                                                    <th class="align-middle">Item name</th>
+                                                    <th class="align-middle">Category</th>
+                                                    <th class="align-middle">Section</th>
+                                                    <th class="align-middle" colspan="3" >Capacity</th>
+                                                    <th class="align-middle" colspan="1">Quantity</th>
+                                                    <th class="align-middle"> Power Rating</th>
+                                                    <th class="align-middle">Fee</th>
                                                     <th class="align-middle text-center">Action</th>
                                                 </tr>
                                             </thead>
@@ -251,8 +251,9 @@
                                                     <tr>
                                                         <td class="align-middle">{{$value['name']}}</td>
                                                         <td class="align-middle">{{$value['category_name']}}</td>
-                                                        <td class="align-middle">{{$value['section']}}</td>
+                                                        <td class="align-middle">{{$value['section_name']}}</td>
                                                         <td class="align-middle" colspan="3">
+
                                                             <?php 
                                                                 $equipments_billing = DB::table('equipment_billings as eb')
                                                                     ->select(
@@ -262,7 +263,7 @@
                                                                     ->join('equipment_billing_sections as ebs','ebs.id','eb.section_id')
                                                                     // ->orderBy('eb.id','desc')
                                                                     ->where('ebs.category_id','=',$value['category_id'])
-                                                                    ->where('ebs.name','=',$value['section'])
+                                                                    ->where('ebs.id','=',$value['section_id'])
                                                                     ->get()
                                                                     ->toArray();
                                                             ?>
@@ -383,13 +384,13 @@
                                         <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
                                             <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                                                 <tr>
-                                                    <th>Name</th>
+                                                    <th class="align-middle">Name</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach($issue_inspection['inspector_team_leaders']  as $key =>$value)
                                                     <tr>
-                                                        <td>{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
+                                                        <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -401,7 +402,7 @@
                                     <div class="input-group mb-3">
                                         <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.inspector_member_id">
                                             <option value="">Select Team Member</option>
-                                            @foreach($issue_inspection['inspector_members'] as $key =>  $value)
+                                            @foreach($inspector_members as $key =>  $value)
                                                 <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</option>
                                             @endforeach
                                         </select>
@@ -411,14 +412,14 @@
                                         <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
                                             <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                                                 <tr>
-                                                    <th>Name</th>
+                                                    <th class="align-middle">Name</th>
                                                     <th class="align-middle text-center">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach($issue_inspection['inspection_inspector_members']  as $key =>$value)
                                                     <tr>
-                                                        <td>{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
+                                                        <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
                                                         <td class="align-middle text-center">
                                                             <button class="btn btn-danger " wire:click="update_delete_members({{$value->id}})"> 
                                                                 Delete
