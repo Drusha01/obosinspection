@@ -231,10 +231,37 @@ class InspectionSchedules extends Component
         ];
         $this->dispatch('openModal',$modal_id);
     }
-    public function next($modal_id){
+    public function next(Request $request, $modal_id){
+        $session = $request->session()->all();
         if($this->inspection['step'] == 1){
             if(intval($this->inspection['business_id'])){
                 $this->inspection['step']+=1;
+                // self add
+                $inspector_leaders = DB::table('persons as p')
+                ->select(
+                    "p.id",
+                    "p.person_type_id",
+                    "p.brgy_id",
+                    "p.work_role_id",
+                    "p.first_name",
+                    "p.middle_name",
+                    "p.last_name",
+                    "p.suffix",
+                    "p.contact_number",
+                    "p.email",
+                    "p.img_url",
+                    'wr.name as work_role_name',
+                )
+                ->join('inspector_teams as it','p.id','it.team_leader_id')
+                ->join('person_types as pt','p.person_type_id','pt.id')
+                ->join('work_roles as wr', 'wr.id','p.work_role_id')
+                ->join('users as u','p.id','u.person_id')
+                ->whereNotNull('it.team_leader_id')
+                ->where('u.id','=',$session['id'])
+                ->where('pt.name','Inspector')
+                ->first();
+                $this->inspection['inspector_leader_id'] = $inspector_leaders->id;
+                self::add_team_leader();
             }else{
                 $this->dispatch('swal:redirect',
                     position         									: 'center',
@@ -1737,4 +1764,6 @@ class InspectionSchedules extends Component
             return 0;
         }
     }
+   
+  
 }

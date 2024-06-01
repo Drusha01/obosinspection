@@ -380,6 +380,15 @@
                                 </div>
                             @elseif($issue_inspection['step'] == 6)
                                 <div wire:key="{{$issue_inspection['step']}}">
+                                    <div class="input-group mb-3">
+                                        <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.inspector_leader_id">
+                                            <option value="">Select Team Leader</option>
+                                            @foreach($issue_inspection['inspection_inspector_team_leaders'] as $key =>  $value)
+                                                <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</option>
+                                            @endforeach
+                                        </select>
+                                        <button class="btn btn-primary" type="button" wire:click="update_inspection_team_leader()"><i class="bi bi-plus"></i></button>
+                                    </div>
                                     <div class="table-responsive">
                                         <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
                                             <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
