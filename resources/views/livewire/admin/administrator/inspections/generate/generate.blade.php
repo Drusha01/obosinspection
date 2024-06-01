@@ -267,7 +267,7 @@
                             </section>
                         </section>
                         <section class="position-absolute left bottom-0 start-50 translate-middle d-print-none">
-                            <button class="btn btn-primary btn-md-block mr-3 px-3" id="print-button">Print
+                            <button class="btn btn-primary btn-md-block mr-3 px-3" id="print-button" onclick="window.print()">Print
                             </button>
                         </section>
                     </section>

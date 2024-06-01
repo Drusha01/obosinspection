@@ -18,7 +18,7 @@
                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                         TOTAL INSPECTED BUSINESS
                                     </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">4</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{$dashboard['total_inspected_business']}}</div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fa-solid fa-briefcase fa-2x text-gray-300"></i>
@@ -37,7 +37,7 @@
                                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                         INSPECTED BUSINESS WITHOUT VIOLATION
                                     </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">203</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{$dashboard['total_inspected_business_without_violation']}}</div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fa-solid fa-building-circle-check fa-2x text-gray-300"></i>
@@ -56,7 +56,7 @@
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                         INSPECTED BUSINESS WITH VIOLATION
                                     </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">10</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{$dashboard['total_inspected_business_with_violation']}}</div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fa-solid fa-triangle-exclamation fa-2x text-gray-300"></i>
@@ -75,7 +75,7 @@
                                     <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                         TOTAL ISSUED CERTIFICATE
                                     </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">12</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{$dashboard['total_issued_certificate']}}</div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fa-solid fa-file fa-2x text-gray-300"></i>
@@ -129,6 +129,19 @@
                                 <canvas id="myPieChart"></canvas>
                             </div>
                             <div class="mt-4 text-center small" id="chartLegend">
+                                <?php 
+                                    $color = ['#2e59d9', '#17a673', '#2c9faf', '#d4a017', '#c22d2d'];
+                                    for ($i=0; $i < count($dashboard['certificate_application_types']) ; $i++) { 
+                                        // array_push($color,$rand = substr(md5(microtime()),rand(0,26),5));
+                                        if($i+1 != count($dashboard['certificate_application_types'])){
+                                            echo '<span class="mx-2"><i class="fas fa-circle" style="color:'.$color[$i].';"></i> ( '.$dashboard['certificate_application_types'][$i]->certificate_application_types.' ) '.$dashboard['certificate_application_types'][$i]->application_type_name.'</span>';
+                                        }else{
+                                            echo '<span class="mx-2"><i class="fas fa-circle" style="color:'.$color[$i].';"></i> ( '.$dashboard['certificate_application_types'][$i]->certificate_application_types.' ) '.$dashboard['certificate_application_types'][$i]->application_type_name.'</span>';
+                                        }
+                                        
+                                    }    
+                                ?>
+                                
                                 <!-- Legends will be dynamically inserted here -->
                             </div>
                         </div>
@@ -142,5 +155,201 @@
             </a>
         </div>
     </div>
+    <script>
+
+        var labels = [
+         
+            <?php 
+                for ($i=0; $i < count($dashboard['montly_inspected_business']) ; $i++) { 
+                    if($i+1 != count($dashboard['montly_inspected_business'])){
+                        echo '\''.$dashboard['montly_inspected_business'][$i]->month_name.'\',';
+                    }else{
+                        echo '\''.$dashboard['montly_inspected_business'][$i]->month_name.'\'';
+                    }
+                    
+                }    
+            ?>
+        ];
+        var businessCounts = [
+            <?php 
+                for ($i=0; $i < count($dashboard['montly_inspected_business']) ; $i++) { 
+                    if($i+1 != count($dashboard['montly_inspected_business'])){
+                        echo $dashboard['montly_inspected_business'][$i]->montly_inspected_business.',';
+                    }else{
+                        echo $dashboard['montly_inspected_business'][$i]->montly_inspected_business;
+                    }
+                    
+                }    
+            ?>
+        ];
+
+        var ctx = document.getElementById("myAreaChart");
+        var myLineChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Inspected Businesses",
+                    lineTension: 0.3,
+                    backgroundColor: "rgba(78, 115, 223, 0.05)",
+                    borderColor: "rgba(78, 115, 223, 1)",
+                    pointRadius: 3,
+                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                    pointBorderColor: "rgba(78, 115, 223, 1)",
+                    pointHoverRadius: 3,
+                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                    pointHitRadius: 10,
+                    pointBorderWidth: 2,
+                    data: businessCounts,
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        left: 10,
+                        right: 25,
+                        top: 25,
+                        bottom: 0
+                    }
+                },
+                scales: {
+                    xAxes: [{
+                        time: {
+                            unit: 'date'
+                        },
+                        gridLines: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            maxTicksLimit: 7
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            maxTicksLimit: 5,
+                            padding: 10,
+                        },
+                        gridLines: {
+                            color: "rgb(234, 236, 244)",
+                            zeroLineColor: "rgb(234, 236, 244)",
+                            drawBorder: false,
+                            borderDash: [2],
+                            zeroLineBorderDash: [2]
+                        }
+                    }],
+                },
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    backgroundColor: "rgb(255,255,255)",
+                    bodyFontColor: "#858796",
+                    titleMarginBottom: 10,
+                    titleFontColor: '#6e707e',
+                    titleFontSize: 14,
+                    borderColor: '#dddfeb',
+                    borderWidth: 1,
+                    xPadding: 15,
+                    yPadding: 15,
+                    displayColors: false,
+                    intersect: false,
+                    mode: 'index',
+                    caretPadding: 10,
+                    callbacks: {
+                        label: function(tooltipItem, chart) {
+                            var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                            return datasetLabel + ': ' + tooltipItem.yLabel;
+                        }
+                    }
+                }
+            }
+        });
+        
+
+        var labels = [
+            <?php 
+                for ($i=0; $i < count($dashboard['certificate_application_types']) ; $i++) { 
+                    if($i+1 != count($dashboard['certificate_application_types'])){
+                        echo '\''.$dashboard['certificate_application_types'][$i]->application_type_name.'\',';
+                    }else{
+                        echo '\''.$dashboard['certificate_application_types'][$i]->application_type_name.'\'';
+                    }
+                    
+                }    
+            ?>
+        ];
+            var data = [
+                <?php 
+                    for ($i=0; $i < count($dashboard['certificate_application_types']) ; $i++) { 
+                        if($i+1 != count($dashboard['certificate_application_types'])){
+                            echo '\''.$dashboard['certificate_application_types'][$i]->certificate_application_types.'\',';
+                        }else{
+                            echo '\''.$dashboard['certificate_application_types'][$i]->certificate_application_types.'\'';
+                        }
+                        
+                    }    
+                ?>
+            ];
+            var colors = [
+                <?php 
+                    for ($i=0; $i < count($dashboard['certificate_application_types']) ; $i++) { 
+                        if($i+1 != count($dashboard['certificate_application_types'])){
+                            echo '\''.$color[$i].'\',';
+                        }else{
+                            echo '\''.$color[$i].'\'';
+                        }
+                        
+                    }    
+                ?>
+            ];
+            var hoverColors = [
+                <?php 
+                    for ($i=0; $i < count($dashboard['certificate_application_types']) ; $i++) { 
+                        if($i+1 != count($dashboard['certificate_application_types'])){
+                            echo '\''.$color[$i].'\',';
+                        }else{
+                            echo '\''.$color[$i].'\'';
+                        }
+                        
+                    }    
+                ?>
+            ];
+
+         
+                
+            var ctx = document.getElementById("myPieChart").getContext('2d');
+            var myPieChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors,
+                        hoverBackgroundColor: hoverColors,
+                        hoverBorderColor: "rgba(234, 236, 244, 1)",
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    tooltips: {
+                        backgroundColor: "rgb(255,255,255)",
+                        bodyFontColor: "#858796",
+                        borderColor: '#dddfeb',
+                        borderWidth: 1,
+                        xPadding: 15,
+                        yPadding: 15,
+                        displayColors: false,
+                        caretPadding: 10,
+                    },
+                    legend: {
+                        display: false
+                    },
+                    cutoutPercentage: 80,
+                },
+            });
+    </script>
 
 </div>

@@ -88,40 +88,7 @@ class Certification extends Component
 
     public function render()
     {
-        // dd(DB::table('annual_certificate_inspections as aci')
-        // ->select(
-        //     'aci.id',
-        //     'b.img_url',
-        //     'b.name',
-        //     'p.first_name',
-        //     'p.middle_name',
-        //     'p.last_name',
-        //     'p.suffix',
-        //     'brg.brgyDesc as barangay',
-        //     'bt.name as business_type_name',
-        //     'oc.character_of_occupancy as occupancy_classification_name',
-        //     'oc.character_of_occupancy_group',
-        //     'b.contact_number',
-        //     'b.street_address',
-        //     'b.email',
-        //     'b.floor_area',
-        //     'b.signage_area',
-        //     'at.name as application_type_name',
-        //     'aci.bin',
-        //     'aci.occupancy_no',
-        //     'aci.date_compiled',
-        //     'aci.issued_on',
-        //     'aci.date_created',
-        //     'aci.date_updated'
-        // )
-        // ->join('application_types as at','at.id','aci.application_type_id')
-        // ->join('businesses as b','b.id','aci.business_id')
-        // ->join('business_types as bt','bt.id','b.business_type_id')
-        // ->leftjoin('persons as p','p.id','b.owner_id')
-        // ->leftjoin('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-        // ->join('brgy as brg','brg.id','b.brgy_id')
-        // ->get()
-        // ->toArray());
+        
         $table_data = DB::table('annual_certificate_inspections as aci')
         ->select(
             'aci.id',
