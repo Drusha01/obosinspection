@@ -77,6 +77,35 @@ class CompletedInspections extends Component
         'inspector_team_leaders'  => [],
         'violations'  =>[],
     ];
+    public $activity_logs = [
+        'created_by' => NULL,
+        'inspector_team_id' => NULL,
+        'log_details' => NULL,
+    ];
+    public function boot(Request $request){
+        $session = $request->session()->all();
+        $this->activity_logs['created_by'] = $session['id'];
+        $user_details = 
+            DB::table('users as u')
+            ->select(
+                'im.member_id',
+                'im.inspector_team_id',
+                'it.team_leader_id',
+                'it.id',
+                )
+            ->join('persons as p','p.id','u.id')
+            ->leftjoin('inspector_members as im','im.member_id','p.id')
+            ->leftjoin('inspector_teams as it','it.team_leader_id','p.id')
+            ->where('u.id','=',$session['id'])
+            ->first();
+        if($user_details->member_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->member_id;
+        }elseif($user_details->team_leader_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->team_leader_id;
+        }else{
+            $this->activity_logs['inspector_team_id'] = 0;
+        }
+    }
     public function render(Request $request)
     {
         $session = $request->session()->all();
@@ -108,7 +137,7 @@ class CompletedInspections extends Component
             ->join('inspection_inspector_team_leaders as iitl','iitl.inspection_id','i.id')
             ->join('inspection_status as st','st.id','i.status_id')
             ->join('businesses as b','b.id','i.business_id')
-            ->join('persons as p','p.id','b.owner_id')
+            ->leftjoin('persons as p','p.id','b.owner_id')
             ->join('brgy as brg','brg.id','b.brgy_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
@@ -132,9 +161,48 @@ class CompletedInspections extends Component
             ->update([
                 'remarks'=>$remarks
             ]);
+        $var = DB::table('inspection_violations as iv')
+            ->join('violations as v','v.id','iv.violation_id')
+            ->where('iv.id','=',$id)
+            ->where('iv.inspection_id','=',$this->issue_inspection['id'])
+            ->first();
+                    
+        $edit = DB::table('inspections as i')
+            ->select(
+                'b.id',
+                'b.img_url',
+                'b.name',
+                'b.occupancy_classification_id',
+                'b.business_type_id',
+                'b.street_address',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'bt.name as business_type_name',
+            )
+            ->join('businesses as b','b.id','i.business_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->where('i.id','=',$this->issue_inspection['id'])
+            ->first();
+        if($remarks == 1){
+            DB::table('activity_logs')
+                ->insert([
+                    'created_by' => $this->activity_logs['created_by'],
+                    'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                    'log_details' => 'has updated a violation ( '.$var->description.', remarks: '.$remarks.' )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
+            ]);
+        }else{
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has updated a violation ( '.$var->description.', remarks: '.$remarks.' )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
+            ]);
+        }
         self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
     }
-    public function update_inspection_data($id,$step){
+     public function update_inspection_data($id,$step){
         
         $application_types = DB::table('application_types')
             ->where('is_active','=',1)
@@ -263,7 +331,7 @@ class CompletedInspections extends Component
             )
             ->join('inspection_status as st','st.id','i.status_id')
             ->join('businesses as b','b.id','i.business_id')
-            ->join('persons as p','p.id','b.owner_id')
+            ->leftjoin('persons as p','p.id','b.owner_id')
             ->join('brgy as brg','brg.id','b.brgy_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
@@ -275,6 +343,7 @@ class CompletedInspections extends Component
                 'c.name as category_name',
                 'c.id as category_id',
                 'i.name',
+                'i.section_id',
                 'i.img_url',
                 'i.is_active',
                 "ii.id",
@@ -285,8 +354,7 @@ class CompletedInspections extends Component
                 "ii.quantity",
                 "eb.fee",
                 'ebs.name as section_name',
-                'i.section_id',
-            )
+                )
             ->join('items as i','i.id','ii.item_id')
             ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
             ->join('categories as c','c.id','i.category_id')
@@ -297,11 +365,10 @@ class CompletedInspections extends Component
         $temp = [];
         foreach ($inspection_items as $key => $value) {
             array_push($temp,[
-                'section_id' => $value->section_id,
                 'category_name' => $value->category_name,
                 'category_id' => $value->category_id,
                 'name'=> $value->name,
-                'section_name' => $value->section_name,
+                'section_id' => $value->section_id,
                 'img_url' => $value->img_url,
                 'is_active' => $value->is_active,
                 "id" => $value->id,
@@ -311,6 +378,7 @@ class CompletedInspections extends Component
                 "power_rating" => $value->power_rating,
                 "quantity" => $value->quantity,
                 "fee" => $value->fee,
+                'section_name'=>$value->section_name
             ]);
         }
         $inspection_items = $temp;
@@ -389,8 +457,7 @@ class CompletedInspections extends Component
         $inspection_violations = DB::table('inspection_violations as iv')
             ->select(
                 'iv.id',
-                'description',
-                'remarks'
+                'description'
             )
             ->join('violations as v','v.id','iv.violation_id')
             ->where('inspection_id','=',$id)
@@ -413,7 +480,6 @@ class CompletedInspections extends Component
         foreach ($inspection_violations as $key => $value) {
             array_push($temp,[
                 'description'=> $value->description,
-                'remarks'=> $value->remarks,
                 "id" => $value->id,
             ]);
         }
@@ -423,12 +489,13 @@ class CompletedInspections extends Component
                 'i.id',
                 'c.name as category_name',
                 'i.name',
+                'i.section_id',
                 'i.img_url',
                 'i.is_active',
-                'ebs.name as section_name'
-            )
-            ->join('categories as c','c.id','i.category_id')
+                'ebs.name as section_name',
+                )
             ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
+            ->join('categories as c','c.id','i.category_id')
             ->where('i.is_active','=',1)
             ->get()
             ->toArray();
@@ -525,7 +592,6 @@ class CompletedInspections extends Component
         $this->issue_inspection['step']++;
         self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
     }
-
     public function generate_cert($id,$modal_id){
         // validation.... cannot create if it has violation/s
         $violations = DB::table('inspection_violations as iv')
@@ -800,7 +866,7 @@ class CompletedInspections extends Component
                     title             									: 'Successfully added!',
                     showConfirmButton 									: 'true',
                     timer             									: '1500',
-                    link              									: ($_SERVER['REMOTE_PORT'] == 80? 'https://': 'http://' ).$_SERVER['SERVER_NAME'].'/inspector-team-leader/certifications/generate/'.$temp->id
+                    link              									: ($_SERVER['REMOTE_PORT'] == 80? 'https://': 'http://' ).$_SERVER['SERVER_NAME'].'/administrator/certifications/generate/'.$temp->id
                 );
             }
         }
@@ -809,4 +875,3 @@ class CompletedInspections extends Component
         $this->annual_certificate_inspection['step']-=1;
     }
 }
-

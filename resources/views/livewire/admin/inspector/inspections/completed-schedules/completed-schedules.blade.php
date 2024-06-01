@@ -280,12 +280,16 @@
                                             <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                                                 <tr>
                                                     <th>Description</th>
+                                                    <th class="text-center align-middle">Is Complied</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach($issue_inspection['inspection_violations']  as $key => $value)
                                                     <tr>
                                                         <td class="align-middle">{{$value['description']}}</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="checkbox" @if(isset($value['remarks'])) checked @endif  wire:click="update_complied_violation({{$value['id']}},@if(!isset($value['remarks'])) {{1}} @else {{0}} @endif)">
+                                                        </td>
                                                     </tr>
                                                 @endforeach
 

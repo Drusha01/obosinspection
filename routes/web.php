@@ -131,7 +131,7 @@ Route::middleware([Authenticated::class,IsValid::class,IsInspectorTeamLeader::cl
         Route::prefix('inspections')->group(function () {
             Route::get('/inspection-schedules', InspectorTeamLeaderInspectionSchedules::class)->name('inspector-team-leader-inspections-inspection-schedules');
             Route::get('/generate/{id}', InspectorTeamLeaderGenerate::class)->name('inspector-team-leader-inspections-generate');
-            Route::get('/deleted-inspections', InspectorTeamLeaderGenerate::class)->name('inspector-team-leader-inspections-deleted-inspections');
+            Route::get('/deleted-inspections', InspectorTeamLeaderDeletedInspections::class)->name('inspector-team-leader-inspections-deleted-inspections');
             Route::get('/completed-inspections', InspectorTeamLeaderCompletedInspections::class)->name('inspector-team-leader-inspections-completed-inspections');
         });
         Route::get('/certifications', InspectorTeamLeaderCertification::class)->name('inspector-team-leader-certifications');

@@ -35,6 +35,35 @@ class Category extends Component
         ->where('u.id','=',$session['id'])
         ->first();
     }
+    public $activity_logs = [
+        'created_by' => NULL,
+        'inspector_team_id' => NULL,
+        'log_details' => NULL,
+    ];
+    public function boot(Request $request){
+        $session = $request->session()->all();
+        $this->activity_logs['created_by'] = $session['id'];
+        $user_details = 
+            DB::table('users as u')
+            ->select(
+                'im.member_id',
+                'im.inspector_team_id',
+                'it.team_leader_id',
+                'it.id',
+                )
+            ->join('persons as p','p.id','u.id')
+            ->leftjoin('inspector_members as im','im.member_id','p.id')
+            ->leftjoin('inspector_teams as it','it.team_leader_id','p.id')
+            ->where('u.id','=',$session['id'])
+            ->first();
+        if($user_details->member_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->member_id;
+        }elseif($user_details->team_leader_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->team_leader_id;
+        }else{
+            $this->activity_logs['inspector_team_id'] = 0;
+        }
+    }
     public function render()
     {
         $table_data = DB::table('categories')
@@ -159,6 +188,12 @@ class Category extends Component
                 timer             									: '1000',
                 link              									: '#'
             );
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has added a category with the description of '.$this->category['name'],
+            ]);
             $this->dispatch('openModal',$modal_id);
         }
     }
@@ -233,6 +268,12 @@ class Category extends Component
             timer             									: '1000',
             link              									: '#'
         );
+        DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has edited a category with the description of '.$this->category['name'],
+            ]);
         $this->dispatch('openModal',$modal_id);
     }
     public function save_deactivate($id,$modal_id){
@@ -251,6 +292,12 @@ class Category extends Component
                 timer             									: '1000',
                 link              									: '#'
             );
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has deactivated a category with the description of '.$this->category['name'],
+            ]);
             $this->dispatch('openModal',$modal_id);
         }
     }
@@ -270,8 +317,13 @@ class Category extends Component
                 timer             									: '1000',
                 link              									: '#'
             );
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has activated a category with the description of '.$this->category['name'],
+            ]);
             $this->dispatch('openModal',$modal_id);
         }
     }
 }
-

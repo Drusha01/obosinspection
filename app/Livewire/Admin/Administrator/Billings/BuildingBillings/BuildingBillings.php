@@ -38,6 +38,35 @@ class BuildingBillings extends Component
             ->get()
             ->toArray();
     }
+    public $activity_logs = [
+        'created_by' => NULL,
+        'inspector_team_id' => NULL,
+        'log_details' => NULL,
+    ];
+    public function boot(Request $request){
+        $session = $request->session()->all();
+        $this->activity_logs['created_by'] = $session['id'];
+        $user_details = 
+            DB::table('users as u')
+            ->select(
+                'im.member_id',
+                'im.inspector_team_id',
+                'it.team_leader_id',
+                'it.id',
+                )
+            ->join('persons as p','p.id','u.id')
+            ->leftjoin('inspector_members as im','im.member_id','p.id')
+            ->leftjoin('inspector_teams as it','it.team_leader_id','p.id')
+            ->where('u.id','=',$session['id'])
+            ->first();
+        if($user_details->member_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->member_id;
+        }elseif($user_details->team_leader_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->team_leader_id;
+        }else{
+            $this->activity_logs['inspector_team_id'] = 0;
+        }
+    }
 
     public function render()
     {
@@ -106,6 +135,17 @@ class BuildingBillings extends Component
                 timer             									: '1000',
                 link              									: '#'
             );
+
+            $building_billing_sections = DB::table('building_billing_sections')
+            ->where('id','=',$this->building_billing['section_id'])
+            ->first();
+            
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has added a building billing with section of '.$building_billing_sections->name.' and an attribute of '.$this->building_billing['property_attribute'].' with the fee of '.$this->building_billing['fee'],
+            ]);
             $this->dispatch('openModal',$modal_id);
         }
     }
@@ -170,6 +210,16 @@ class BuildingBillings extends Component
             timer             									: '1000',
             link              									: '#'
         );
+        $building_billing_sections = DB::table('building_billing_sections')
+        ->where('id','=',$this->building_billing['section_id'])
+        ->first();
+        
+        DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has edited a building billing with section of '.$building_billing_sections->name.' and an attribute of '.$this->building_billing['property_attribute'].' with the fee of '.$this->building_billing['fee'],
+            ]);
         $this->dispatch('openModal',$modal_id);
     }
 
@@ -189,6 +239,16 @@ class BuildingBillings extends Component
                 timer             									: '1000',
                 link              									: '#'
             );
+            $building_billing_sections = DB::table('building_billing_sections')
+            ->where('id','=',$this->building_billing['section_id'])
+            ->first();
+            
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has deactivated a building billing with section of '.$building_billing_sections->name.' and an attribute of '.$this->building_billing['property_attribute'].' with the fee of '.$this->building_billing['fee'],
+            ]);
             $this->dispatch('openModal',$modal_id);
         }
     }
@@ -208,6 +268,16 @@ class BuildingBillings extends Component
                 timer             									: '1000',
                 link              									: '#'
             );
+            $building_billing_sections = DB::table('building_billing_sections')
+            ->where('id','=',$this->building_billing['section_id'])
+            ->first();
+            
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has activated a building billing with section of '.$building_billing_sections->name.' and an attribute of '.$this->building_billing['property_attribute'].' with the fee of '.$this->building_billing['fee'],
+            ]);
             $this->dispatch('openModal',$modal_id);
         }
     }

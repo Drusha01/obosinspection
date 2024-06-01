@@ -75,6 +75,35 @@ class CompletedInspections extends Component
         'inspector_team_leaders'  => [],
         'violations'  =>[],
     ];
+    public $activity_logs = [
+        'created_by' => NULL,
+        'inspector_team_id' => NULL,
+        'log_details' => NULL,
+    ];
+    public function boot(Request $request){
+        $session = $request->session()->all();
+        $this->activity_logs['created_by'] = $session['id'];
+        $user_details = 
+            DB::table('users as u')
+            ->select(
+                'im.member_id',
+                'im.inspector_team_id',
+                'it.team_leader_id',
+                'it.id',
+                )
+            ->join('persons as p','p.id','u.id')
+            ->leftjoin('inspector_members as im','im.member_id','p.id')
+            ->leftjoin('inspector_teams as it','it.team_leader_id','p.id')
+            ->where('u.id','=',$session['id'])
+            ->first();
+        if($user_details->member_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->member_id;
+        }elseif($user_details->team_leader_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->team_leader_id;
+        }else{
+            $this->activity_logs['inspector_team_id'] = 0;
+        }
+    }
     public function render()
     {
          $table_data = DB::table('inspections as i')
@@ -100,12 +129,12 @@ class CompletedInspections extends Component
             )
             ->join('inspection_status as st','st.id','i.status_id')
             ->join('businesses as b','b.id','i.business_id')
-            ->join('persons as p','p.id','b.owner_id')
+            ->leftjoin('persons as p','p.id','b.owner_id')
             ->join('brgy as brg','brg.id','b.brgy_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
             ->where('st.name','=','Completed')
-            ->orderBy('id','desc')
+            ->orderBy('i.id','desc')
             ->paginate(10);
         return view('livewire.admin.administrator.inspections.completed-inspections.completed-inspections',[
             'table_data'=>$table_data
@@ -123,6 +152,45 @@ class CompletedInspections extends Component
             ->update([
                 'remarks'=>$remarks
             ]);
+        $var = DB::table('inspection_violations as iv')
+            ->join('violations as v','v.id','iv.violation_id')
+            ->where('iv.id','=',$id)
+            ->where('iv.inspection_id','=',$this->issue_inspection['id'])
+            ->first();
+                    
+        $edit = DB::table('inspections as i')
+            ->select(
+                'b.id',
+                'b.img_url',
+                'b.name',
+                'b.occupancy_classification_id',
+                'b.business_type_id',
+                'b.street_address',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'bt.name as business_type_name',
+            )
+            ->join('businesses as b','b.id','i.business_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->where('i.id','=',$this->issue_inspection['id'])
+            ->first();
+        if($remarks == 1){
+            DB::table('activity_logs')
+                ->insert([
+                    'created_by' => $this->activity_logs['created_by'],
+                    'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                    'log_details' => 'has updated a violation ( '.$var->description.', remarks: '.$remarks.' )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
+            ]);
+        }else{
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has updated a violation ( '.$var->description.', remarks: '.$remarks.' )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
+            ]);
+        }
         self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
     }
      public function update_inspection_data($id,$step){
@@ -254,7 +322,7 @@ class CompletedInspections extends Component
             )
             ->join('inspection_status as st','st.id','i.status_id')
             ->join('businesses as b','b.id','i.business_id')
-            ->join('persons as p','p.id','b.owner_id')
+            ->leftjoin('persons as p','p.id','b.owner_id')
             ->join('brgy as brg','brg.id','b.brgy_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')

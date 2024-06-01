@@ -95,7 +95,7 @@
                             <div class="mb-3">
                                 <label for="name" class="form-label">Display type</label>
                                 <select class="form-select" aria-label="Default select example" wire:model="signage_billing.display_type_id">
-                                    <option selected value="">Select Category</option>
+                                    <option selected value="">Select Display type</option>
                                     @foreach($signage_billing_display_types as $key => $value)
                                         <option value="{{$value->id}}">{{$value->name}}</option>
                                     @endforeach
@@ -134,7 +134,7 @@
                             <div class="mb-3">
                                 <label for="name" class="form-label">Display type</label>
                                 <select class="form-select" aria-label="Default select example" wire:model="signage_billing.display_type_id">
-                                    <option selected value="">Select Category</option>
+                                    <option selected value="">Select Display type</option>
                                     @foreach($signage_billing_display_types as $key => $value)
                                         <option value="{{$value->id}}">{{$value->name}}</option>
                                     @endforeach

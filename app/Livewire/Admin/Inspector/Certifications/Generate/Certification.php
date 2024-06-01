@@ -98,6 +98,41 @@ class Certification extends Component
             'annual_certificate_inspection_inspectors'=>$annual_certificate_inspection_inspectors,
             'unique_annual_certificate_inspection_inspectors'=>$unique_annual_certificate_inspection_inspectors
         ];
+        DB::table('activity_logs')
+        ->insert([
+            'created_by' => $this->activity_logs['created_by'],
+            'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+            'log_details' => 'has generated a cetificate for '.$annual_certificate_inspections->name.' with business type of '.$annual_certificate_inspections->business_type_name,
+        ]);
+    }
+    public $activity_logs = [
+        'created_by' => NULL,
+        'inspector_team_id' => NULL,
+        'log_details' => NULL,
+    ];
+    public function boot(Request $request){
+        $session = $request->session()->all();
+        $this->activity_logs['created_by'] = $session['id'];
+        $user_details = 
+            DB::table('users as u')
+            ->select(
+                'im.member_id',
+                'im.inspector_team_id',
+                'it.team_leader_id',
+                'it.id',
+                )
+            ->join('persons as p','p.id','u.id')
+            ->leftjoin('inspector_members as im','im.member_id','p.id')
+            ->leftjoin('inspector_teams as it','it.team_leader_id','p.id')
+            ->where('u.id','=',$session['id'])
+            ->first();
+        if($user_details->member_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->member_id;
+        }elseif($user_details->team_leader_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->team_leader_id;
+        }else{
+            $this->activity_logs['inspector_team_id'] = 0;
+        }
     }
     public function render()
     {

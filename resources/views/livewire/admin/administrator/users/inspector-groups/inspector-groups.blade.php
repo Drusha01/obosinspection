@@ -206,7 +206,7 @@
                                                 {{$value->brgyDesc}}
                                             </td>
                                             <td class="align-middle text-center">
-                                                <button class="btn btn-danger" type="button" wire:click="delete_designation({{$value->id}})">
+                                                <button class="btn btn-danger" type="button" wire:click="delete_designation({{$value->id}},{{$value->brgy_id}})">
                                                     Delete
                                                 </button>
                                             </td>
@@ -247,7 +247,7 @@
                                                 {{$value->brgyDesc}}
                                             </td>
                                             <td class="align-middle text-center">
-                                                <button class="btn btn-danger" type="button" wire:click="delete_designation({{$value->id}})">
+                                                <button class="btn btn-danger" type="button" wire:click="delete_designation({{$value->id}},{{$value->brgy_id}})">
                                                     Delete
                                                 </button>
                                             </td>
@@ -303,7 +303,7 @@
                                                     {{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix}}
                                                 </td>
                                                 <td class="align-middle text-center">
-                                                    <button class="btn btn-danger" type="button" wire:click="delete_member({{$value->id}})">
+                                                    <button class="btn btn-danger" type="button" wire:click="delete_member({{$value->id}},{{$value->member_id}})">
                                                         Delete
                                                     </button>
                                                 </td>

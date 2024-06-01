@@ -44,6 +44,36 @@ class SignageBillings extends Component
             ->toArray();
     }
 
+    public $activity_logs = [
+        'created_by' => NULL,
+        'inspector_team_id' => NULL,
+        'log_details' => NULL,
+    ];
+    public function boot(Request $request){
+        $session = $request->session()->all();
+        $this->activity_logs['created_by'] = $session['id'];
+        $user_details = 
+            DB::table('users as u')
+            ->select(
+                'im.member_id',
+                'im.inspector_team_id',
+                'it.team_leader_id',
+                'it.id',
+                )
+            ->join('persons as p','p.id','u.id')
+            ->leftjoin('inspector_members as im','im.member_id','p.id')
+            ->leftjoin('inspector_teams as it','it.team_leader_id','p.id')
+            ->where('u.id','=',$session['id'])
+            ->first();
+        if($user_details->member_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->member_id;
+        }elseif($user_details->team_leader_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->team_leader_id;
+        }else{
+            $this->activity_logs['inspector_team_id'] = 0;
+        }
+    }
+
     public function render()
     {
         $table_data = DB::table('signage_billings as sb')
@@ -124,6 +154,33 @@ class SignageBillings extends Component
                 timer             									: '1000',
                 link              									: '#'
             );
+            $edit =  DB::table('signage_billings as sb')
+            ->select(
+                'sb.id',
+                'sbdt.name as display_type_name',
+                'sbt.name as sign_type_name',
+                'sb.display_type_id',
+                'sb.sign_type_id',
+                'sb.fee',
+                'sb.is_active'
+            )
+            ->join('signage_billing_types as sbt','sbt.id','sb.sign_type_id')
+            ->join('signage_billing_display_types as sbdt','sbdt.id','sb.display_type_id')
+            ->orderBy('sb.id','desc')
+            ->first();
+            $this->signage_billing = [
+                'id' => $edit->id,
+                'display_type_id' => $edit->display_type_id,
+                'sign_type_id' => $edit->sign_type_id,
+                'fee' => $edit->fee,
+                'is_active' => $edit->is_active,
+            ];
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has added a signage billing with display type of '.$edit->display_type_name.', with sign type of '.$edit->sign_type_name.' and fee of '.$edit->fee,
+            ]);
             $this->dispatch('openModal',$modal_id);
         }
     }
@@ -201,6 +258,34 @@ class SignageBillings extends Component
             timer             									: '1000',
             link              									: '#'
         );
+        $edit =  DB::table('signage_billings as sb')
+            ->select(
+                'sb.id',
+                'sbdt.name as display_type_name',
+                'sbt.name as sign_type_name',
+                'sb.display_type_id',
+                'sb.sign_type_id',
+                'sb.fee',
+                'sb.is_active'
+            )
+            ->join('signage_billing_types as sbt','sbt.id','sb.sign_type_id')
+            ->join('signage_billing_display_types as sbdt','sbdt.id','sb.display_type_id')
+            ->orderBy('sb.id','desc')
+            ->where('sb.id','=',$id)
+            ->first();
+            $this->signage_billing = [
+                'id' => $edit->id,
+                'display_type_id' => $edit->display_type_id,
+                'sign_type_id' => $edit->sign_type_id,
+                'fee' => $edit->fee,
+                'is_active' => $edit->is_active,
+            ];
+        DB::table('activity_logs')
+        ->insert([
+            'created_by' => $this->activity_logs['created_by'],
+            'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+            'log_details' => 'has edited a signage billing with display type of '.$edit->display_type_name.', with sign type of '.$edit->sign_type_name.' and fee of '.$edit->fee,
+        ]);
         $this->dispatch('openModal',$modal_id);
     }
 
@@ -221,6 +306,34 @@ class SignageBillings extends Component
                 timer             									: '1000',
                 link              									: '#'
             );
+            $edit =  DB::table('signage_billings as sb')
+            ->select(
+                'sb.id',
+                'sbdt.name as display_type_name',
+                'sbt.name as sign_type_name',
+                'sb.display_type_id',
+                'sb.sign_type_id',
+                'sb.fee',
+                'sb.is_active'
+            )
+            ->join('signage_billing_types as sbt','sbt.id','sb.sign_type_id')
+            ->join('signage_billing_display_types as sbdt','sbdt.id','sb.display_type_id')
+            ->orderBy('sb.id','desc')
+            ->where('sb.id','=',$id)
+            ->first();
+            $this->signage_billing = [
+                'id' => $edit->id,
+                'display_type_id' => $edit->display_type_id,
+                'sign_type_id' => $edit->sign_type_id,
+                'fee' => $edit->fee,
+                'is_active' => $edit->is_active,
+            ];
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has deactivated a signage billing with display type of '.$edit->display_type_name.', with sign type of '.$edit->sign_type_name.' and fee of '.$edit->fee,
+            ]);
             $this->dispatch('openModal',$modal_id);
         }
     }
@@ -240,6 +353,34 @@ class SignageBillings extends Component
                 timer             									: '1000',
                 link              									: '#'
             );
+            $edit =  DB::table('signage_billings as sb')
+            ->select(
+                'sb.id',
+                'sbdt.name as display_type_name',
+                'sbt.name as sign_type_name',
+                'sb.display_type_id',
+                'sb.sign_type_id',
+                'sb.fee',
+                'sb.is_active'
+            )
+            ->join('signage_billing_types as sbt','sbt.id','sb.sign_type_id')
+            ->join('signage_billing_display_types as sbdt','sbdt.id','sb.display_type_id')
+            ->orderBy('sb.id','desc')
+            ->where('sb.id','=',$id)
+            ->first();
+            $this->signage_billing = [
+                'id' => $edit->id,
+                'display_type_id' => $edit->display_type_id,
+                'sign_type_id' => $edit->sign_type_id,
+                'fee' => $edit->fee,
+                'is_active' => $edit->is_active,
+            ];
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has activated a signage billing with display type of '.$edit->display_type_name.', with sign type of '.$edit->sign_type_name.' and fee of '.$edit->fee,
+            ]);
             $this->dispatch('openModal',$modal_id);
         }
     }

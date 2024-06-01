@@ -137,6 +137,35 @@ class InspectionSchedules extends Component
             ->get()
             ->toArray();
     }
+    public $activity_logs = [
+        'created_by' => NULL,
+        'inspector_team_id' => NULL,
+        'log_details' => NULL,
+    ];
+    public function boot(Request $request){
+        $session = $request->session()->all();
+        $this->activity_logs['created_by'] = $session['id'];
+        $user_details = 
+            DB::table('users as u')
+            ->select(
+                'im.member_id',
+                'im.inspector_team_id',
+                'it.team_leader_id',
+                'it.id',
+                )
+            ->join('persons as p','p.id','u.id')
+            ->leftjoin('inspector_members as im','im.member_id','p.id')
+            ->leftjoin('inspector_teams as it','it.team_leader_id','p.id')
+            ->where('u.id','=',$session['id'])
+            ->first();
+        if($user_details->member_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->member_id;
+        }elseif($user_details->team_leader_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->team_leader_id;
+        }else{
+            $this->activity_logs['inspector_team_id'] = 0;
+        }
+    }
     public function render(Request $request)
     {
         $session = $request->session()->all();
@@ -168,7 +197,7 @@ class InspectionSchedules extends Component
             ->join('inspection_inspector_members as iim','iim.inspection_id','i.id')
             ->join('inspection_status as st','st.id','i.status_id')
             ->join('businesses as b','b.id','i.business_id')
-            ->join('persons as p','p.id','b.owner_id')
+            ->leftjoin('persons as p','p.id','b.owner_id')
             ->join('brgy as brg','brg.id','b.brgy_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
@@ -285,6 +314,44 @@ class InspectionSchedules extends Component
                     timer             									: '1000',
                     link              									: '#'
                 );
+                $edit = DB::table('businesses as b')
+                    ->select(
+                        'b.id',
+                        'b.img_url',
+                        'b.name',
+                        'p.first_name',
+                        'p.middle_name',
+                        'p.last_name',
+                        'p.suffix',
+                        'brg.brgyDesc as barangay',
+                        'bt.name as business_type_name',
+                        'oc.character_of_occupancy as occupancy_classification_name',
+                        'b.is_active',
+                        'b.brgy_id',
+                        'b.owner_id',
+                        'b.occupancy_classification_id',
+                        'b.business_type_id',
+                        'b.street_address',
+                        'b.contact_number',
+                        'b.email',
+                        'b.floor_area',
+                        'b.signage_area',
+
+
+
+                    )
+                    ->join('persons as p','p.id','b.owner_id')
+                    ->join('brgy as brg','brg.id','b.brgy_id')
+                    ->join('business_types as bt','bt.id','b.business_type_id')
+                    ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+                    ->where('b.id','=',$this->inspection['business_id'])
+                    ->first();
+                DB::table('activity_logs')
+                ->insert([
+                    'created_by' => $this->activity_logs['created_by'],
+                    'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                    'log_details' => 'has added an inspection for '.$edit->name.' (' .$edit->business_type_name. ') ',
+                ]);
                 $this->dispatch('openModal',$modal_id);
                 return 0;
             }
@@ -292,80 +359,6 @@ class InspectionSchedules extends Component
     }
     public function prev(){
         $this->inspection['step']-=1;
-    }
-    public function add_team_leader(){
-        if(intval($this->inspection['inspector_leader_id'])){
-            $valid = true;
-            foreach ($this->inspection['inspector_leaders'] as $key => $value) {
-                if($value->id == $this->inspection['inspector_leader_id']){
-                    $valid = false;
-                }
-            }
-            if($valid){
-                foreach ($this->inspector_leaders as $key => $value) {
-                    if($this->inspection['inspector_leader_id'] == $value->id){
-                        array_push($this->inspection['inspector_leaders'],$value);
-                        $this->inspection['inspector_leader_id'] = NULL;
-                    }
-                }
-            }
-            $this->dispatch('swal:redirect',
-                position         									: 'center',
-                icon              									: 'success',
-                title             									: 'Team leader has been added!',
-                showConfirmButton 									: 'true',
-                timer             									: '1000',
-                link              									: '#'
-            );
-            return 0;
-        }else{
-            $this->dispatch('swal:redirect',
-                position         									: 'center',
-                icon              									: 'warning',
-                title             									: 'Please select team leader!',
-                showConfirmButton 									: 'true',
-                timer             									: '1000',
-                link              									: '#'
-            );
-            return 0;
-        }
-    }
-    public function add_team_member(){
-        if(intval($this->inspection['inspector_member_id'])){
-            $valid = true;
-            foreach ($this->inspection['inspector_members'] as $key => $value) {
-                if($value->id == $this->inspection['inspector_member_id']){
-                    $valid = false;
-                }
-            }
-            if($valid){
-                foreach ($this->inspector_members as $key => $value) {
-                    if($this->inspection['inspector_member_id'] == $value->id){
-                        array_push($this->inspection['inspector_members'],$value);
-                        $this->inspection['inspector_member_id'] = NULL;
-                    }
-                }
-            }
-            $this->dispatch('swal:redirect',
-                position         									: 'center',
-                icon              									: 'success',
-                title             									: 'Team leader has been added!',
-                showConfirmButton 									: 'true',
-                timer             									: '1000',
-                link              									: '#'
-            );
-            return 0;
-        }else{
-            $this->dispatch('swal:redirect',
-                position         									: 'center',
-                icon              									: 'warning',
-                title             									: 'Please select team leader!',
-                showConfirmButton 									: 'true',
-                timer             									: '1000',
-                link              									: '#'
-            );
-            return 0;
-        }
     }
     public function update_inspection_data($id,$step){
         
@@ -496,7 +489,7 @@ class InspectionSchedules extends Component
             )
             ->join('inspection_status as st','st.id','i.status_id')
             ->join('businesses as b','b.id','i.business_id')
-            ->join('persons as p','p.id','b.owner_id')
+            ->leftjoin('persons as p','p.id','b.owner_id')
             ->join('brgy as brg','brg.id','b.brgy_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
@@ -508,7 +501,7 @@ class InspectionSchedules extends Component
                 'c.name as category_name',
                 'c.id as category_id',
                 'i.name',
-                'i.section_name',
+                'i.section_id',
                 'i.img_url',
                 'i.is_active',
                 "ii.id",
@@ -522,6 +515,7 @@ class InspectionSchedules extends Component
                 )
             ->join('items as i','i.id','ii.item_id')
             ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
+            ->join('categories as c','c.id','i.category_id')
             ->leftjoin('equipment_billings as eb','eb.id','ii.equipment_billing_id')
             ->where('ii.inspection_id','=',$id)
             ->get()
@@ -532,7 +526,7 @@ class InspectionSchedules extends Component
                 'category_name' => $value->category_name,
                 'category_id' => $value->category_id,
                 'name'=> $value->name,
-                'section_name' => $value->section_name,
+                'section_id' => $value->section_id,
                 'img_url' => $value->img_url,
                 'is_active' => $value->is_active,
                 "id" => $value->id,
@@ -542,6 +536,7 @@ class InspectionSchedules extends Component
                 "power_rating" => $value->power_rating,
                 "quantity" => $value->quantity,
                 "fee" => $value->fee,
+                'section_name'=>$value->section_name
             ]);
         }
         $inspection_items = $temp;
@@ -652,7 +647,7 @@ class InspectionSchedules extends Component
                 'i.id',
                 'c.name as category_name',
                 'i.name',
-                'i.section_name',
+                'i.section_id',
                 'i.img_url',
                 'i.is_active',
                 'ebs.name as section_name',
@@ -754,7 +749,6 @@ class InspectionSchedules extends Component
     public function next_issue(){
         $this->issue_inspection['step']++;
         self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
-        // dd($this->issue_inspection);
     }
     public function update_application_type(){
         if(intval($this->issue_inspection['application_type_id'])){
@@ -763,6 +757,36 @@ class InspectionSchedules extends Component
                 ->update([
                     'application_type_id'=>$this->issue_inspection['application_type_id']
             ]);
+            $var = DB::table('application_types')
+                ->where('id','=',$this->issue_inspection['application_type_id'])
+                ->first();
+            
+            $edit = DB::table('inspections as i')
+                ->select(
+                    'b.id',
+                    'b.img_url',
+                    'b.name',
+                    'b.occupancy_classification_id',
+                    'b.business_type_id',
+                    'b.street_address',
+                    'b.contact_number',
+                    'b.email',
+                    'b.floor_area',
+                    'b.signage_area',
+                    'bt.name as business_type_name',
+                )
+                ->join('businesses as b','b.id','i.business_id')
+                ->join('business_types as bt','bt.id','b.business_type_id')
+                ->where('i.id','=',$this->issue_inspection['id'])
+                ->first();
+
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has updated an application type ( '.$var->name.' ) for '.$edit->name.' (' .$edit->business_type_name. ') ',
+            ]);
+            
             self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
         }
     }
@@ -780,21 +804,121 @@ class InspectionSchedules extends Component
                     'item_id' =>$this->issue_inspection['item_id'],
                     'inspection_id'=>$this->issue_inspection['id']
                 ]);
-                self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
+
+
+                $var = DB::table('items')
+                ->where('id','=',$this->issue_inspection['item_id'])
+                ->first();
+            
+                $edit = DB::table('inspections as i')
+                    ->select(
+                        'b.id',
+                        'b.img_url',
+                        'b.name',
+                        'b.occupancy_classification_id',
+                        'b.business_type_id',
+                        'b.street_address',
+                        'b.contact_number',
+                        'b.email',
+                        'b.floor_area',
+                        'b.signage_area',
+                        'bt.name as business_type_name',
+                    )
+                    ->join('businesses as b','b.id','i.business_id')
+                    ->join('business_types as bt','bt.id','b.business_type_id')
+                    ->where('i.id','=',$this->issue_inspection['id'])
+                    ->first();
+
+                DB::table('activity_logs')
+                ->insert([
+                    'created_by' => $this->activity_logs['created_by'],
+                    'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                    'log_details' => 'has added an item ( '.$var->name.' ) for '.$edit->name.' (' .$edit->business_type_name. ') ',
+                ]);
+                
             }
         }
+        self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
     }
     public function update_equipment_billing($id,$key){
-        DB::table('inspection_items')
+        if($this->issue_inspection['inspection_items'][$key]['equipment_billing_id']){
+            DB::table('inspection_items')
+                ->where('id','=',$id)
+                ->where('inspection_id','=',$this->issue_inspection['id'])
+                ->update([
+                    'equipment_billing_id'=> $this->issue_inspection['inspection_items'][$key]['equipment_billing_id']
+                ]);
+            $var_1 = DB::table('equipment_billings')
+                ->where('id','=',$this->issue_inspection['inspection_items'][$key]['equipment_billing_id'])
+                ->first();
+            $var = DB::table('items')
+                ->where('id','=',$this->issue_inspection['inspection_items'][$key]['item_id'])
+                ->first();
+            
+            $edit = DB::table('inspections as i')
+                ->select(
+                    'b.id',
+                    'b.img_url',
+                    'b.name',
+                    'b.occupancy_classification_id',
+                    'b.business_type_id',
+                    'b.street_address',
+                    'b.contact_number',
+                    'b.email',
+                    'b.floor_area',
+                    'b.signage_area',
+                    'bt.name as business_type_name',
+                )
+                ->join('businesses as b','b.id','i.business_id')
+                ->join('business_types as bt','bt.id','b.business_type_id')
+                ->where('i.id','=',$this->issue_inspection['id'])
+                ->first();
+            DB::table('activity_logs')
+                ->insert([
+                    'created_by' => $this->activity_logs['created_by'],
+                    'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                    'log_details' => 'has updated an item ( '.$var->name.' ) capacity of '.$var_1->capacity.' for '.$edit->name.' (' .$edit->business_type_name. ') ',
+            ]);
+        }else{
+            DB::table('inspection_items')
             ->where('id','=',$id)
             ->where('inspection_id','=',$this->issue_inspection['id'])
             ->update([
-                'equipment_billing_id'=> $this->issue_inspection['inspection_items'][$key]['equipment_billing_id']
+                'equipment_billing_id'=> NULL
             ]);
-            self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
+        }
+        self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
 
     }
     public function update_item_quantity($id,$key){
+        $var = DB::table('items')
+            ->where('id','=',$this->issue_inspection['inspection_items'][$key]['item_id'])
+            ->first();
+            
+        $edit = DB::table('inspections as i')
+            ->select(
+                'b.id',
+                'b.img_url',
+                'b.name',
+                'b.occupancy_classification_id',
+                'b.business_type_id',
+                'b.street_address',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'bt.name as business_type_name',
+            )
+            ->join('businesses as b','b.id','i.business_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->where('i.id','=',$this->issue_inspection['id'])
+            ->first();
+        DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has updated an item ( '.$var->name.' ) quantity of '.$this->issue_inspection['inspection_items'][$key]['quantity'].' for '.$edit->name.' (' .$edit->business_type_name. ') ',
+        ]);
         DB::table('inspection_items')
             ->where('id','=',$id)
             ->where('inspection_id','=',$this->issue_inspection['id'])
@@ -804,16 +928,77 @@ class InspectionSchedules extends Component
             self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
     }
     public function update_item_power_rating($id,$key){
+        $var = DB::table('items')
+            ->where('id','=',$this->issue_inspection['inspection_items'][$key]['item_id'])
+            ->first();
+            
+        $edit = DB::table('inspections as i')
+            ->select(
+                'b.id',
+                'b.img_url',
+                'b.name',
+                'b.occupancy_classification_id',
+                'b.business_type_id',
+                'b.street_address',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'bt.name as business_type_name',
+            )
+            ->join('businesses as b','b.id','i.business_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->where('i.id','=',$this->issue_inspection['id'])
+            ->first();
+        DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has updated an item ( '.$var->name.' ) power rating of '.floatval($this->issue_inspection['inspection_items'][$key]['power_rating']).' for '.$edit->name.' (' .$edit->business_type_name. ') ',
+        ]);
         DB::table('inspection_items')
             ->where('id','=',$id)
             ->where('inspection_id','=',$this->issue_inspection['id'])
             ->update([
-                'power_rating'=> $this->issue_inspection['inspection_items'][$key]['power_rating']
+                'power_rating'=> floatval($this->issue_inspection['inspection_items'][$key]['power_rating'])
             ]);
             self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
     }
-    
     public function update_building_billing(){
+        $var = DB::table('building_billings as bb')
+            ->select(
+                'bbs.name as section_name',
+                'bb.property_attribute',
+                'bb.fee'
+            )
+            ->join('building_billing_sections as bbs','bbs.id', 'bb.section_id')
+            ->where('bb.id','=',$this->issue_inspection['building_billing_id'])
+            ->first();
+            
+        $edit = DB::table('inspections as i')
+            ->select(
+                'b.id',
+                'b.img_url',
+                'b.name',
+                'b.occupancy_classification_id',
+                'b.business_type_id',
+                'b.street_address',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'bt.name as business_type_name',
+            )
+            ->join('businesses as b','b.id','i.business_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->where('i.id','=',$this->issue_inspection['id'])
+            ->first();
+        DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has updated building billing ( section '.$var->section_name.', property_attribute '.$var->property_attribute.', and fee of '.$var->fee.' )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
+        ]);
         if(intval($this->issue_inspection['building_billing_id'])){
             DB::table('inspections as i')
                 ->where('id','=',$this->issue_inspection['id'])
@@ -837,11 +1022,72 @@ class InspectionSchedules extends Component
                     'sanitary_billing_id' =>$this->issue_inspection['sanitary_billing_id'],
                     'inspection_id'=>$this->issue_inspection['id']
                 ]);
+                $var = DB::table('sanitary_billings')
+                ->where('id','=',$this->issue_inspection['sanitary_billing_id'])
+                ->first();
+                
+                $edit = DB::table('inspections as i')
+                    ->select(
+                        'b.id',
+                        'b.img_url',
+                        'b.name',
+                        'b.occupancy_classification_id',
+                        'b.business_type_id',
+                        'b.street_address',
+                        'b.contact_number',
+                        'b.email',
+                        'b.floor_area',
+                        'b.signage_area',
+                        'bt.name as business_type_name',
+                    )
+                    ->join('businesses as b','b.id','i.business_id')
+                    ->join('business_types as bt','bt.id','b.business_type_id')
+                    ->where('i.id','=',$this->issue_inspection['id'])
+                    ->first();
+                DB::table('activity_logs')
+                    ->insert([
+                        'created_by' => $this->activity_logs['created_by'],
+                        'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                        'log_details' => 'has added sanitary billing ( '.$var->name.', and fee of '.$var->fee.' )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
+                ]);
                 self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
             }
         }
     }
     public function update_sanitary_quantity($id,$key){
+        $var = DB::table('inspection_sanitary_billings as isb')
+            ->select(
+                'ss.name',
+                'ss.fee'
+            )
+            ->join('sanitary_billings as ss','ss.id','sanitary_billing_id')
+            ->where('isb.id','=',$id)
+            ->first();
+            
+        $edit = DB::table('inspections as i')
+            ->select(
+                'b.id',
+                'b.img_url',
+                'b.name',
+                'b.occupancy_classification_id',
+                'b.business_type_id',
+                'b.street_address',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'bt.name as business_type_name',
+            )
+            ->join('businesses as b','b.id','i.business_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->where('i.id','=',$this->issue_inspection['id'])
+            ->first();
+        DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has updated sanitary billing quantity to '.$this->issue_inspection['inspection_sanitary_billings'][$key]['sanitary_quantity'].' of  ( '.$var->name.', and fee of '.$var->fee.' )   for '.$edit->name.' (' .$edit->business_type_name. ') ',
+        ]);
         DB::table('inspection_sanitary_billings')
         ->where('id','=',$id)
         ->where('inspection_id','=',$this->issue_inspection['id'])
@@ -851,6 +1097,41 @@ class InspectionSchedules extends Component
         self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
     }
     public function update_signage_billing(){
+        $var = DB::table('signage_billings as sb')
+            ->select(
+                'sbdt.name as display_type_name',
+                'st.name as sign_type_name',
+                'sb.fee'
+            )
+            ->join('signage_billing_display_types as sbdt','sbdt.id', 'sb.display_type_id')
+            ->join('signage_billing_types as st','st.id', 'sb.sign_type_id')
+            ->where('sb.id','=',$this->issue_inspection['building_billing_id'])
+            ->first();
+            
+        $edit = DB::table('inspections as i')
+            ->select(
+                'b.id',
+                'b.img_url',
+                'b.name',
+                'b.occupancy_classification_id',
+                'b.business_type_id',
+                'b.street_address',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'bt.name as business_type_name',
+            )
+            ->join('businesses as b','b.id','i.business_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->where('i.id','=',$this->issue_inspection['id'])
+            ->first();
+        DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has updated signage billing ( display type '.$var->display_type_name.', sign type '.$var->sign_type_name.', and fee of '.$var->fee.' )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
+        ]);
         if(intval($this->issue_inspection['signage_id'])){
             DB::table('inspections as i')
                 ->where('id','=',$this->issue_inspection['id'])
@@ -874,6 +1155,34 @@ class InspectionSchedules extends Component
                         'inspection_id' => $this->issue_inspection['id'],
                         'person_id' =>$this->issue_inspection['inspector_leader_id']
                     ]);
+                $var = DB::table('persons as p')
+                ->where('id','=',$this->issue_inspection['inspector_leader_id'])
+                ->first();
+                    
+                $edit = DB::table('inspections as i')
+                    ->select(
+                        'b.id',
+                        'b.img_url',
+                        'b.name',
+                        'b.occupancy_classification_id',
+                        'b.business_type_id',
+                        'b.street_address',
+                        'b.contact_number',
+                        'b.email',
+                        'b.floor_area',
+                        'b.signage_area',
+                        'bt.name as business_type_name',
+                    )
+                    ->join('businesses as b','b.id','i.business_id')
+                    ->join('business_types as bt','bt.id','b.business_type_id')
+                    ->where('i.id','=',$this->issue_inspection['id'])
+                    ->first();
+                DB::table('activity_logs')
+                    ->insert([
+                        'created_by' => $this->activity_logs['created_by'],
+                        'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                        'log_details' => 'has added a team leader ( '.$var->first_name.' '.$var->middle_name.' '.$var->last_name.' '.$var->suffix.' '.' )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
+                ]);
                 self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
             }
         }
@@ -892,6 +1201,34 @@ class InspectionSchedules extends Component
                         'inspection_id' => $this->issue_inspection['id'],
                         'person_id' =>$this->issue_inspection['inspector_member_id']
                     ]);
+                $var = DB::table('persons as p')
+                    ->where('id','=',$this->issue_inspection['inspector_member_id'])
+                    ->first();
+                    
+                $edit = DB::table('inspections as i')
+                    ->select(
+                        'b.id',
+                        'b.img_url',
+                        'b.name',
+                        'b.occupancy_classification_id',
+                        'b.business_type_id',
+                        'b.street_address',
+                        'b.contact_number',
+                        'b.email',
+                        'b.floor_area',
+                        'b.signage_area',
+                        'bt.name as business_type_name',
+                    )
+                    ->join('businesses as b','b.id','i.business_id')
+                    ->join('business_types as bt','bt.id','b.business_type_id')
+                    ->where('i.id','=',$this->issue_inspection['id'])
+                    ->first();
+                DB::table('activity_logs')
+                    ->insert([
+                        'created_by' => $this->activity_logs['created_by'],
+                        'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                        'log_details' => 'has added a team leader ( '.$var->first_name.' '.$var->middle_name.' '.$var->last_name.' '.$var->suffix.' '.' )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
+                ]);
                 self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
             }
         }
@@ -910,11 +1247,145 @@ class InspectionSchedules extends Component
                     'violation_id' =>$this->issue_inspection['violation_id'],
                     'inspection_id'=>$this->issue_inspection['id']
                 ]);
+
+                $var = DB::table('violations as p')
+                    ->where('id','=',$this->issue_inspection['violation_id'])
+                    ->first();
+                    
+                $edit = DB::table('inspections as i')
+                    ->select(
+                        'b.id',
+                        'b.img_url',
+                        'b.name',
+                        'b.occupancy_classification_id',
+                        'b.business_type_id',
+                        'b.street_address',
+                        'b.contact_number',
+                        'b.email',
+                        'b.floor_area',
+                        'b.signage_area',
+                        'bt.name as business_type_name',
+                    )
+                    ->join('businesses as b','b.id','i.business_id')
+                    ->join('business_types as bt','bt.id','b.business_type_id')
+                    ->where('i.id','=',$this->issue_inspection['id'])
+                    ->first();
+                DB::table('activity_logs')
+                    ->insert([
+                        'created_by' => $this->activity_logs['created_by'],
+                        'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                        'log_details' => 'has added a violation ( '.$var->description.' )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
+                ]);
                 self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
             }
         }
     }
+    public function add_team_leader(){
+        if(intval($this->inspection['inspector_leader_id'])){
+            $valid = true;
+            foreach ($this->inspection['inspector_leaders'] as $key => $value) {
+                if($value->id == $this->inspection['inspector_leader_id']){
+                    $valid = false;
+                }
+            }
+            if($valid){
+                foreach ($this->inspector_leaders as $key => $value) {
+                    if($this->inspection['inspector_leader_id'] == $value->id){
+                        array_push($this->inspection['inspector_leaders'],$value);
+                        $this->inspection['inspector_leader_id'] = NULL;
+                    }
+                }
+            }
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'success',
+                title             									: 'Team leader has been added!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return 0;
+        }else{
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'Please select team leader!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return 0;
+        }
+    }
+    public function add_team_member(){
+        if(intval($this->inspection['inspector_member_id'])){
+            $valid = true;
+            foreach ($this->inspection['inspector_members'] as $key => $value) {
+                if($value->id == $this->inspection['inspector_member_id']){
+                    $valid = false;
+                }
+            }
+            if($valid){
+                foreach ($this->inspector_members as $key => $value) {
+                    if($this->inspection['inspector_member_id'] == $value->id){
+                        array_push($this->inspection['inspector_members'],$value);
+                        $this->inspection['inspector_member_id'] = NULL;
+                    }
+                }
+            }
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'success',
+                title             									: 'Team leader has been added!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return 0;
+        }else{
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'Please select team leader!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return 0;
+        }
+    }
+
     public function update_delete_item($id){
+       
+        $var = DB::table('inspection_items as ii')
+            ->select('i.name')
+            ->join('items as i','i.id','ii.item_id')
+            ->where('ii.id','=',$id)
+            ->first();
+        $edit = DB::table('inspections as i')
+            ->select(
+                'b.id',
+                'b.img_url',
+                'b.name',
+                'b.occupancy_classification_id',
+                'b.business_type_id',
+                'b.street_address',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'bt.name as business_type_name',
+            )
+            ->join('businesses as b','b.id','i.business_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->where('i.id','=',$this->issue_inspection['id'])
+            ->first();
+        DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has deleted an item ( '.$var->name.' ) for '.$edit->name.' (' .$edit->business_type_name. ') ',
+            ]);
         DB::table('inspection_items')
             ->where('id','=',$id)
             ->where('inspection_id','=',$this->issue_inspection['id'])
@@ -922,6 +1393,39 @@ class InspectionSchedules extends Component
         self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
     }
     public function update_delete_sanitary($id){
+        $var = DB::table('inspection_sanitary_billings as isb')
+            ->select(
+                'ss.name',
+                'ss.fee'
+            )
+            ->join('sanitary_billings as ss','ss.id','sanitary_billing_id')
+            ->where('isb.id','=',$id)
+            ->first();
+            
+        $edit = DB::table('inspections as i')
+            ->select(
+                'b.id',
+                'b.img_url',
+                'b.name',
+                'b.occupancy_classification_id',
+                'b.business_type_id',
+                'b.street_address',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'bt.name as business_type_name',
+            )
+            ->join('businesses as b','b.id','i.business_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->where('i.id','=',$this->issue_inspection['id'])
+            ->first();
+        DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has deleted sanitary billing of  ( '.$var->name.', and fee of '.$var->fee.' )   for '.$edit->name.' (' .$edit->business_type_name. ') ',
+        ]);
         DB::table('inspection_sanitary_billings')
             ->where('id','=',$id)
             ->where('inspection_id','=',$this->issue_inspection['id'])
@@ -952,10 +1456,42 @@ class InspectionSchedules extends Component
         ->get()
         ->toArray();
         if(count($temp)>=1){
+           
+            $var = DB::table('inspection_inspector_team_leaders as iitl')
+                ->join('persons as p','p.id','iitl.person_id')
+                ->where('iitl.inspection_id','=',$this->issue_inspection['id'])
+                ->where('iitl.id','=',$id)
+                ->first();
+                
+            $edit = DB::table('inspections as i')
+                ->select(
+                    'b.id',
+                    'b.img_url',
+                    'b.name',
+                    'b.occupancy_classification_id',
+                    'b.business_type_id',
+                    'b.street_address',
+                    'b.contact_number',
+                    'b.email',
+                    'b.floor_area',
+                    'b.signage_area',
+                    'bt.name as business_type_name',
+                )
+                ->join('businesses as b','b.id','i.business_id')
+                ->join('business_types as bt','bt.id','b.business_type_id')
+                ->where('i.id','=',$this->issue_inspection['id'])
+                ->first();
+            DB::table('activity_logs')
+                ->insert([
+                    'created_by' => $this->activity_logs['created_by'],
+                    'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                    'log_details' => 'has deleted a team leader ( '.$var->first_name.' '.$var->middle_name.' '.$var->last_name.' '.$var->suffix.' '.' )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
+            ]);
             DB::table('inspection_inspector_team_leaders')
-                ->where('id','=',$id)
-                ->where('inspection_id','=',$this->issue_inspection['id'])
-                ->delete();
+            ->where('id','=',$id)
+            ->where('inspection_id','=',$this->issue_inspection['id'])
+            ->delete();
+
             self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
         }else{
             $this->dispatch('swal:redirect',
@@ -970,6 +1506,36 @@ class InspectionSchedules extends Component
         }
     }
     public function update_delete_members($id){
+        $var = DB::table('inspection_inspector_members as iim')
+                ->join('persons as p','p.id','iim.person_id')
+                ->where('iim.inspection_id','=',$this->issue_inspection['id'])
+                ->where('iim.id','=',$id)
+                ->first();
+            
+        $edit = DB::table('inspections as i')
+            ->select(
+                'b.id',
+                'b.img_url',
+                'b.name',
+                'b.occupancy_classification_id',
+                'b.business_type_id',
+                'b.street_address',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'bt.name as business_type_name',
+            )
+            ->join('businesses as b','b.id','i.business_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->where('i.id','=',$this->issue_inspection['id'])
+            ->first();
+        DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has deleted a member ( '.$var->first_name.' '.$var->middle_name.' '.$var->last_name.' '.$var->suffix.' '.' )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
+        ]);
         DB::table('inspection_inspector_members')
             ->where('id','=',$id)
             ->where('inspection_id','=',$this->issue_inspection['id'])
@@ -978,6 +1544,37 @@ class InspectionSchedules extends Component
        
     }
     public function update_delete_violation($id){
+        
+        $var = DB::table('inspection_violations as iv')
+            ->join('violations as v','v.id','iv.violation_id')
+            ->where('iv.id','=',$id)
+            ->where('iv.inspection_id','=',$this->issue_inspection['id'])
+            ->first();
+            
+        $edit = DB::table('inspections as i')
+            ->select(
+                'b.id',
+                'b.img_url',
+                'b.name',
+                'b.occupancy_classification_id',
+                'b.business_type_id',
+                'b.street_address',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'bt.name as business_type_name',
+            )
+            ->join('businesses as b','b.id','i.business_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->where('i.id','=',$this->issue_inspection['id'])
+            ->first();
+        DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has deleted a violation ( '.$var->description.' )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
+        ]);
         DB::table('inspection_violations')
             ->where('id','=',$id)
             ->where('inspection_id','=',$this->issue_inspection['id'])
@@ -1033,5 +1630,94 @@ class InspectionSchedules extends Component
         ];
         $this->dispatch('openModal',$modal_id);
     }
-   
+    public function save_deactivate($id,$modal_id){
+        $status = DB::table('inspection_status')
+            ->where('name','=','Deleted')
+            ->first();
+        if(DB::table('inspections as i')
+        ->where('i.id','=',$id)
+        ->update([
+            'status_id'=>$status->id
+        ])){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'success',
+                title             									: 'Successfully deleted!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            $edit = DB::table('inspections as i')
+                ->select(
+                    'b.id',
+                    'b.img_url',
+                    'b.name',
+                    'b.occupancy_classification_id',
+                    'b.business_type_id',
+                    'b.street_address',
+                    'b.contact_number',
+                    'b.email',
+                    'b.floor_area',
+                    'b.signage_area',
+                    'bt.name as business_type_name',
+                )
+                ->join('businesses as b','b.id','i.business_id')
+                ->join('business_types as bt','bt.id','b.business_type_id')
+                ->where('i.id','=',$id)
+                ->first();
+            DB::table('activity_logs')
+                ->insert([
+                    'created_by' => $this->activity_logs['created_by'],
+                    'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                    'log_details' => 'has deleted an inspection for '.$edit->name.' (' .$edit->business_type_name. ') ',
+            ]);
+            $this->dispatch('openModal',$modal_id);
+            return 0;
+        }
+    }
+    public function save_complete($id,$modal_id){
+        $status = DB::table('inspection_status')
+            ->where('name','=','Completed')
+            ->first();
+        if(DB::table('inspections as i')
+        ->where('i.id','=',$id)
+        ->update([
+            'status_id'=>$status->id
+        ])){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'success',
+                title             									: 'Successfully completed!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            $edit = DB::table('inspections as i')
+                ->select(
+                    'b.id',
+                    'b.img_url',
+                    'b.name',
+                    'b.occupancy_classification_id',
+                    'b.business_type_id',
+                    'b.street_address',
+                    'b.contact_number',
+                    'b.email',
+                    'b.floor_area',
+                    'b.signage_area',
+                    'bt.name as business_type_name',
+                )
+                ->join('businesses as b','b.id','i.business_id')
+                ->join('business_types as bt','bt.id','b.business_type_id')
+                ->where('i.id','=',$id)
+                ->first();
+            DB::table('activity_logs')
+                ->insert([
+                    'created_by' => $this->activity_logs['created_by'],
+                    'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                    'log_details' => 'has completed an inspection for '.$edit->name.' (' .$edit->business_type_name. ') ',
+            ]);
+            $this->dispatch('openModal',$modal_id);
+            return 0;
+        }
+    }
 }

@@ -40,6 +40,35 @@ class InspectorGroups extends Component
     public function mount(){
         
     }
+    public $activity_logs = [
+        'created_by' => NULL,
+        'inspector_team_id' => NULL,
+        'log_details' => NULL,
+    ];
+    public function boot(Request $request){
+        $session = $request->session()->all();
+        $this->activity_logs['created_by'] = $session['id'];
+        $user_details = 
+            DB::table('users as u')
+            ->select(
+                'im.member_id',
+                'im.inspector_team_id',
+                'it.team_leader_id',
+                'it.id',
+                )
+            ->join('persons as p','p.id','u.id')
+            ->leftjoin('inspector_members as im','im.member_id','p.id')
+            ->leftjoin('inspector_teams as it','it.team_leader_id','p.id')
+            ->where('u.id','=',$session['id'])
+            ->first();
+        if($user_details->member_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->member_id;
+        }elseif($user_details->team_leader_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->team_leader_id;
+        }else{
+            $this->activity_logs['inspector_team_id'] = 0;
+        }
+    }
     public function render()
     {
         $this->unassigned_inspectors = DB::table('persons as p')
@@ -194,6 +223,12 @@ class InspectorGroups extends Component
                 timer             									: '1000',
                 link              									: '#'
             );
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has added '.$this->inspector_team['name'], 
+            ]);
             $this->dispatch('openModal',$modal_id);  
         }
     }
@@ -329,6 +364,12 @@ class InspectorGroups extends Component
             timer             									: '1000',
             link              									: '#'
         );
+        DB::table('activity_logs')
+        ->insert([
+            'created_by' => $this->activity_logs['created_by'],
+            'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+            'log_details' => 'has edited '.$this->inspector_team['name'], 
+        ]);
         $this->dispatch('openModal',$modal_id);  
     }
     public function save_deactivate($id,$modal_id){
@@ -347,6 +388,12 @@ class InspectorGroups extends Component
                 timer             									: '1000',
                 link              									: '#'
             );
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has deactivated '.$this->inspector_team['name'], 
+            ]);
             $this->dispatch('openModal',$modal_id);
         }
     }
@@ -366,6 +413,12 @@ class InspectorGroups extends Component
                 timer             									: '1000',
                 link              									: '#'
             );
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has activated '.$this->inspector_team['name'], 
+            ]);
             $this->dispatch('openModal',$modal_id);
         }
     }
@@ -383,7 +436,8 @@ class InspectorGroups extends Component
         $this->designations = DB::table('team_target_barangays as ttb')
             ->select(
                 'ttb.id',
-                'b.brgyDesc'
+                'b.brgyDesc',
+                'ttb.brgy_id'
                 )
             ->join('brgy as b','b.id','ttb.brgy_id')
             ->where('ttb.inspector_team_id','=',$id)
@@ -431,6 +485,15 @@ class InspectorGroups extends Component
                     'brgy_id'=>$this->inspector_team['brgy_id'],
                     'inspector_team_id'=>$this->inspector_team['id']
                 ]);
+                $barangays = DB::table('brgy')
+                ->where('id','=',$this->inspector_team['brgy_id'])
+                ->first();
+                DB::table('activity_logs')
+                ->insert([
+                    'created_by' => $this->activity_logs['created_by'],
+                    'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                    'log_details' => 'has added a barangay '.$barangays->brgyDesc.' designation to '.$this->inspector_team['name'], 
+                ]);
             }
         }else{
             $this->dispatch('swal:redirect',
@@ -446,21 +509,33 @@ class InspectorGroups extends Component
         $this->designations = DB::table('team_target_barangays as ttb')
             ->select(
                 'ttb.id',
-                'b.brgyDesc'
+                'b.brgyDesc',
+                'ttb.brgy_id'
                 )
             ->join('brgy as b','b.id','ttb.brgy_id')
             ->where('ttb.inspector_team_id','=',$this->inspector_team['id'])
             ->get()
             ->toArray();
     }
-    public function delete_designation($id){
-            DB::table('team_target_barangays')
+    public function delete_designation($id,$brgy_id){
+
+        $barangays = DB::table('brgy')
+                ->where('id','=',$brgy_id)
+                ->first();
+        DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has deleted a barangay '.$barangays->brgyDesc.' designation to '.$this->inspector_team['name'], 
+            ]);
+        DB::table('team_target_barangays')
             ->where('id','=',$id)
             ->delete();
         $this->designations = DB::table('team_target_barangays as ttb')
             ->select(
                 'ttb.id',
-                'b.brgyDesc'
+                'b.brgyDesc',
+                'ttb.brgy_id'
                 )
             ->join('brgy as b','b.id','ttb.brgy_id')
             ->where('ttb.inspector_team_id','=',$this->inspector_team['id'])
@@ -471,6 +546,7 @@ class InspectorGroups extends Component
         $this->members = DB::table('inspector_members as im')
             ->select(
                 'im.id',
+                'im.member_id',
                 'p.first_name',
                 'p.middle_name',
                 'p.last_name',
@@ -527,10 +603,32 @@ class InspectorGroups extends Component
                         'inspector_team_id'=>$this->inspector_team['id'],
                         'member_id'=> $this->inspector_team['member_id']
                 ])){
+                    $members =DB::table('inspector_members as im')
+                        ->select(
+                            'im.id',
+                            'p.first_name',
+                            'p.middle_name',
+                            'p.last_name',
+                            'p.suffix',
+                            'wr.id as work_role_id',
+                            'wr.name as work_role_name',
+                            )
+                        ->join('persons as p','p.id','im.member_id')
+                        ->join('person_types as pt', 'pt.id','p.person_type_id')
+                        ->join('work_roles as wr', 'wr.id','p.work_role_id')
+                        ->where('p.id','=',$this->inspector_team['member_id'])
+                        ->first();
+                    DB::table('activity_logs')
+                    ->insert([
+                        'created_by' => $this->activity_logs['created_by'],
+                        'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                        'log_details' => 'has added a member ( '.$members->first_name.' '.$members->middle_name.' '.$members->last_name.' '.$members->suffix.' ) to '.$this->inspector_team['name'], 
+                    ]);
                     $this->inspector_team['member_id'] = NULL;
                     $this->members =DB::table('inspector_members as im')
                         ->select(
                             'im.id',
+                            'im.member_id',
                             'p.first_name',
                             'p.middle_name',
                             'p.last_name',
@@ -573,14 +671,30 @@ class InspectorGroups extends Component
             }
         }
     }
-    public function delete_member($id){
+    public function delete_member($id,$member_id){
         if(DB::table('inspector_members')
             ->where('id','=',$id)
             ->delete()
         ){
+            $members =DB::table('persons as p')
+                ->select(
+                    'p.first_name',
+                    'p.middle_name',
+                    'p.last_name',
+                    'p.suffix',
+                    )
+                ->where('p.id','=',$member_id)
+                ->first();
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has deleted a member ( '.$members->first_name.' '.$members->middle_name.' '.$members->last_name.' '.$members->suffix.' ) to '.$this->inspector_team['name'], 
+            ]);
             $this->members =DB::table('inspector_members as im')
                 ->select(
                     'im.id',
+                    'im.member_id',
                     'p.first_name',
                     'p.middle_name',
                     'p.last_name',

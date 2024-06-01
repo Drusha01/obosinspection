@@ -52,6 +52,35 @@ class DeletedInspections extends Component
         'inspector_team_leaders'  => [],
         'violations'  =>[],
     ];
+    public $activity_logs = [
+        'created_by' => NULL,
+        'inspector_team_id' => NULL,
+        'log_details' => NULL,
+    ];
+    public function boot(Request $request){
+        $session = $request->session()->all();
+        $this->activity_logs['created_by'] = $session['id'];
+        $user_details = 
+            DB::table('users as u')
+            ->select(
+                'im.member_id',
+                'im.inspector_team_id',
+                'it.team_leader_id',
+                'it.id',
+                )
+            ->join('persons as p','p.id','u.id')
+            ->leftjoin('inspector_members as im','im.member_id','p.id')
+            ->leftjoin('inspector_teams as it','it.team_leader_id','p.id')
+            ->where('u.id','=',$session['id'])
+            ->first();
+        if($user_details->member_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->member_id;
+        }elseif($user_details->team_leader_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->team_leader_id;
+        }else{
+            $this->activity_logs['inspector_team_id'] = 0;
+        }
+    }
     public function render(Request $request)
     {
         $session = $request->session()->all();
@@ -83,7 +112,7 @@ class DeletedInspections extends Component
             ->join('inspection_inspector_members as iim','iim.inspection_id','i.id')
             ->join('inspection_status as st','st.id','i.status_id')
             ->join('businesses as b','b.id','i.business_id')
-            ->join('persons as p','p.id','b.owner_id')
+            ->leftjoin('persons as p','p.id','b.owner_id')
             ->join('brgy as brg','brg.id','b.brgy_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
@@ -226,7 +255,7 @@ class DeletedInspections extends Component
             )
             ->join('inspection_status as st','st.id','i.status_id')
             ->join('businesses as b','b.id','i.business_id')
-            ->join('persons as p','p.id','b.owner_id')
+            ->leftjoin('persons as p','p.id','b.owner_id')
             ->join('brgy as brg','brg.id','b.brgy_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')

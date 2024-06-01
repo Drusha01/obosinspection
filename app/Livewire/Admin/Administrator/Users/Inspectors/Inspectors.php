@@ -58,6 +58,35 @@ class Inspectors extends Component
             ->get()
             ->toArray();
     }
+    public $activity_logs = [
+        'created_by' => NULL,
+        'inspector_team_id' => NULL,
+        'log_details' => NULL,
+    ];
+    public function boot(Request $request){
+        $session = $request->session()->all();
+        $this->activity_logs['created_by'] = $session['id'];
+        $user_details = 
+            DB::table('users as u')
+            ->select(
+                'im.member_id',
+                'im.inspector_team_id',
+                'it.team_leader_id',
+                'it.id',
+                )
+            ->join('persons as p','p.id','u.id')
+            ->leftjoin('inspector_members as im','im.member_id','p.id')
+            ->leftjoin('inspector_teams as it','it.team_leader_id','p.id')
+            ->where('u.id','=',$session['id'])
+            ->first();
+        if($user_details->member_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->member_id;
+        }elseif($user_details->team_leader_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->team_leader_id;
+        }else{
+            $this->activity_logs['inspector_team_id'] = 0;
+        }
+    }
     public function render()
     {
         $table_data = DB::table('users as u')
@@ -403,6 +432,13 @@ class Inspectors extends Component
                 timer             									: '1000',
                 link              									: '#'
             );
+
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has added a new inspector '.$this->person['first_name'].' '.$this->person['middle_name'].' '.$this->person['last_name'].' '.$this->person['suffix'],
+            ]);
             $this->dispatch('openModal',$modal_id);
         }
     }
@@ -596,7 +632,7 @@ class Inspectors extends Component
             $this->dispatch('swal:redirect',
                 position         									: 'center',
                 icon              									: 'warning',
-                title             									: 'Please enter emailname!',
+                title             									: 'Please enter email!',
                 showConfirmButton 									: 'true',
                 timer             									: '1000',
                 link              									: '#'
@@ -614,13 +650,14 @@ class Inspectors extends Component
                 );
                 return 0;
             }
-            if(DB::table('users as u')
-                ->join('roles as r','r.id','u.role_id')
-                ->join('persons as p','p.id','u.person_id')
-                ->where('r.name','=','Inspector')
-                ->where('p.id','<>',$id)
-                ->where('email','=',$this->person['email'])
-                ->first()){
+            $var = DB::table('users as u')
+            ->join('roles as r','r.id','u.role_id')
+            ->join('persons as p','p.id','u.person_id')
+            ->where('r.name','=','Inspector')
+            ->where('p.email','=',$this->person['email'])
+            ->where('u.person_id','<>',$this->person['person_id'])
+            ->first();
+            if( $var){
                 $this->dispatch('swal:redirect',
                     position         									: 'center',
                     icon              									: 'warning',
@@ -656,6 +693,7 @@ class Inspectors extends Component
                 'img_url' => $person['img_url'],
             ])){
          
+            }
             $this->dispatch('swal:redirect',
                 position         									: 'center',
                 icon              									: 'success',
@@ -664,8 +702,13 @@ class Inspectors extends Component
                 timer             									: '1000',
                 link              									: '#'
             );
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has edited an inspector '.$this->person['first_name'].' '.$this->person['middle_name'].' '.$this->person['last_name'].' '.$this->person['suffix'],
+            ]);
             $this->dispatch('openModal',$modal_id);
-        }
     }
     public function save_recover_password($id,$modal_id){
         if(strlen($this->person['password'])< 8){
@@ -739,6 +782,12 @@ class Inspectors extends Component
                         link              									: '#'
                     );
                     $this->dispatch('openModal',$modal_id);
+                    DB::table('activity_logs')
+                    ->insert([
+                        'created_by' => $this->activity_logs['created_by'],
+                        'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                        'log_details' => 'has updated a password for inspector '.$this->person['first_name'].' '.$this->person['middle_name'].' '.$this->person['last_name'].' '.$this->person['suffix'],
+                    ]);
                     return 0;
                 }
             }
@@ -771,6 +820,12 @@ class Inspectors extends Component
                 timer             									: '1000',
                 link              									: '#'
             );
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has deactivated inspector '.$this->person['first_name'].' '.$this->person['middle_name'].' '.$this->person['last_name'].' '.$this->person['suffix'],
+            ]);
             $this->dispatch('openModal',$modal_id);
         }
     }
@@ -790,6 +845,12 @@ class Inspectors extends Component
                 timer             									: '1000',
                 link              									: '#'
             );
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has activated inspector '.$this->person['first_name'].' '.$this->person['middle_name'].' '.$this->person['last_name'].' '.$this->person['suffix'],
+            ]);
             $this->dispatch('openModal',$modal_id);
         }
     }
