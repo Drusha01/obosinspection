@@ -23,9 +23,9 @@
                     </span>
                 </a>
                 <div id="Establishmentsdropdown" class="collapse  @if(Request()->route()->getPrefix() == 'administrator/establishments') show @endif">
-                    <ul class="nav flex-column sub-menu">
+                    <ul class="nav flex-column sub-menu" style="background-color: #50C878; border-radius: 8px; z-index: 9999;">
                         <li class="nav-item  @if( Route::is('administrator-establishments-owners'))  active @endif">
-                            <a class="nav-link " href="{{ route('administrator-establishments-owners') }}">
+                            <a class="nav-link" href="{{ route('administrator-establishments-owners') }}">
                                 <i class="fas fa-fw fa-user"></i>
                                 <span>Owners</span>
                             </a>
@@ -63,7 +63,7 @@
                     </span>
                 </a>
                 <div id="Equipmentsdropdown" class="collapse  @if(Request()->route()->getPrefix() == 'administrator/equipments') show @endif">
-                    <ul class="nav flex-column sub-menu">
+                    <ul class="nav flex-column sub-menu" style="background-color: #50C878; border-radius: 8px; z-index: 9999;">
                         <li class="nav-item @if(Route::is('administrator-equipments-categories')) active @endif">
                             <a class="nav-link" href="{{ route('administrator-equipments-categories') }}">
                                 <i class="fas fa-fw fa-th-list"></i>
@@ -91,7 +91,7 @@
                     </span>
                 </a>
                 <div id="Billingsdropdown" class="collapse @if(Request()->route()->getPrefix() == 'administrator/billings') show @endif">
-                    <ul class="nav flex-column sub-menu">
+                    <ul class="nav flex-column sub-menu" style="background-color: #50C878; border-radius: 8px; z-index: 9999;">
                         <li class="nav-item @if(Route::is('administrator-billings-equipments-billings')) active @endif">
                             <a class="nav-link" href="{{ route('administrator-billings-equipments-billings') }}">
                                 <i class="fas fa-fw fa-toolbox"></i>
@@ -143,7 +143,7 @@
                     </span>
                 </a>
                 <div id="Inspectionsdropdown" class="collapse @if(Request()->route()->getPrefix() == 'administrator/inspections') show @endif">
-                    <ul class="nav flex-column sub-menu">
+                    <ul class="nav flex-column sub-menu" style="background-color: #50C878; border-radius: 8px; z-index: 9999;">
                         <li class="nav-item @if(Route::is('administrator-inspections-inspection-schedules')) active @endif">
                             <a class="nav-link" href="{{ route('administrator-inspections-inspection-schedules') }}">
                                 <i class="fas fa-fw fa-calendar-check"></i>
@@ -183,7 +183,7 @@
                     </span>
                 </a>
                 <div id="Userdropdown" class="collapse @if(Request()->route()->getPrefix() == 'administrator/users') show @endif">
-                    <ul class="nav flex-column sub-menu">
+                    <ul class="nav flex-column sub-menu" style="background-color: #50C878; border-radius: 8px; z-index: 9999;">
                         <li class="nav-item @if(Route::is('administrator-users-inspectors')) active @endif">
                             <a class="nav-link" href="{{ route('administrator-users-inspectors') }}">
                                 <i class="fas fa-fw fa-user-tie"></i>
@@ -275,7 +275,7 @@
                     </span>
                 </a>
                 <div id="Equipmentsdropdown" class="collapse  @if(Request()->route()->getPrefix() == 'inspector-team-leader/equipments') show @endif">
-                    <ul class="nav flex-column sub-menu">
+                    <ul class="nav flex-column sub-menu" style="background-color: #50C878; border-radius: 8px; z-index: 9999;">
                         <li class="nav-item @if(Route::is('inspector-team-leader-equipments-categories')) active @endif">
                             <a class="nav-link" href="{{ route('inspector-team-leader-equipments-categories') }}">
                                 <i class="fas fa-fw fa-th-list"></i>
@@ -308,7 +308,7 @@
                     </span>
                 </a>
                 <div id="Inspectionsdropdown" class="collapse @if(Request()->route()->getPrefix() == 'inspector-team-leader/inspections') show @endif">
-                    <ul class="nav flex-column sub-menu">
+                    <ul class="nav flex-column sub-menu" style="background-color: #50C878; border-radius: 8px; z-index: 9999;">
                         <li class="nav-item @if(Route::is('inspector-team-leader-inspections-inspection-schedules')) active @endif">
                             <a class="nav-link" href="{{ route('inspector-team-leader-inspections-inspection-schedules') }}">
                                 <i class="fas fa-fw fa-calendar-check"></i>
@@ -361,7 +361,7 @@
                     </span>
                 </a>
                 <div id="Equipmentsdropdown" class="collapse  @if(Request()->route()->getPrefix() == 'inspector/equipments') show @endif">
-                    <ul class="nav flex-column sub-menu">
+                    <ul class="nav flex-column sub-menu" style="background-color: #50C878; border-radius: 8px; z-index: 9999;">
                         <li class="nav-item @if(Route::is('inspector-equipments-categories')) active @endif">
                             <a class="nav-link" href="{{ route('inspector-equipments-categories') }}">
                                 <i class="fas fa-fw fa-th-list"></i>
@@ -394,7 +394,7 @@
                     </span>
                 </a>
                 <div id="Inspectionsdropdown" class="collapse @if(Request()->route()->getPrefix() == 'inspector/inspections') show @endif">
-                    <ul class="nav flex-column sub-menu">
+                    <ul class="nav flex-column sub-menu" style="background-color: #50C878; border-radius: 8px; z-index: 9999;">
                         <li class="nav-item @if(Route::is('inspector-inspections-inspection-schedules')) active @endif">
                             <a class="nav-link" href="{{ route('inspector-inspections-inspection-schedules') }}">
                                 <i class="fas fa-fw fa-calendar-check"></i>
