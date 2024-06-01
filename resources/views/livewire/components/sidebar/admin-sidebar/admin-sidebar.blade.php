@@ -184,7 +184,7 @@
                 </a>
                 <div id="Userdropdown" class="collapse @if(Request()->route()->getPrefix() == 'administrator/users') show @endif">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item @if(Route::is('administrator-users-inspectors   ')) active @endif">
+                        <li class="nav-item @if(Route::is('administrator-users-inspectors')) active @endif">
                             <a class="nav-link" href="{{ route('administrator-users-inspectors') }}">
                                 <i class="fas fa-fw fa-user-tie"></i>
                                 <span>Inspector</span>
