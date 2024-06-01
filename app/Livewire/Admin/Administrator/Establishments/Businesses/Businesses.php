@@ -14,7 +14,15 @@ class Businesses extends Component
     use WithPagination;
     use WithFileUploads;
     public $title = "Businesses";
-
+    public $histfilter = [
+        ['column_name'=> 'id','active'=> true,'name'=>'#'],
+        ['column_name'=> 'img_url','active'=> true,'name'=>'Image'],
+        ['column_name'=> 'name','active'=> true,'name'=>'Business name'],
+        ['column_name'=> 'barangay','active'=> true,'name'=>'Brgy'],
+        ['column_name'=> 'business_type_name','active'=> true,'name'=>'Business Type'],
+        ['column_name'=> 'schedule_date','active'=> true,'name'=>'Schedule'],
+        ['column_name'=> 'id','active'=> true,'name'=>'Generate'],
+    ];
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
         ['column_name'=> 'img_url','active'=> true,'name'=>'Image'],
@@ -27,7 +35,7 @@ class Businesses extends Component
         ['column_name'=> 'email','active'=> true,'name'=>'Email'],
         ['column_name'=> 'floor_area','active'=> true,'name'=>'Floor Area'],
         ['column_name'=> 'signage_area','active'=> true,'name'=>'Signage Area'],
-
+        ['column_name'=> 'history','active'=> true,'name'=>'History'],
         ['column_name'=> 'id','active'=> true,'name'=>'Action'],
     ];
     public $business = [
@@ -48,6 +56,7 @@ class Businesses extends Component
     public $occupancy_classifications;
     public $owners;
     public $business_types;
+    public $history = [];
     public function mount(){
         $city_mun = DB::table('citymun')
             ->where('citymunDesc','=','GENERAL SANTOS CITY (DADIANGAS)')
@@ -785,5 +794,163 @@ class Businesses extends Component
             ]);
             $this->dispatch('openModal',$modal_id);
         }
+    }
+    public function viewHistory($id,$modal_id){
+        $this->history = DB::table('inspections as i')
+        ->select(
+            'i.id',
+            'b.img_url',
+            'b.name',
+            'p.first_name',
+            'p.middle_name',
+            'p.last_name',
+            'p.suffix',
+            'brg.brgyDesc as barangay',
+            'bt.name as business_type_name',
+            'oc.character_of_occupancy as occupancy_classification_name',
+            'b.contact_number',
+            'b.email',
+            'b.floor_area',
+            'b.signage_area',
+            'b.is_active',
+            'st.name as status_name',
+            'i.schedule_date',
+        )
+        ->leftjoin('inspection_inspector_members as iim','iim.inspection_id','i.id')
+        ->join('inspection_status as st','st.id','i.status_id')
+        ->join('businesses as b','b.id','i.business_id')
+        ->leftjoin('persons as p','p.id','b.owner_id')
+        ->join('brgy as brg','brg.id','b.brgy_id')
+        ->join('business_types as bt','bt.id','b.business_type_id')
+        ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+        ->where('i.business_id','=',$id)
+        ->where('st.name','=','Completed')
+        ->orderBy('i.id','desc')
+        ->get()
+        ->toArray();
+        $this->dispatch('openModal',$modal_id);
+    }
+    public function generate_cert($id,$modal_id){
+        // validation.... cannot create if it has violation/s
+        $violations = DB::table('inspection_violations as iv')
+            ->where('iv.inspection_id','=',$id)
+            ->whereNull('remarks')
+            ->get()
+            ->toArray();
+        if(count($violations)){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: "Inspection has violation/s hence you cannot generate certificate \n\n This needs to be approved by administrator!",
+                showConfirmButton 									: 'true',
+                timer             									: '3000',
+                link              									: '#'
+            );
+            return 0 ;
+        }
+        $application_types = DB::table('application_types')
+            ->get()
+            ->toArray();
+
+        $application_type = DB::table('application_types')
+            ->where('name','=','Annual')
+            ->first();
+
+        $business = DB::table('inspections as i')
+            ->select(
+                'b.id',
+                'b.img_url',
+                'b.name',
+                'p.first_name',
+                'p.middle_name',
+                'p.last_name',
+                'p.suffix',
+                'brg.brgyDesc as barangay',
+                'bt.name as business_type_name',
+                'oc.character_of_occupancy as occupancy_classification_name',
+                'oc.character_of_occupancy_group',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'b.is_active'
+
+            )
+            ->join('businesses as b','b.id','i.business_id')
+            ->join('persons as p','p.id','b.owner_id')
+            ->join('brgy as brg','brg.id','b.brgy_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+            ->where('i.id','=',$id)
+            ->first();
+
+        $inspection_members = DB::table('inspection_inspector_members as iim')
+            ->select(
+                'p.id',
+                'p.first_name',
+                'p.middle_name',
+                'p.last_name',
+                'p.suffix',
+                'p.img_url',
+                'wr.id as work_role_id',
+                'wr.name as work_role_name',
+                )
+            ->join('persons as p','p.id','iim.person_id')
+            ->join('person_types as pt', 'pt.id','p.person_type_id')
+            ->join('work_roles as wr', 'wr.id','p.work_role_id')
+            ->where('iim.inspection_id','=',$id)
+            ->get()
+            ->toArray();
+        
+        $inspection_team_leaders = DB::table('inspection_inspector_team_leaders as iitl')
+            ->select(
+                'p.id',
+                'p.first_name',
+                'p.middle_name',
+                'p.last_name',
+                'p.suffix',
+                'p.img_url',
+                'wr.id as work_role_id',
+                'wr.name as work_role_name',
+                )
+            ->join('persons as p','p.id','iitl.person_id')
+            ->join('person_types as pt', 'pt.id','p.person_type_id')
+            ->join('work_roles as wr', 'wr.id','p.work_role_id')
+            ->where('iitl.inspection_id','=',$id)
+            ->get()
+            ->toArray();
+        $inspectors = [];
+        foreach ($inspection_members as $key => $value) {
+            array_push($inspectors,$value);
+        }
+        foreach ($inspection_team_leaders as $key => $value) {
+            array_push($inspectors,$value);
+        }
+        $annual_certificate_categories = DB::table('annual_certificate_categories as acc')
+            ->get()
+            ->toArray();
+
+        $this->annual_certificate_inspection = [
+            'id' => NULL,
+            'business_id' => $business->id,
+            'application_type_id' => $application_type->id,
+            'bin' => NULL,
+            'occupancy_no' => NULL,
+            'date_compiled' => NULL,
+            'issued_on' => NULL,
+            'step'=> 1,
+            'business'=> $business,
+
+            'application_types'=> $application_types,
+
+            'inspectors'=>$inspectors,
+            'annual_certificate_inspection_inspector' => [],
+            'inspector_id'=>NULL,
+
+            'annual_certificate_categories'=> $annual_certificate_categories,
+            'annual_certificate_category_id'=>NULL,
+        ];
+        
+        $this->dispatch('openModal',$modal_id);
     }
 }
