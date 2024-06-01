@@ -237,6 +237,34 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Establishmentsdropdown" aria-expanded="@if(Request()->route()->getPrefix() == 'inspector-team-leader/establishments') false @else true @endif" aria-controls="Establishmentsdropdown">
+                    <span class="d-flex justify-content-between align-items-center">
+                        <span>
+                            <i class="fas fa-fw fa-building"></i>
+                            Establishments 
+                        </span>
+                        <i class="fas @if(Request()->route()->getPrefix() == 'inspector-team-leader/establishments') fa-chevron-up @else fa-chevron-down @endif"></i> 
+                    </span>
+                </a>
+                <div id="Establishmentsdropdown" class="collapse  @if(Request()->route()->getPrefix() == 'inspector-team-leader/establishments') show @endif">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item  @if( Route::is('inspector-team-leader-establishments-owners'))  active @endif">
+                            <a class="nav-link " href="{{ route('inspector-team-leader-establishments-owners') }}">
+                                <i class="fas fa-fw fa-user"></i>
+                                <span>Owners</span>
+                            </a>
+                        </li>
+                        <li class="nav-item  @if( Route::is('inspector-team-leader-establishments-businesses') ) active @endif">
+                            <a class="nav-link " href="{{ route('inspector-team-leader-establishments-businesses') }}">
+                                <i class="fas fa-fw fa-briefcase"></i>
+                                <span>Businesses</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Equipmentsdropdown" aria-expanded="@if(Request()->route()->getPrefix() == 'inspector-team-leader/equipments') false @else true @endif" aria-controls="Equipmentsdropdown">
                     <span class="d-flex justify-content-between align-items-center">
                         <span>
