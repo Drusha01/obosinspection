@@ -603,7 +603,7 @@ class CompletedInspections extends Component
             $this->dispatch('swal:redirect',
                 position         									: 'center',
                 icon              									: 'warning',
-                title             									: 'Inspection has violation/s hence you cannot generate certificate!',
+                title             									: "Inspection has violation/s hence you cannot generate certificate \n\n This needs to be approved by administrator!",
                 showConfirmButton 									: 'true',
                 timer             									: '3000',
                 link              									: '#'
