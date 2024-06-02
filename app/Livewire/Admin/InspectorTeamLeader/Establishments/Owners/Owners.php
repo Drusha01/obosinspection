@@ -14,6 +14,10 @@ class Owners extends Component
     use WithPagination;
     use WithFileUploads;
     public $title = "Owners";
+    public $search = [
+        'owner_name'=> NULL,
+        'owner_name_prev'=> NULL,
+    ];
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
         ['column_name'=> 'img_url','active'=> true,'name'=>'Image'],
@@ -66,6 +70,10 @@ class Owners extends Component
     }
     public function render()
     {
+        if($this->search['owner_name'] != $this->search['owner_name_prev']){
+            $this->search['owner_name_prev'] = $this->search['owner_name'];
+            $this->resetPage();
+        }
         $table_data = DB::table('persons as p')
         ->select(
             'p.id',
@@ -82,6 +90,7 @@ class Owners extends Component
         )
         ->join('person_types as pt','pt.id','p.person_type_id')
         ->where('pt.name','=','Owner')
+        ->where(DB::raw("CONCAT(p.first_name,' ',p.middle_name,' ',p.last_name)"),'like',$this->search['owner_name'] .'%')
         ->orderBy('id','desc')
         ->paginate(10);
         return view('livewire.admin.inspector-team-leader.establishments.owners.owners',[

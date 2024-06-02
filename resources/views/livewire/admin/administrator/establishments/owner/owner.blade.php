@@ -7,8 +7,8 @@
             <!-- Search bar and Add button -->
             <div class="d-flex align-items-center justify-content-between mb-4">
                 <div class="d-flex align-items-center w-50">
-                    <label for="search" class="form-label mb-0 mr-2">Search:</label>
-                    <input type="text" id="search" class="form-control" placeholder="Enter Name" wire:model="searchTerm">
+                    <label for="search" class="form-label mb-0 mr-2">Search owner:</label>
+                    <input type="text" id="search" class="form-control" placeholder="Enter Name" wire:model.live.debounce.650ms="search.owner_name">
                 </div>
                 <div>
                     <button type="button" class="btn btn-primary"  wire:click="add('addModaltoggler')">

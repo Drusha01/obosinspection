@@ -14,6 +14,10 @@ class Businesses extends Component
     use WithPagination;
     use WithFileUploads;
     public $title = "Businesses";
+    public $search = [
+        'business_name'=> NULL,
+        'business_name_prev'=> NULL,
+    ];
     public $histfilter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
         ['column_name'=> 'img_url','active'=> true,'name'=>'Image'],
@@ -124,6 +128,10 @@ class Businesses extends Component
 
     public function render()
     {
+        if($this->search['business_name'] != $this->search['business_name_prev']){
+            $this->search['business_name_prev'] = $this->search['business_name'];
+            $this->resetPage();
+        }
         $table_data = DB::table('businesses as b')
             ->select(
                 'b.id',
@@ -147,6 +155,7 @@ class Businesses extends Component
             ->join('brgy as brg','brg.id','b.brgy_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+            ->where('b.name','like',$this->search['business_name'] .'%')
             ->orderBy('id','desc')
             ->paginate(10);
         return view('livewire.admin.administrator.establishments.businesses.businesses',[

@@ -142,16 +142,11 @@ class CompletedInspections extends Component
         ->layout('components.layouts.admin',[
             'title'=>$this->title]);
     }
-    public function update_complied_violation($id,$remarks){
-        if($remarks == 0){
-            $remarks = NULL;
-        }
-        DB::table('inspection_violations')
+    public function update_complied_violation($id){
+        $inspection_violation = DB::table('inspection_violations')
             ->where('id','=',$id)
-            ->where('inspection_id','=',$this->issue_inspection['id'])
-            ->update([
-                'remarks'=>$remarks
-            ]);
+            ->first();
+
         $var = DB::table('inspection_violations as iv')
             ->join('violations as v','v.id','iv.violation_id')
             ->where('iv.id','=',$id)
@@ -176,21 +171,35 @@ class CompletedInspections extends Component
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->where('i.id','=',$this->issue_inspection['id'])
             ->first();
-        if($remarks == 1){
-            DB::table('activity_logs')
-                ->insert([
-                    'created_by' => $this->activity_logs['created_by'],
-                    'inspector_team_id' => $this->activity_logs['inspector_team_id'],
-                    'log_details' => 'has updated a violation ( '.$var->description.', remarks: '.$remarks.' )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
+        if(isset($inspection_violation->remarks)){
+            DB::table('inspection_violations')
+            ->where('id','=',$id)
+            ->where('inspection_id','=',$this->issue_inspection['id'])
+            ->update([
+                'remarks'=>NULL
             ]);
-        }else{
             DB::table('activity_logs')
             ->insert([
                 'created_by' => $this->activity_logs['created_by'],
                 'inspector_team_id' => $this->activity_logs['inspector_team_id'],
-                'log_details' => 'has updated a violation ( '.$var->description.', remarks: '.$remarks.' )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
+                'log_details' => 'has updated a violation ( '.$var->description.', remarks: Not complied )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
+            ]);
+        }else{
+            DB::table('inspection_violations')
+                ->where('id','=',$id)
+                ->where('inspection_id','=',$this->issue_inspection['id'])
+                ->update([
+                    'remarks'=>1
+                ]);
+            DB::table('activity_logs')
+                ->insert([
+                    'created_by' => $this->activity_logs['created_by'],
+                    'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                    'log_details' => 'has updated a violation ( '.$var->description.', remarks: complied )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
             ]);
         }
+        
+       
         self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
     }
      public function update_inspection_data($id,$step){
@@ -448,7 +457,8 @@ class CompletedInspections extends Component
         $inspection_violations = DB::table('inspection_violations as iv')
             ->select(
                 'iv.id',
-                'description'
+                'description',
+                'remarks'
             )
             ->join('violations as v','v.id','iv.violation_id')
             ->where('inspection_id','=',$id)
@@ -472,6 +482,7 @@ class CompletedInspections extends Component
             array_push($temp,[
                 'description'=> $value->description,
                 "id" => $value->id,
+                'remarks'=>$value->remarks
             ]);
         }
         $inspection_violations = $temp;
