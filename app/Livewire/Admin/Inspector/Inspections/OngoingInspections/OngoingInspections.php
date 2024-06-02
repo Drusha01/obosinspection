@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Admin\Administrator\Inspections\InspectionSchedules;
+namespace App\Livewire\Admin\Inspector\Inspections\OngoingInspections;
 
 use Livewire\Component;
 use Illuminate\Http\Request;
@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 
-class InspectionSchedules extends Component
+class OngoingInspections extends Component
 {
     use WithPagination;
     use WithFileUploads;
@@ -35,7 +35,6 @@ class InspectionSchedules extends Component
         ['column_name'=> 'schedule_date','active'=> true,'name'=>'Schedule'],
         ['column_name'=> 'status_name','active'=> true,'name'=>'Status'],
         ['column_name'=> 'id','active'=> true,'name'=>'Inspection Details'],
-        ['column_name'=> 'id','active'=> true,'name'=>'Action'],
     ];
     public $issue_inspection = [
         'id' => NULL,
@@ -170,8 +169,13 @@ class InspectionSchedules extends Component
             $this->activity_logs['inspector_team_id'] = 0;
         }
     }
-    public function render()
+    public function render(Request $request)
     {
+        $session = $request->session()->all();
+        $person = DB::table('users as u')
+            ->select('u.person_id')
+            ->where('u.id','=',$session['id'])
+            ->first();
         $table_data = DB::table('inspections as i')
             ->select(
                 'i.id',
@@ -193,17 +197,18 @@ class InspectionSchedules extends Component
                 'i.schedule_date',
 
             )
+            ->join('inspection_inspector_members as iim','iim.inspection_id','i.id')
             ->join('inspection_status as st','st.id','i.status_id')
             ->join('businesses as b','b.id','i.business_id')
             ->leftjoin('persons as p','p.id','b.owner_id')
             ->join('brgy as brg','brg.id','b.brgy_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-            ->where('st.name','=','Pending')
+            ->where('iim.person_id','=',$person->person_id)
+            ->where('st.name','=','On-going')
             ->orderBy('id','desc')
             ->paginate(10);
-            // dd($table_data);
-        return view('livewire.admin.administrator.inspections.inspection-schedules.inspection-schedules',[
+        return view('livewire.admin.inspector.inspections.ongoing-inspections.ongoing-inspections',[
             'table_data'=>$table_data
         ])
         ->layout('components.layouts.admin',[
@@ -422,7 +427,6 @@ class InspectionSchedules extends Component
                 "p.email",
                 "p.img_url",
                 'wr.name as work_role_name',
-                'it.name as inspector_team',
             )
             ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
@@ -445,7 +449,6 @@ class InspectionSchedules extends Component
                 "p.email",
                 "p.img_url",
                 'wr.name as work_role_name',
-                'it.name as inspector_team',
             )
             ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
@@ -454,7 +457,7 @@ class InspectionSchedules extends Component
             ->where('pt.name','Inspector')
             ->get()
             ->toArray();
-           
+
         $violations = DB::table('violations')
             ->where('is_active','=',1)
             ->get()
@@ -554,9 +557,7 @@ class InspectionSchedules extends Component
                 "p.email",
                 "p.img_url",
                 'wr.name as work_role_name',
-                'it.name as inspector_team',
             )
-            ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->leftjoin('inspection_inspector_members as iim','p.id','iim.person_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
@@ -579,9 +580,7 @@ class InspectionSchedules extends Component
                 "p.email",
                 "p.img_url",
                 'wr.name as work_role_name',
-                'it.name as inspector_team',
             )
-            ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->join('inspection_inspector_team_leaders as iitl','p.id','iitl.person_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
@@ -1238,7 +1237,7 @@ class InspectionSchedules extends Component
         }
     }
     public function update_inspection_violation(){
-        if(isset($this->issue_inspection['violation_id'])){
+        if(intval($this->issue_inspection['violation_id'])){
             $temp = DB::table('inspection_violations')
             ->where('violation_id','=',$this->issue_inspection['violation_id'])
             ->where('inspection_id','=',$this->issue_inspection['id'])
@@ -1282,16 +1281,6 @@ class InspectionSchedules extends Component
                 ]);
                 self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
             }
-        }else{
-            $this->dispatch('swal:redirect',
-                position         									: 'center',
-                icon              									: 'warning',
-                title             									: 'Select violation!',
-                showConfirmButton 									: 'true',
-                timer             									: '1000',
-                link              									: '#'
-            );
-            return 0;
         }
     }
     public function add_team_leader(){
@@ -1733,15 +1722,5 @@ class InspectionSchedules extends Component
             $this->dispatch('openModal',$modal_id);
             return 0;
         }
-    }
-    public function update_status($id,$status){
-        $status = DB::table('inspection_status')
-            ->where('name','=',$status)
-            ->first();
-        DB::table('inspections')
-            ->where('id','=',$id)
-            ->update([
-                'status_id'=> $status->id
-        ]);
     }
 }

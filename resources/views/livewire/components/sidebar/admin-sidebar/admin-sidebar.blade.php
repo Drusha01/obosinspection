@@ -150,6 +150,12 @@
                                 <span>Inspection schedules</span>
                             </a>
                         </li>
+                        <li class="nav-item @if(Route::is('administrator-inspections-ongoing-inspections')) active @endif">
+                            <a class="nav-link" href="{{ route('administrator-inspections-ongoing-inspections') }}">
+                                <i class="fas fa-fw fa-check-circle"></i>
+                                <span>Ongoing inspections</span>
+                            </a>
+                        </li>
                         <li class="nav-item @if(Route::is('administrator-inspections-completed-inspections')) active @endif">
                             <a class="nav-link" href="{{ route('administrator-inspections-completed-inspections') }}">
                                 <i class="fas fa-fw fa-check-circle"></i>
@@ -315,6 +321,12 @@
                                 <span>Inspection schedules</span>
                             </a>
                         </li>
+                        <li class="nav-item @if(Route::is('inspector-team-leader-inspections-ongoing-inspections')) active @endif">
+                            <a class="nav-link" href="{{ route('inspector-team-leader-inspections-ongoing-inspections') }}">
+                                <i class="fas fa-fw fa-check-circle"></i>
+                                <span>Ongoing inspections</span>
+                            </a>
+                        </li>
                         <li class="nav-item @if(Route::is('inspector-team-leader-inspections-completed-inspections')) active @endif">
                             <a class="nav-link" href="{{ route('inspector-team-leader-inspections-completed-inspections') }}">
                                 <i class="fas fa-fw fa-check-circle"></i>
@@ -399,6 +411,12 @@
                             <a class="nav-link" href="{{ route('inspector-inspections-inspection-schedules') }}">
                                 <i class="fas fa-fw fa-calendar-check"></i>
                                 <span>Inspection schedules</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @if(Route::is('inspector-inspections-ongoing-inspections')) active @endif">
+                            <a class="nav-link" href="{{ route('inspector-inspections-ongoing-inspections') }}">
+                                <i class="fas fa-fw fa-check-circle"></i>
+                                <span>Ongoing inspections</span>
                             </a>
                         </li>
                         <li class="nav-item @if(Route::is('inspector-inspections-completed-inspections')) active @endif">

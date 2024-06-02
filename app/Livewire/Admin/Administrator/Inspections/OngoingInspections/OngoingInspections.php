@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Admin\Administrator\Inspections\InspectionSchedules;
+namespace App\Livewire\Admin\Administrator\Inspections\OngoingInspections;
 
 use Livewire\Component;
 use Illuminate\Http\Request;
@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 
-class InspectionSchedules extends Component
+class OngoingInspections extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $title = "Inspection schedules";
+    public $title = "Ongoing Inspections";
     public $inspector_leaders;
     public $inspector_members;
     public $businesses;
@@ -199,11 +199,11 @@ class InspectionSchedules extends Component
             ->join('brgy as brg','brg.id','b.brgy_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-            ->where('st.name','=','Pending')
+            ->where('st.name','=','On-going')
             ->orderBy('id','desc')
             ->paginate(10);
             // dd($table_data);
-        return view('livewire.admin.administrator.inspections.inspection-schedules.inspection-schedules',[
+        return view('livewire.admin.administrator.inspections.ongoing-inspections.ongoing-inspections',[
             'table_data'=>$table_data
         ])
         ->layout('components.layouts.admin',[

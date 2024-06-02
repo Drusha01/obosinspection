@@ -33,6 +33,7 @@ class InspectionSchedules extends Component
         ['column_name'=> 'barangay','active'=> true,'name'=>'Brgy'],
         ['column_name'=> 'business_type_name','active'=> true,'name'=>'Business Type'],
         ['column_name'=> 'schedule_date','active'=> true,'name'=>'Schedule'],
+        ['column_name'=> 'status_name','active'=> true,'name'=>'Status'],
         ['column_name'=> 'id','active'=> true,'name'=>'Inspection Details'],
     ];
     public $issue_inspection = [

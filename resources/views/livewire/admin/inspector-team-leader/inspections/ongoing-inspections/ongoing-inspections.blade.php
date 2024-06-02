@@ -4,9 +4,6 @@
             <div class="d-sm-flex align-items-center justify-content-between mt-4 mb-4">
                 <h1 class="h3 mb-0 text-gray-800">{{$title}}</h1>
                 <div class="p-0 m-0" wire:click="add('addModaltoggler')" >
-                    <button type="button" class="btn btn-primary">
-                        Add Inspection Schedule
-                    </button>
                 </div>
             </div>
             <!-- Table -->
@@ -41,15 +38,16 @@
                                         </td>
                                     @elseif($filter_value['name'] == 'Status' && $filter_value['active'])
                                         <td class="text-center align-middle">
-                                            <button class="btn btn-outline-success" wire:click="update_status({{$value->id}},'On-going')">
-                                                On-going
+                                            <button class="btn btn-outline-secondary" wire:click="update_status({{$value->id}},'Pending')">
+                                                Pending
                                             </button>
+                                           
                                         </td>
                                     @elseif($filter_value['name'] == 'Action' && $filter_value['active'])
                                         <td class="text-center align-middle">
-                                            <!-- <button class="btn btn-outline-secondary" @if($value->status_name == 'Pending') disabled @else @endif wire:click="edit({{$value->id}},'completeModaltoggler')">
+                                            <button class="btn btn-outline-secondary" @if($value->status_name == 'Pending') disabled @else @endif wire:click="edit({{$value->id}},'completeModaltoggler')">
                                                 Complete
-                                            </button> -->
+                                            </button>
                                             @if($value->is_active)
                                                 <button class="btn btn-danger" wire:click="edit({{$value->id}},'deactivateModaltoggler')">
                                                     Delete
@@ -121,27 +119,18 @@
                             </div>
                             @elseif($inspection['step'] == 2)
                             <div>
-                                <div class="input-group mb-3">
-                                    <select class="form-select" id="teamLeaderSelect" wire:model.live="inspection.inspector_leader_id">
-                                        <option value="">Select Team Leader</option>
-                                        @foreach($inspector_leaders as $key =>  $value)
-                                            <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</option>
-                                        @endforeach
-                                    </select>
-                                    <button class="btn btn-primary" type="button" wire:click="add_team_leader()"><i class="bi bi-plus"></i></button>
-                                </div>
                                 <div class="table-responsive">
                                     <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
                                         <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                                             <tr>
-                                                <th class="align-middle">Name</th>
+                                                <th>Name</th>
                                                 <th class="align-middle text-center">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach($inspection['inspector_leaders']  as $key =>$value)
                                                 <tr>
-                                                    <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
+                                                    <td>{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
                                                     <td class="align-middle text-center">
                                                         <button class="btn btn-danger ">
                                                             Delete
@@ -169,14 +158,14 @@
                                     <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
                                         <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                                             <tr>
-                                                <th class="align-middle">Name</th>
+                                                <th>Name</th>
                                                 <th class="align-middle text-center">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach($inspection['inspector_members']  as $key =>$value)
                                                 <tr>
-                                                    <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
+                                                    <td>{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
                                                     <td class="align-middle text-center">
                                                         <button class="btn btn-danger ">
                                                             Delete
@@ -401,7 +390,7 @@
                                         <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.inspector_leader_id">
                                             <option value="">Select Team Leader</option>
                                             @foreach($issue_inspection['inspection_inspector_team_leaders'] as $key =>  $value)
-                                                <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</option>
+                                                <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</option>
                                             @endforeach
                                         </select>
                                         <button class="btn btn-primary" type="button" wire:click="update_inspection_team_leader()"><i class="bi bi-plus"></i></button>
@@ -411,18 +400,12 @@
                                             <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                                                 <tr>
                                                     <th class="align-middle">Name</th>
-                                                    <th class="align-middle text-center">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach($issue_inspection['inspector_team_leaders']  as $key =>$value)
                                                     <tr>
-                                                        <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
-                                                        <td class="align-middle text-center">
-                                                            <button class="btn btn-danger " wire:click="update_delete_team_leaders({{$value->id}})">
-                                                                Delete
-                                                            </button>
-                                                        </td>
+                                                        <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -434,7 +417,7 @@
                                     <div class="input-group mb-3">
                                         <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.inspector_member_id">
                                             <option value="">Select Team Member</option>
-                                            @foreach($issue_inspection['inspector_members'] as $key =>  $value)
+                                            @foreach($inspector_members as $key =>  $value)
                                                 <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</option>
                                             @endforeach
                                         </select>

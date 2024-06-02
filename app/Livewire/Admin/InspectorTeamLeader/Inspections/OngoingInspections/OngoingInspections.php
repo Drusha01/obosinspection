@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Admin\Administrator\Inspections\InspectionSchedules;
+namespace App\Livewire\Admin\InspectorTeamLeader\Inspections\OngoingInspections;
 
 use Livewire\Component;
 use Illuminate\Http\Request;
@@ -8,12 +8,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
+use Illuminate\Database\Query\Builder;
 
-class InspectionSchedules extends Component
+class OngoingInspections extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $title = "Inspection schedules";
+    public $title = "Ongoing Inspections";
     public $inspector_leaders;
     public $inspector_members;
     public $businesses;
@@ -66,34 +67,8 @@ class InspectionSchedules extends Component
         'inspector_team_leaders'  => [],
         'violations'  =>[],
     ];
-    public function mount(){
-        $this->businesses = DB::table('businesses as b')
-            ->select(
-                'b.id',
-                'b.img_url',
-                'b.name',
-                'p.first_name',
-                'p.middle_name',
-                'p.last_name',
-                'p.suffix',
-                'brg.brgyDesc as barangay',
-                'bt.name as business_type_name',
-                'oc.character_of_occupancy as occupancy_classification_name',
-                'b.contact_number',
-                'b.email',
-                'b.floor_area',
-                'b.signage_area',
-                'b.is_active'
-
-            )
-            ->join('persons as p','p.id','b.owner_id')
-            ->join('brgy as brg','brg.id','b.brgy_id')
-            ->join('business_types as bt','bt.id','b.business_type_id')
-            ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-            ->where('b.is_active','=',1)
-            ->get()
-            ->toArray();
-
+    public function mount(Request $request){
+        $session = $request->session()->all();
         $this->inspector_members = DB::table('persons as p')
             ->select(
                 "p.id",
@@ -110,14 +85,15 @@ class InspectionSchedules extends Component
                 'wr.name as work_role_name',
                 'it.name as inspector_team',
             )
-            ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
+            ->join('inspector_members as im','im.member_id','p.id')
+            ->join('inspector_teams as it','im.inspector_team_id','it.id')
             ->join('person_types as pt','p.person_type_id','pt.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
-            ->whereNull('it.team_leader_id')
             ->where('pt.name','Inspector')
+            ->where('it.team_leader_id','=',$session['id'])
             ->get()
             ->toArray();
-        $this->inspector_leaders = DB::table('persons as p')
+            $this->inspector_leaders = DB::table('persons as p')
             ->select(
                 "p.id",
                 "p.person_type_id",
@@ -140,6 +116,7 @@ class InspectionSchedules extends Component
             ->where('pt.name','Inspector')
             ->get()
             ->toArray();
+            
     }
     public $activity_logs = [
         'created_by' => NULL,
@@ -170,9 +147,44 @@ class InspectionSchedules extends Component
             $this->activity_logs['inspector_team_id'] = 0;
         }
     }
-    public function render()
+    public function render(Request $request)
     {
-        $table_data = DB::table('inspections as i')
+        $session = $request->session()->all();
+        $person = DB::table('users as u')
+            ->select('u.person_id')
+            ->where('u.id','=',$session['id'])
+            ->first();
+
+        $this->businesses = DB::table('businesses as b')
+            ->select(
+                'b.id',
+                'b.img_url',
+                'b.name',
+                'p.first_name',
+                'p.middle_name',
+                'p.last_name',
+                'p.suffix',
+                'brg.brgyDesc as barangay',
+                'bt.name as business_type_name',
+                'oc.character_of_occupancy as occupancy_classification_name',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'b.is_active'
+            )
+            ->join('persons as p','p.id','b.owner_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+        
+            ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
+            ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
+            ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
+            ->where('it.team_leader_id','=',$person->person_id)
+            ->where('b.is_active','=',1)
+            ->get()
+            ->toArray();
+        $table_data =  DB::table('inspections as i')
             ->select(
                 'i.id',
                 'b.img_url',
@@ -193,17 +205,18 @@ class InspectionSchedules extends Component
                 'i.schedule_date',
 
             )
+            ->join('inspection_inspector_team_leaders as iitl','iitl.inspection_id','i.id')
             ->join('inspection_status as st','st.id','i.status_id')
             ->join('businesses as b','b.id','i.business_id')
             ->leftjoin('persons as p','p.id','b.owner_id')
             ->join('brgy as brg','brg.id','b.brgy_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-            ->where('st.name','=','Pending')
+            ->where('iitl.person_id','=',$person->person_id)
+            ->where('st.name','=','On-going')
             ->orderBy('id','desc')
             ->paginate(10);
-            // dd($table_data);
-        return view('livewire.admin.administrator.inspections.inspection-schedules.inspection-schedules',[
+        return view('livewire.admin.inspector-team-leader.inspections.ongoing-inspections.ongoing-inspections',[
             'table_data'=>$table_data
         ])
         ->layout('components.layouts.admin',[
@@ -222,10 +235,37 @@ class InspectionSchedules extends Component
         ];
         $this->dispatch('openModal',$modal_id);
     }
-    public function next($modal_id){
+    public function next(Request $request, $modal_id){
+        $session = $request->session()->all();
         if($this->inspection['step'] == 1){
             if(intval($this->inspection['business_id'])){
                 $this->inspection['step']+=1;
+                // self add
+                $inspector_leaders = DB::table('persons as p')
+                ->select(
+                    "p.id",
+                    "p.person_type_id",
+                    "p.brgy_id",
+                    "p.work_role_id",
+                    "p.first_name",
+                    "p.middle_name",
+                    "p.last_name",
+                    "p.suffix",
+                    "p.contact_number",
+                    "p.email",
+                    "p.img_url",
+                    'wr.name as work_role_name',
+                )
+                ->join('inspector_teams as it','p.id','it.team_leader_id')
+                ->join('person_types as pt','p.person_type_id','pt.id')
+                ->join('work_roles as wr', 'wr.id','p.work_role_id')
+                ->join('users as u','p.id','u.person_id')
+                ->whereNotNull('it.team_leader_id')
+                ->where('u.id','=',$session['id'])
+                ->where('pt.name','Inspector')
+                ->first();
+                $this->inspection['inspector_leader_id'] = $inspector_leaders->id;
+                self::add_team_leader();
             }else{
                 $this->dispatch('swal:redirect',
                     position         									: 'center',
@@ -422,7 +462,6 @@ class InspectionSchedules extends Component
                 "p.email",
                 "p.img_url",
                 'wr.name as work_role_name',
-                'it.name as inspector_team',
             )
             ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
@@ -445,7 +484,6 @@ class InspectionSchedules extends Component
                 "p.email",
                 "p.img_url",
                 'wr.name as work_role_name',
-                'it.name as inspector_team',
             )
             ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
@@ -454,7 +492,7 @@ class InspectionSchedules extends Component
             ->where('pt.name','Inspector')
             ->get()
             ->toArray();
-           
+
         $violations = DB::table('violations')
             ->where('is_active','=',1)
             ->get()
@@ -554,9 +592,7 @@ class InspectionSchedules extends Component
                 "p.email",
                 "p.img_url",
                 'wr.name as work_role_name',
-                'it.name as inspector_team',
             )
-            ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->leftjoin('inspection_inspector_members as iim','p.id','iim.person_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
@@ -579,9 +615,7 @@ class InspectionSchedules extends Component
                 "p.email",
                 "p.img_url",
                 'wr.name as work_role_name',
-                'it.name as inspector_team',
             )
-            ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->join('inspection_inspector_team_leaders as iitl','p.id','iitl.person_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
@@ -1744,4 +1778,5 @@ class InspectionSchedules extends Component
                 'status_id'=> $status->id
         ]);
     }
+  
 }

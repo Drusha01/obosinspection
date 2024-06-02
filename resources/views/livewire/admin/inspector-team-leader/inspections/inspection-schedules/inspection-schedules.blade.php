@@ -17,6 +17,8 @@
                             @foreach($filter as $filter_key => $filter_value)
                                 @if($filter_value['name'] == 'Action')
                                     <th scope="col" class="text-center">{{$filter_value['name']}}</th>
+                                @elseif($filter_value['name'] == 'Status')
+                                    <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                 @elseif($filter_value['name'] == 'Inspection Details')
                                     <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                 @else 
@@ -37,11 +39,17 @@
                                                 <img class="img-fluid"src="{{asset('storage/content/business/'.$value->{$filter_value['column_name']})}}" alt="" style="max-height:50px;max-width:50px; ">
                                             </a>
                                         </td>
+                                    @elseif($filter_value['name'] == 'Status' && $filter_value['active'])
+                                        <td class="text-center align-middle">
+                                            <button class="btn btn-outline-success" wire:click="update_status({{$value->id}},'On-going')">
+                                                On-going
+                                            </button>
+                                        </td>
                                     @elseif($filter_value['name'] == 'Action' && $filter_value['active'])
                                         <td class="text-center align-middle">
-                                            <button class="btn btn-outline-secondary" wire:click="edit({{$value->id}},'completeModaltoggler')">
+                                            <!-- <button class="btn btn-outline-secondary" @if($value->status_name == 'Pending') disabled @else @endif wire:click="edit({{$value->id}},'completeModaltoggler')">
                                                 Complete
-                                            </button>
+                                            </button> -->
                                             @if($value->is_active)
                                                 <button class="btn btn-danger" wire:click="edit({{$value->id}},'deactivateModaltoggler')">
                                                     Delete
@@ -50,7 +58,7 @@
                                         </td>
                                     @elseif($filter_value['name'] == 'Inspection Details' && $filter_value['active'])
                                         <td class="text-center align-middle">
-                                            <button class="btn btn-primary" wire:click="issue({{$value->id}},'issueModaltoggler')">
+                                            <button class="btn btn-primary" @if($value->status_name == 'Pending') disabled @else @endif  wire:click="issue({{$value->id}},'issueModaltoggler')">
                                                 Inspection Details
                                             </button>
                                         </td>   

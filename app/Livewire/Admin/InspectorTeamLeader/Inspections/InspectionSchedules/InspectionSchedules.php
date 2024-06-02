@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
+use Illuminate\Database\Query\Builder;
 
 class InspectionSchedules extends Component
 {
@@ -33,6 +34,7 @@ class InspectionSchedules extends Component
         ['column_name'=> 'barangay','active'=> true,'name'=>'Brgy'],
         ['column_name'=> 'business_type_name','active'=> true,'name'=>'Business Type'],
         ['column_name'=> 'schedule_date','active'=> true,'name'=>'Schedule'],
+        ['column_name'=> 'status_name','active'=> true,'name'=>'Status'],
         ['column_name'=> 'id','active'=> true,'name'=>'Inspection Details'],
         ['column_name'=> 'id','active'=> true,'name'=>'Action'],
     ];
@@ -1766,6 +1768,15 @@ class InspectionSchedules extends Component
             return 0;
         }
     }
-   
+    public function update_status($id,$status){
+        $status = DB::table('inspection_status')
+            ->where('name','=',$status)
+            ->first();
+        DB::table('inspections')
+            ->where('id','=',$id)
+            ->update([
+                'status_id'=> $status->id
+        ]);
+    }
   
 }
