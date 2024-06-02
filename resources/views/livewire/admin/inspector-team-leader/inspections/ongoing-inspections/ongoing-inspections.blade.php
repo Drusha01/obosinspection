@@ -387,7 +387,7 @@
                             @elseif($issue_inspection['step'] == 6)
                                 <div wire:key="{{$issue_inspection['step']}}">
                                     <div class="input-group mb-3">
-                                        <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.inspector_leader_id">
+                                        <select class="form-select" id="teamLeaderSelect" disabled wire:model="issue_inspection.inspector_leader_id">
                                             <option value="">Select Team Leader</option>
                                             @foreach($issue_inspection['inspection_inspector_team_leaders'] as $key =>  $value)
                                                 <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</option>
