@@ -29,7 +29,7 @@
 
             ?>
 
-            <form action="./../controller/create.php" method="POST">
+            <form >
                 <section class="sheet-container">
                     <section class="sheet d-flex position-relative">
                         <img src="./../../../assets/img/list-of-equipments.jpg" alt="list-of-equipment" class="sheet-image">

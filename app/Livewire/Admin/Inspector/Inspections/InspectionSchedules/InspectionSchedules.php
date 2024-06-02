@@ -106,6 +106,7 @@ class InspectionSchedules extends Component
                 "p.email",
                 "p.img_url",
                 'wr.name as work_role_name',
+                'it.name as inspector_team',
             )
             ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
@@ -128,6 +129,7 @@ class InspectionSchedules extends Component
                 "p.email",
                 "p.img_url",
                 'wr.name as work_role_name',
+                'it.name as inspector_team',
             )
             ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
