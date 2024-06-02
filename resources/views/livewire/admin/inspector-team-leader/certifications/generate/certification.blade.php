@@ -297,9 +297,8 @@
                             </div>
                             <div style="margin:10px;">
                                 <section class="position-absolute bottom-0 end-0 d-print-none justify-content-center">
-                                    <a class="btn btn-primary btn-md-block mr-3 px-3" id="print-button">
-                                        Print Report
-                                    </a>
+                                    <button class="btn btn-primary btn-md-block mr-3 px-3" id="print-button" onclick="window.print()">Print
+                                    </button>
                                 </section>
                             </div>
                           
