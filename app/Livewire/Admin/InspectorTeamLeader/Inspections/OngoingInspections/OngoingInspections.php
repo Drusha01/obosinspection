@@ -1143,7 +1143,7 @@ class OngoingInspections extends Component
             )
             ->join('signage_billing_display_types as sbdt','sbdt.id', 'sb.display_type_id')
             ->join('signage_billing_types as st','st.id', 'sb.sign_type_id')
-            ->where('sb.id','=',$this->issue_inspection['building_billing_id'])
+            ->where('sb.id','=',$this->issue_inspection['signage_id'])
             ->first();
             
         $edit = DB::table('inspections as i')

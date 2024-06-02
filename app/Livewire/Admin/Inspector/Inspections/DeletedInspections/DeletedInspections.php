@@ -267,7 +267,7 @@ class DeletedInspections extends Component
                 'c.name as category_name',
                 'c.id as category_id',
                 'i.name',
-                'i.section',
+                'i.section_id',
                 'i.img_url',
                 'i.is_active',
                 "ii.id",
@@ -277,8 +277,10 @@ class DeletedInspections extends Component
                 "ii.power_rating",
                 "ii.quantity",
                 "eb.fee",
-            )
+                'ebs.name as section_name',
+                )
             ->join('items as i','i.id','ii.item_id')
+            ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
             ->join('categories as c','c.id','i.category_id')
             ->leftjoin('equipment_billings as eb','eb.id','ii.equipment_billing_id')
             ->where('ii.inspection_id','=',$id)
@@ -290,7 +292,7 @@ class DeletedInspections extends Component
                 'category_name' => $value->category_name,
                 'category_id' => $value->category_id,
                 'name'=> $value->name,
-                'section' => $value->section,
+                'section_id' => $value->section_id,
                 'img_url' => $value->img_url,
                 'is_active' => $value->is_active,
                 "id" => $value->id,
@@ -300,6 +302,7 @@ class DeletedInspections extends Component
                 "power_rating" => $value->power_rating,
                 "quantity" => $value->quantity,
                 "fee" => $value->fee,
+                'section_name'=>$value->section_name
             ]);
         }
         $inspection_items = $temp;
@@ -410,10 +413,12 @@ class DeletedInspections extends Component
                 'i.id',
                 'c.name as category_name',
                 'i.name',
-                'i.section',
+                'i.section_id',
                 'i.img_url',
-                'i.is_active'
-            )
+                'i.is_active',
+                'ebs.name as section_name',
+                )
+            ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
             ->join('categories as c','c.id','i.category_id')
             ->where('i.is_active','=',1)
             ->get()
