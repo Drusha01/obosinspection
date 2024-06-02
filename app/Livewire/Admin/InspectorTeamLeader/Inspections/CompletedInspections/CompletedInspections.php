@@ -866,7 +866,7 @@ class CompletedInspections extends Component
                     title             									: 'Successfully added!',
                     showConfirmButton 									: 'true',
                     timer             									: '1500',
-                    link              									: ($_SERVER['REMOTE_PORT'] == 80? 'https://': 'http://' ).$_SERVER['SERVER_NAME'].'/administrator/certifications/generate/'.$temp->id
+                    link              									: ($_SERVER['REMOTE_PORT'] == 80? 'https://': 'http://' ).$_SERVER['SERVER_NAME'].'/inspector-team-leader/certifications/generate/'.$temp->id
                 );
             }
         }
