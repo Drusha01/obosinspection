@@ -116,6 +116,8 @@ class InspectionSchedules extends Component
             ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
+            ->join('users as u','u.person_id','p.id')
+            ->where('u.is_active',1)
             ->whereNull('it.team_leader_id')
             ->where('pt.name','Inspector')
             ->get()
@@ -139,6 +141,8 @@ class InspectionSchedules extends Component
             ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
+            ->join('users as u','u.person_id','p.id')
+            ->where('u.is_active',1)
             ->whereNotNull('it.team_leader_id')
             ->where('pt.name','Inspector')
             ->get()
@@ -213,6 +217,58 @@ class InspectionSchedules extends Component
             'title'=>$this->title]);
     }
     public function add($modal_id){
+        $this->inspector_members = DB::table('persons as p')
+        ->select(
+            "p.id",
+            "p.person_type_id",
+            "p.brgy_id",
+            "p.work_role_id",
+            "p.first_name",
+            "p.middle_name",
+            "p.last_name",
+            "p.suffix",
+            "p.contact_number",
+            "p.email",
+            "p.img_url",
+            'wr.name as work_role_name',
+            'iit.name as inspector_team',
+        )
+        ->leftjoin('inspector_members as im','p.id','im.member_id')
+        ->leftjoin('inspector_teams as iit','iit.id','im.inspector_team_id')
+        ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
+        ->join('person_types as pt','p.person_type_id','pt.id')
+        ->join('work_roles as wr', 'wr.id','p.work_role_id')
+        ->join('users as u','u.person_id','p.id')
+        ->where('u.is_active',1)
+        ->whereNull('it.team_leader_id')
+        ->where('pt.name','Inspector')
+        ->get()
+        ->toArray();
+    $this->inspector_leaders = DB::table('persons as p')
+        ->select(
+            "p.id",
+            "p.person_type_id",
+            "p.brgy_id",
+            "p.work_role_id",
+            "p.first_name",
+            "p.middle_name",
+            "p.last_name",
+            "p.suffix",
+            "p.contact_number",
+            "p.email",
+            "p.img_url",
+            'wr.name as work_role_name',
+            'it.name as inspector_team',
+        )
+        ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
+        ->join('person_types as pt','p.person_type_id','pt.id')
+        ->join('work_roles as wr', 'wr.id','p.work_role_id')
+        ->join('users as u','u.person_id','p.id')
+        ->where('u.is_active',1)
+        ->whereNotNull('it.team_leader_id')
+        ->where('pt.name','Inspector')
+        ->get()
+        ->toArray();
         $this->inspection = [
             'id'=>NULL,
             'inspector_leaders' =>[],
