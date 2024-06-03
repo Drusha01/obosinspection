@@ -320,9 +320,9 @@ class Generate extends Component
             ->get()
             ->toArray();
         $inspectors = [];
-        foreach ($inspection_inspector_members as $key => $value) {
-            array_push($inspectors,$value);
-        }
+        // foreach ($inspection_inspector_members as $key => $value) {
+        //     array_push($inspectors,$value);
+        // }
         foreach ($inspector_team_leaders as $key => $value) {
             array_push($inspectors,$value);
         }
