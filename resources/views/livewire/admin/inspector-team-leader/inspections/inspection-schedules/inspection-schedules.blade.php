@@ -41,7 +41,7 @@
                                         </td>
                                     @elseif($filter_value['name'] == 'Status' && $filter_value['active'])
                                         <td class="text-center align-middle">
-                                            <button class="btn btn-outline-success" wire:click="update_status({{$value->id}},'On-going')">
+                                            <button class="btn btn-outline-success" wire:click="update_status({{$value->id}},'On-going  ')">
                                                 On-going
                                             </button>
                                         </td>

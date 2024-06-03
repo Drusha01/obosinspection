@@ -48,7 +48,7 @@
                                         </td>
                                     @elseif($filter_value['name'] == 'Inspection Details' && $filter_value['active'])
                                         <td class="text-center align-middle">
-                                            <button class="btn btn-primary" wire:click="issue({{$value->id}},'issueModaltoggler')">
+                                            <button class="btn btn-primary" disabled wire:click="issue({{$value->id}},'issueModaltoggler')">
                                                 Inspection Details
                                             </button>
                                         </td>   

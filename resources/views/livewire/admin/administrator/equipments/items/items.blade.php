@@ -69,13 +69,17 @@
             <!-- Pagination -->
             <div class="pagination-container mt-3">
                 <ul class="d-flex justify-content-center list-unstyled">
-                    <li><a class="btn btn-outline-secondary mx-1" href="{{ $table_data->previousPageUrl() }}">Previous</a></li>
                     @foreach ($table_data->getUrlRange(1, $table_data->lastPage()) as $page => $url)
+                        @if($page == 1 )
+                            <li><a class="btn btn-outline-secondary mx-1" href="{{  $url_path.'?page='.($page ==  1 ? 1 : $page+1  ) }}">Previous</a></li>
+                        @endif
                         <li>
-                            <a class="btn mx-1 btn-{{ $page == $table_data->currentPage() ? 'secondary' : 'outline-secondary' }}" href="{{ $url }}">{{ $page }}</a>
+                            <a class="btn mx-1 btn-{{ $page == $table_data->currentPage() ? 'secondary' : 'outline-secondary' }}" href="{{  $url_path.'?page='.$page }}">{{ $page }}</a>
                         </li>
+                        @if($table_data->lastPage() == $page)
+                            <li><a class="btn mx-1 btn-outline-secondary" href="{{  $url_path.'?page='.($page ==  $table_data->lastPage() ? $table_data->lastPage():$page+1  ) }}">Next</a></li>
+                        @endif
                     @endforeach
-                    <li><a class="btn mx-1 btn-outline-secondary" href="{{ $table_data->nextPageUrl() }}">Next</a></li>
                 </ul>
             </div>
 

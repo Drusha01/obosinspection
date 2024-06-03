@@ -33,12 +33,13 @@ class Items extends Component
     public $categories;
     public $equipment_billing_sections = [];
 
+    public $url_path;
     public function mount(){
         $this->categories = DB::table('categories')
             ->where('is_active','=',1)
             ->get()
             ->toArray();
-        
+        $this->url_path = url()->current();
     }
     public $activity_logs = [
         'created_by' => NULL,

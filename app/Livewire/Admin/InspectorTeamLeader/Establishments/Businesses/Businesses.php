@@ -125,8 +125,14 @@ class Businesses extends Component
         }
     }
 
-    public function render()
+    public function render(Request $request)
     {
+        $session = $request->session()->all();
+        $person = DB::table('users as u')
+            ->select('u.person_id')
+            ->where('u.id','=',$session['id'])
+            ->first();
+            
         if($this->search['business_name'] != $this->search['business_name_prev']){
             $this->search['business_name_prev'] = $this->search['business_name'];
             $this->resetPage();
@@ -148,15 +154,44 @@ class Businesses extends Component
                 'b.floor_area',
                 'b.signage_area',
                 'b.is_active'
-
             )
             ->join('persons as p','p.id','b.owner_id')
-            ->join('brgy as brg','brg.id','b.brgy_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+        
+            ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
+            ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
+            ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
+            ->where('it.team_leader_id','=',$person->person_id)
             ->where('b.name','like',$this->search['business_name'] .'%')
             ->orderBy('id','desc')
             ->paginate(10);
+        // $table_data = DB::table('businesses as b')
+        //     ->select(
+        //         'b.id',
+        //         'b.img_url',
+        //         'b.name',
+        //         'p.first_name',
+        //         'p.middle_name',
+        //         'p.last_name',
+        //         'p.suffix',
+        //         'brg.brgyDesc as barangay',
+        //         'bt.name as business_type_name',
+        //         'oc.character_of_occupancy as occupancy_classification_name',
+        //         'b.contact_number',
+        //         'b.email',
+        //         'b.floor_area',
+        //         'b.signage_area',
+        //         'b.is_active'
+
+        //     )
+        //     ->join('persons as p','p.id','b.owner_id')
+        //     ->join('brgy as brg','brg.id','b.brgy_id')
+        //     ->join('business_types as bt','bt.id','b.business_type_id')
+        //     ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+        //     ->where('b.name','like',$this->search['business_name'] .'%')
+        //     ->orderBy('id','desc')
+        //     ->paginate(10);
         return view('livewire.admin.inspector-team-leader.establishments.businesses.businesses',[
            'table_data'=>$table_data 
         ])
