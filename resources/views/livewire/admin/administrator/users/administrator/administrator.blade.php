@@ -61,7 +61,10 @@
                 </table>
             </div>
         </div>
-        
+        <div class="container d-flex justify-content-center">
+            {{$table_data->links()}}
+        </div>
+
         <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">

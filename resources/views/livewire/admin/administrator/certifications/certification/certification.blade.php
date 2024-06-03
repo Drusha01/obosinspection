@@ -76,6 +76,10 @@
                     </tbody>
                 </table>
             </div>
+            
+            <div class="container d-flex justify-content-center">
+                {{$table_data->links()}}
+            </div>
 
             <button type="button" data-bs-toggle="modal" data-bs-target="#addModal" id="addModaltoggler" style="display:none;"></button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="editModaltoggler" style="display:none;"></button>

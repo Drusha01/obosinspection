@@ -76,6 +76,9 @@
                     </tbody>
                 </table>
             </div>
+            <div class="container d-flex justify-content-center">
+                {{$table_data->links()}}
+            </div>
 
             <a class="scroll-to-top rounded" href="#page-top">
                 <i class="fas fa-angle-up"></i>

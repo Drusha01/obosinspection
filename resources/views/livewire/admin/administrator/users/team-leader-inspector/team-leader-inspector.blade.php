@@ -68,6 +68,9 @@
                 </table>
             </div>
         </div>
+        <div class="container d-flex justify-content-center">
+            {{$table_data->links()}}
+        </div>
 
          <!-- Hidden buttons for modal toggling -->
          <button type="button" data-bs-toggle="modal" data-bs-target="#addModal" id="addModaltoggler" style="display:none;"></button>

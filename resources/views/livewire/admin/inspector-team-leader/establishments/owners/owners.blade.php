@@ -69,6 +69,9 @@
                 </table>
             </div>
         </div>
+        <div class="container d-flex justify-content-center">
+            {{$table_data->links()}}
+        </div>
 
 
     </div>
