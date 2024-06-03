@@ -253,7 +253,7 @@
                     </span>
                 </a>
                 <div id="Establishmentsdropdown" class="collapse  @if(Request()->route()->getPrefix() == 'inspector-team-leader/establishments') show @endif">
-                    <ul class="nav flex-column sub-menu">
+                    <ul class="nav flex-column sub-menu"  style="background-color: #50C878; border-radius: 8px; z-index: 9999;">
                         <li class="nav-item  @if( Route::is('inspector-team-leader-establishments-owners'))  active @endif">
                             <a class="nav-link " href="{{ route('inspector-team-leader-establishments-owners') }}">
                                 <i class="fas fa-fw fa-user"></i>
