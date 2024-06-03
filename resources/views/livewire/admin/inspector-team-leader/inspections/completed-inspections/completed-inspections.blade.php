@@ -250,7 +250,7 @@
                                             <tbody>
                                                 @foreach($issue_inspection['inspector_team_leaders']  as $key =>$value)
                                                     <tr>
-                                                        <td>{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
+                                                        <td>{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -269,7 +269,7 @@
                                             <tbody>
                                                 @foreach($issue_inspection['inspection_inspector_members']  as $key =>$value)
                                                     <tr>
-                                                        <td>{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
+                                                        <td>{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                     </tr>
                                                 @endforeach
 

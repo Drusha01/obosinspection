@@ -202,7 +202,7 @@ class CompletedInspections extends Component
        
         self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
     }
-     public function update_inspection_data($id,$step){
+    public function update_inspection_data($id,$step){
         
         $application_types = DB::table('application_types')
             ->where('is_active','=',1)
@@ -266,7 +266,10 @@ class CompletedInspections extends Component
                 "p.email",
                 "p.img_url",
                 'wr.name as work_role_name',
+                'iit.name as inspector_team',
             )
+            ->leftjoin('inspector_members as im','im.member_id','p.id')
+            ->leftjoin('inspector_teams as iit','iit.id','im.inspector_team_id')
             ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
@@ -288,6 +291,7 @@ class CompletedInspections extends Component
                 "p.email",
                 "p.img_url",
                 'wr.name as work_role_name',
+                'it.name as inspector_team',
             )
             ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
@@ -296,7 +300,7 @@ class CompletedInspections extends Component
             ->where('pt.name','Inspector')
             ->get()
             ->toArray();
-
+           
         $violations = DB::table('violations')
             ->where('is_active','=',1)
             ->get()
@@ -396,7 +400,11 @@ class CompletedInspections extends Component
                 "p.email",
                 "p.img_url",
                 'wr.name as work_role_name',
+                'it_member_team.name as inspector_team',
             )
+            ->leftjoin('inspector_members as im','im.member_id','p.id')
+            ->leftjoin('inspector_teams as it_member_team','it_member_team.id','im.inspector_team_id')
+            ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->leftjoin('inspection_inspector_members as iim','p.id','iim.person_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
@@ -404,6 +412,7 @@ class CompletedInspections extends Component
             ->where('iim.inspection_id','=',$id)
             ->get()
             ->toArray();
+
 
         $inspector_team_leaders = DB::table('persons as p')
             ->select(
@@ -419,7 +428,9 @@ class CompletedInspections extends Component
                 "p.email",
                 "p.img_url",
                 'wr.name as work_role_name',
+                'it.name as inspector_team',
             )
+            ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->join('inspection_inspector_team_leaders as iitl','p.id','iitl.person_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
@@ -457,8 +468,7 @@ class CompletedInspections extends Component
         $inspection_violations = DB::table('inspection_violations as iv')
             ->select(
                 'iv.id',
-                'description',
-                'remarks'
+                'description'
             )
             ->join('violations as v','v.id','iv.violation_id')
             ->where('inspection_id','=',$id)
@@ -482,7 +492,6 @@ class CompletedInspections extends Component
             array_push($temp,[
                 'description'=> $value->description,
                 "id" => $value->id,
-                'remarks'=>$value->remarks
             ]);
         }
         $inspection_violations = $temp;

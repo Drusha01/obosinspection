@@ -242,7 +242,10 @@ class CompletedSchedules extends Component
                 "p.email",
                 "p.img_url",
                 'wr.name as work_role_name',
+                'iit.name as inspector_team',
             )
+            ->leftjoin('inspector_members as im','im.member_id','p.id')
+            ->leftjoin('inspector_teams as iit','iit.id','im.inspector_team_id')
             ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
@@ -330,7 +333,7 @@ class CompletedSchedules extends Component
                 "ii.quantity",
                 "eb.fee",
                 'ebs.name as section_name',
-            )
+                )
             ->join('items as i','i.id','ii.item_id')
             ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
             ->join('categories as c','c.id','i.category_id')
@@ -345,7 +348,6 @@ class CompletedSchedules extends Component
                 'category_id' => $value->category_id,
                 'name'=> $value->name,
                 'section_id' => $value->section_id,
-                'section_name' => $value->section_name,
                 'img_url' => $value->img_url,
                 'is_active' => $value->is_active,
                 "id" => $value->id,
@@ -355,6 +357,7 @@ class CompletedSchedules extends Component
                 "power_rating" => $value->power_rating,
                 "quantity" => $value->quantity,
                 "fee" => $value->fee,
+                'section_name'=>$value->section_name
             ]);
         }
         $inspection_items = $temp;
@@ -372,8 +375,12 @@ class CompletedSchedules extends Component
                 "p.email",
                 "p.img_url",
                 'wr.name as work_role_name',
+                'it_member_team.name as inspector_team',
             )
-            ->leftjoin('inspection_inspector_members as iim','p.id','iim.person_id')
+            ->leftjoin('inspector_members as im','im.member_id','p.id')
+            ->leftjoin('inspector_teams as it_member_team','it_member_team.id','im.inspector_team_id')
+            ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
+            ->join('inspection_inspector_members as iim','p.id','iim.person_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
             ->where('pt.name','Inspector')
@@ -395,7 +402,9 @@ class CompletedSchedules extends Component
                 "p.email",
                 "p.img_url",
                 'wr.name as work_role_name',
+                'it.name as inspector_team',
             )
+            ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->join('inspection_inspector_team_leaders as iitl','p.id','iitl.person_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
@@ -433,8 +442,7 @@ class CompletedSchedules extends Component
         $inspection_violations = DB::table('inspection_violations as iv')
             ->select(
                 'iv.id',
-                'description',
-                'remarks'
+                'description'
             )
             ->join('violations as v','v.id','iv.violation_id')
             ->where('inspection_id','=',$id)
@@ -457,7 +465,6 @@ class CompletedSchedules extends Component
         foreach ($inspection_violations as $key => $value) {
             array_push($temp,[
                 'description'=> $value->description,
-                'remarks'=> $value->remarks,
                 "id" => $value->id,
             ]);
         }
@@ -469,8 +476,10 @@ class CompletedSchedules extends Component
                 'i.name',
                 'i.section_id',
                 'i.img_url',
-                'i.is_active'
-            )
+                'i.is_active',
+                'ebs.name as section_name',
+                )
+            ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
             ->join('categories as c','c.id','i.category_id')
             ->where('i.is_active','=',1)
             ->get()
