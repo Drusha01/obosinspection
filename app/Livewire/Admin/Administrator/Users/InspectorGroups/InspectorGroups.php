@@ -86,8 +86,10 @@ class InspectorGroups extends Component
                 "p.img_url",
             )
             ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
+            ->leftjoin('inspector_members as im','p.id','im.member_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
             ->whereNull('it.team_leader_id')
+            ->whereNull('im.member_id')
             ->where('pt.name','Inspector')
             ->get()
             ->toArray();
