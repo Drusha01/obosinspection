@@ -160,7 +160,7 @@
                                     <select class="form-select" id="teamLeaderSelect" wire:model.live="inspection.inspector_member_id">
                                         <option value="">Select Team Member</option>
                                         @foreach($inspector_members as $key =>  $value)
-                                            <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</option>
+                                            <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</option>
                                         @endforeach
                                     </select>
                                     <button class="btn btn-primary" type="button" wire:click="add_team_member()"><i class="bi bi-plus"></i></button>
@@ -176,7 +176,7 @@
                                         <tbody>
                                             @foreach($inspection['inspector_members']  as $key =>$value)
                                                 <tr>
-                                                    <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
+                                                    <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                     <td class="align-middle text-center">
                                                         <button class="btn btn-danger ">
                                                             Delete

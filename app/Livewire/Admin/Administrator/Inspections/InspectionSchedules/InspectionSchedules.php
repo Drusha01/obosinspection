@@ -108,8 +108,10 @@ class InspectionSchedules extends Component
                 "p.email",
                 "p.img_url",
                 'wr.name as work_role_name',
-                'it.name as inspector_team',
+                'iit.name as inspector_team',
             )
+            ->leftjoin('inspector_members as im','p.id','im.member_id')
+            ->leftjoin('inspector_teams as iit','iit.id','im.inspector_team_id')
             ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')

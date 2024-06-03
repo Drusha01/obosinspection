@@ -69,6 +69,7 @@ class InspectionSchedules extends Component
     ];
     public function mount(Request $request){
         $session = $request->session()->all();
+
         $this->inspector_members = DB::table('persons as p')
             ->select(
                 "p.id",
@@ -86,6 +87,7 @@ class InspectionSchedules extends Component
                 'it.name as inspector_team',
             )
             ->join('inspector_members as im','im.member_id','p.id')
+            ->leftjoin('inspector_teams as iit','iit.id','im.inspector_team_id')
             ->join('inspector_teams as it','im.inspector_team_id','it.id')
             ->join('person_types as pt','p.person_type_id','pt.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')

@@ -667,14 +667,17 @@ class CompletedInspections extends Component
                 'p.img_url',
                 'wr.id as work_role_id',
                 'wr.name as work_role_name',
+                'it.name as inspector_team'
                 )
             ->join('persons as p','p.id','iim.person_id')
+            ->leftjoin('inspector_members as im','im.member_id','iim.person_id')
+            ->leftjoin('inspector_teams as it','it.id','im.inspector_team_id')
             ->join('person_types as pt', 'pt.id','p.person_type_id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
             ->where('iim.inspection_id','=',$id)
             ->get()
             ->toArray();
-        
+
         $inspection_team_leaders = DB::table('inspection_inspector_team_leaders as iitl')
             ->select(
                 'p.id',
@@ -685,8 +688,11 @@ class CompletedInspections extends Component
                 'p.img_url',
                 'wr.id as work_role_id',
                 'wr.name as work_role_name',
+                'it.name as inspector_team'
                 )
             ->join('persons as p','p.id','iitl.person_id')
+            ->leftjoin('inspector_members as im','im.member_id','iitl.person_id')
+            ->leftjoin('inspector_teams as it','it.team_leader_id','iitl.person_id')
             ->join('person_types as pt', 'pt.id','p.person_type_id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
             ->where('iitl.inspection_id','=',$id)

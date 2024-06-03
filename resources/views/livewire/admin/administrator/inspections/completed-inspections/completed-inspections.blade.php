@@ -252,7 +252,7 @@
                                             <tbody>
                                                 @foreach($issue_inspection['inspector_team_leaders']  as $key =>$value)
                                                     <tr>
-                                                        <td>{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
+                                                        <td>{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -271,7 +271,7 @@
                                             <tbody>
                                                 @foreach($issue_inspection['inspection_inspector_members']  as $key =>$value)
                                                     <tr>
-                                                        <td>{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
+                                                        <td>{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                     </tr>
                                                 @endforeach
 
@@ -402,7 +402,7 @@
                                     <select class="form-select" id="teamLeaderSelect"  wire:model="annual_certificate_inspection.inspector_id">
                                         <option value="">Select Team Member</option>
                                         @foreach($annual_certificate_inspection['inspectors'] as $key =>  $value)
-                                            <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</option>
+                                            <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</option>
                                         @endforeach
                                     </select>
                                     <button class="btn btn-primary" type="button" wire:click="add_annual_inspector()"><i class="bi bi-plus"></i></button>
@@ -419,7 +419,7 @@
                                         <tbody>
                                             @foreach($annual_certificate_inspection['annual_certificate_inspection_inspector']  as $key =>$value)
                                                 <tr>
-                                                    <td>{{$value['content']->first_name.' '.$value['content']->middle_name.' '.$value['content']->last_name.' '.$value['content']->suffix.' ( '.$value['content']->work_role_name.' ) '}}</td>
+                                                    <td>{{$value['content']->first_name.' '.$value['content']->middle_name.' '.$value['content']->last_name.' '.$value['content']->suffix.' ( '.$value['content']->work_role_name.' ) '.(isset($value['content']->inspector_team) ? '( '.$value['content']->inspector_team.' )' : '( Not assigend )')}}</td>
                                                     <td>
                                                         <select name="" id="" class="form-select" required wire:model.live="annual_certificate_inspection.annual_certificate_inspection_inspector.{{$key}}.category_id">
                                                             <option value="" selected>Select Category</option>
