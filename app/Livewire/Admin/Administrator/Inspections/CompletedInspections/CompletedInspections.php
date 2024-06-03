@@ -468,7 +468,8 @@ class CompletedInspections extends Component
         $inspection_violations = DB::table('inspection_violations as iv')
             ->select(
                 'iv.id',
-                'description'
+                'description',
+                'remarks'
             )
             ->join('violations as v','v.id','iv.violation_id')
             ->where('inspection_id','=',$id)
@@ -492,6 +493,7 @@ class CompletedInspections extends Component
             array_push($temp,[
                 'description'=> $value->description,
                 "id" => $value->id,
+                "remarks" => $value->remarks,
             ]);
         }
         $inspection_violations = $temp;
