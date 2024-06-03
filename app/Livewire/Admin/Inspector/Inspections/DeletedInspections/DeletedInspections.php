@@ -16,6 +16,7 @@ class DeletedInspections extends Component
     public $title = "Deleted Inspections";
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
+        ['column_name'=> 'id','active'=> true,'name'=>'ID'],
         ['column_name'=> 'img_url','active'=> true,'name'=>'Image'],
         ['column_name'=> 'name','active'=> true,'name'=>'Business name'],
         ['column_name'=> 'barangay','active'=> true,'name'=>'Brgy'],
@@ -390,7 +391,8 @@ class DeletedInspections extends Component
         $inspection_violations = DB::table('inspection_violations as iv')
             ->select(
                 'iv.id',
-                'description'
+                'description',
+                'remarks'
             )
             ->join('violations as v','v.id','iv.violation_id')
             ->where('inspection_id','=',$id)
@@ -414,6 +416,7 @@ class DeletedInspections extends Component
             array_push($temp,[
                 'description'=> $value->description,
                 "id" => $value->id,
+                "remarks" => $value->remarks,
             ]);
         }
         $inspection_violations = $temp;

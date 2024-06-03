@@ -28,6 +28,7 @@ class InspectionSchedules extends Component
 
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
+        ['column_name'=> 'id','active'=> true,'name'=>'ID'],
         ['column_name'=> 'img_url','active'=> true,'name'=>'Image'],
         ['column_name'=> 'name','active'=> true,'name'=>'Business name'],
         ['column_name'=> 'barangay','active'=> true,'name'=>'Brgy'],

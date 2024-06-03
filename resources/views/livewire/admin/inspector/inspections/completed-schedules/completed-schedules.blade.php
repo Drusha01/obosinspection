@@ -291,7 +291,7 @@
                                                     <tr>
                                                         <td class="align-middle">{{$value['description']}}</td>
                                                         <td class="text-center align-middle">
-                                                            <input type="checkbox" disabled @if(isset($value['remarks'])) checked @endif  wire:click="update_complied_violation({{$value['id']}},@if(!isset($value['remarks'])) {{1}} @else {{0}} @endif)">
+                                                            <input type="checkbox" disabled  value="1" @if($value['remarks'])) checked @endif  wire:change="update_complied_violation({{$value['id']}})">
                                                         </td>
                                                     </tr>
                                                 @endforeach
