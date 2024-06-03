@@ -219,6 +219,25 @@ class Businesses extends Component
         return 0;
     }
     public function add($modal_id){
+        $this->owners = DB::table('persons as p')
+        ->select(
+            'p.id',
+            'p.first_name',
+            'p.middle_name',
+            'p.last_name',
+            'p.suffix',
+            'p.contact_number',
+            'p.email',
+            'p.img_url',
+            'p.is_active',
+            "p.date_created",
+            "p.date_updated",
+        )
+        ->join('person_types as pt','pt.id','p.person_type_id')
+        ->where('pt.name','=','Owner')
+        ->where('is_active','=',1)
+        ->get()
+        ->toArray();
         $this->business = [
             'id' => NULL,
             'owner_id' => NULL,

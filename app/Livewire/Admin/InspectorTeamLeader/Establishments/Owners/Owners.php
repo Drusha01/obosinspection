@@ -23,6 +23,7 @@ class Owners extends Component
         ['column_name'=> 'img_url','active'=> true,'name'=>'Image'],
         ['column_name'=> 'first_name','active'=> true,'name'=>'Firstname'],
         ['column_name'=> 'middle_name','active'=> true,'name'=>'Middlename'],
+        ['column_name'=> 'last_name','active'=> true,'name'=>'Lastname'],
         ['column_name'=> 'suffix','active'=> true,'name'=>'Suffix'],
         ['column_name'=> 'contact_number','active'=> true,'name'=>'Contact #'],
         ['column_name'=> 'email','active'=> true,'name'=>'Email'],
