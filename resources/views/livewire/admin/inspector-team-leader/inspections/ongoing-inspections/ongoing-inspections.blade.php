@@ -390,7 +390,7 @@
                                         <select class="form-select" id="teamLeaderSelect" disabled wire:model="issue_inspection.inspector_leader_id">
                                             <option value="">Select Team Leader</option>
                                             @foreach($issue_inspection['inspection_inspector_team_leaders'] as $key =>  $value)
-                                                <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</option>
+                                                <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</option>
                                             @endforeach
                                         </select>
                                         <button class="btn btn-primary" type="button" wire:click="update_inspection_team_leader()"><i class="bi bi-plus"></i></button>
@@ -405,7 +405,7 @@
                                             <tbody>
                                                 @foreach($issue_inspection['inspector_team_leaders']  as $key =>$value)
                                                     <tr>
-                                                        <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
+                                                        <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -418,7 +418,7 @@
                                         <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.inspector_member_id">
                                             <option value="">Select Team Member</option>
                                             @foreach($inspector_members as $key =>  $value)
-                                                <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</option>
+                                                <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</option>
                                             @endforeach
                                         </select>
                                         <button class="btn btn-primary" type="button" wire:click="update_inspection_members()"><i class="bi bi-plus"></i></button>
@@ -434,7 +434,7 @@
                                             <tbody>
                                                 @foreach($issue_inspection['inspection_inspector_members']  as $key =>$value)
                                                     <tr>
-                                                        <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
+                                                        <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                         <td class="align-middle text-center">
                                                             <button class="btn btn-danger " wire:click="update_delete_members({{$value->id}})"> 
                                                                 Delete
