@@ -52,6 +52,18 @@
                                                 <img class="img-fluid"src="{{asset('storage/content/profile/'.$value->{$filter_value['column_name']})}}" alt="" style="max-height:50px;max-width:50px; ">
                                             </a>
                                         </td>
+                                    @elseif ($filter_value['name'] == 'E-Signature'  && $filter_value['active'])
+                                        @if(isset($value->{$filter_value['column_name']}))
+                                            <td class="text-center align-middle">
+                                                <a href="{{asset('storage/content/signature/'.$value->{$filter_value['column_name']})}}" target="blank">
+                                                    <img class="img-fluid"src="{{asset('storage/content/signature/'.$value->{$filter_value['column_name']})}}" alt="" style="max-height:50px;max-width:50px; ">
+                                                </a>
+                                            </td>
+                                        @else
+                                            <td class="text-center align-middle">
+                                                No E-Signature
+                                            </td>
+                                        @endif
                                     @else
                                         @if($filter_value['active'])
                                             <td class="align-middle">{{ $value->{$filter_value['column_name']} }}</td>

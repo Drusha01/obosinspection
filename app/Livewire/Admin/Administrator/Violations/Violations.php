@@ -17,11 +17,14 @@ class Violations extends Component
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
         ['column_name'=> 'description','active'=> true,'name'=>'Description name'],
+        ['column_name'=> 'category_name','active'=> true,'name'=>'Category'],
         ['column_name'=> 'id','active'=> true,'name'=>'Action'],
     ];
+    public $categories = [];
     public $violation = [
         'id'=> NULL,
         'description'=>NULL,
+        'category_id'=>NULL,
         'is_active'=>NULL,
     ];
 
@@ -54,9 +57,22 @@ class Violations extends Component
             $this->activity_logs['inspector_team_id'] = 0;
         }
     }
+    public function mount(){
+        $this->categories = DB::table('categories')
+        ->where('is_active','=',1)
+        ->get()
+        ->toArray();
+    }
     public function render()
     {
-        $table_data = DB::table('violations')
+        $table_data = DB::table('violations as v')
+            ->select(
+                'v.id',
+                'description',
+                'c.name as category_name',
+                'v.is_active'
+            )
+            ->join('categories as c','v.category_id','c.id')
             ->orderBy('id','desc')
             ->paginate(10);
 
@@ -70,6 +86,7 @@ class Violations extends Component
     public function add($modal_id){
         $this->violation = [
             'id'=> NULL,
+            'category_id'=>NULL,
             'description'=>NULL,
             'is_active'=>NULL,
         ];
@@ -102,9 +119,21 @@ class Violations extends Component
                 return 0;
             }
         }
+        if(!intval($this->violation['category_id'])){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'Please select category!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return 0;
+        }
         if(DB::table('violations')
             ->insert([
-                'description'=>$this->violation['description']
+                'description'=>$this->violation['description'],
+                'category_id'=>$this->violation['category_id']
             ])){
             $this->dispatch('swal:redirect',
                 position         									: 'center',
@@ -130,6 +159,7 @@ class Violations extends Component
             ->first();
         $this->violation = [
             'id'=> $edit->id,
+            'category_id'=>$edit->category_id,
             'description'=>$edit->description,
             'is_active'=>$edit->is_active,
         ];
@@ -163,10 +193,22 @@ class Violations extends Component
                 return 0;
             }
         }
+        if(!intval($this->violation['category_id'])){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'Please select category!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return 0;
+        }
         if(DB::table('violations')
             ->where('id','=',$id)
             ->update([
-                'description'=>$this->violation['description']
+                'description'=>$this->violation['description'],
+                'category_id'=>$this->violation['category_id']
             ])){
             }
             $this->dispatch('swal:redirect',

@@ -33,6 +33,7 @@ class Businesses extends Component
         ['column_name'=> 'name','active'=> true,'name'=>'Business name'],
         ['column_name'=> 'first_name','active'=> true,'name'=>'Owner'],
         ['column_name'=> 'barangay','active'=> true,'name'=>'Brgy'],
+        ['column_name'=> 'business_category_name','active'=> true,'name'=>'Business Category'],
         ['column_name'=> 'business_type_name','active'=> true,'name'=>'Business Type'],
         ['column_name'=> 'occupancy_classification_name','active'=> true,'name'=>'Char of Occu'],
         ['column_name'=> 'contact_number','active'=> true,'name'=>'Contact #'],
@@ -46,6 +47,7 @@ class Businesses extends Component
         'id' => NULL,
         'owner_id' => NULL,
         'brgy_id' => NULL,
+        'business_category_id' => NULL,
         'occupancy_classification_id' => NULL,
         'business_type_id'=>NULL,
         'img_url' => NULL,
@@ -61,7 +63,100 @@ class Businesses extends Component
     public $owners;
     public $business_types;
     public $history = [];
-    public function mount(){
+    public $business_category = [];
+
+    public $table_filter;
+    public function save_filter(Request $request){
+        $session = $request->session()->all();
+        $table_filter = DB::table('table_filters')
+        ->where('id',$this->table_filter['id'])
+        ->first();
+        if($table_filter){
+            DB::table('table_filters')
+            ->where('id',$this->table_filter['id'])
+            ->update([
+                'table_rows'=>$this->table_filter['table_rows'],
+                'filter'=>json_encode($this->table_filter['filter']),
+            ]);
+            $table_filter = DB::table('table_filters')
+                ->where('id',$this->table_filter['id'])
+                ->first();
+            $temp_filter = [];
+            foreach (json_decode($table_filter->filter) as $key => $value) {
+                array_push($temp_filter,[
+                    'column_name'=>$value->column_name,
+                    'active'=>$value->active,
+                    'name'=>$value->name,
+                ]);
+            }
+            $this->table_filter = [
+                'id'=>$table_filter->id,
+                'path'=>$table_filter->path,
+                'table_rows'=>$table_filter->table_rows,
+                'filter'=>$temp_filter,
+            ];
+        }
+        $this->dispatch('swal:redirect',
+            position         									: 'center',
+            icon              									: 'success',
+            title             									: 'Successfully updated!',
+            showConfirmButton 									: 'true',
+            timer             									: '1000',
+            link              									: '#'
+        );
+    }
+
+    public function mount(Request $request){
+        $session = $request->session()->all();
+        $table_filter = DB::table('table_filters')
+        ->where('user_id',$session['id'])
+        ->where('path','=',$request->path())
+        ->first();
+        if($table_filter){
+            $temp_filter = [];
+            foreach (json_decode($table_filter->filter) as $key => $value) {
+                array_push($temp_filter,[
+                    'column_name'=>$value->column_name,
+                    'active'=>$value->active,
+                    'name'=>$value->name,
+                ]);
+            }
+            $this->table_filter = [
+                'id'=>$table_filter->id,
+                'path'=>$table_filter->path,
+                'table_rows'=>$table_filter->table_rows,
+                'filter'=>$temp_filter,
+            ];
+        }else{
+            DB::table('table_filters')
+            ->insert([
+                'user_id' =>$session['id'],
+                'path' =>$request->path(),
+                'table_rows' =>10,
+                'filter'=> json_encode($this->filter)
+            ]);
+            $table_filter = DB::table('table_filters')
+            ->where('user_id',$session['id'])
+            ->where('path','=',$request->path())
+            ->first();
+            $temp_filter = [];
+            foreach (json_decode($table_filter->filter) as $key => $value) {
+                array_push($temp_filter,[
+                    'column_name'=>$value->column_name,
+                    'active'=>$value->active,
+                    'name'=>$value->name,
+                ]);
+            }
+            $this->table_filter = [
+                'id'=>$table_filter->id,
+                'path'=>$table_filter->path,
+                'table_rows'=>$table_filter->table_rows,
+                'filter'=>$temp_filter,
+            ];
+        }
+        $this->business_category = DB::table('business_category')
+        ->get()
+        ->toArray();
         $city_mun = DB::table('citymun')
             ->where('citymunDesc','=','GENERAL SANTOS CITY (DADIANGAS)')
             ->first();
@@ -142,6 +237,7 @@ class Businesses extends Component
                 'p.last_name',
                 'p.suffix',
                 'brg.brgyDesc as barangay',
+                'bc.name as business_category_name',
                 'bt.name as business_type_name',
                 'oc.character_of_occupancy as occupancy_classification_name',
                 'b.contact_number',
@@ -153,6 +249,7 @@ class Businesses extends Component
             )
             ->join('persons as p','p.id','b.owner_id')
             ->join('brgy as brg','brg.id','b.brgy_id')
+            ->join('business_category as bc','bc.id','b.business_category_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
             ->where('b.name','like',$this->search['business_name'] .'%')
@@ -279,7 +376,21 @@ class Businesses extends Component
         }else{
            // no validation
         }
-
+        if(!intval($this->business['business_category_id']) && 
+            DB::table('business_types')
+                ->where('id','=',$this->business['business_category_id'])
+                ->first()
+        ){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'Please select business category!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return 0;
+        }
         if(!intval($this->business['business_type_id']) && 
             DB::table('business_types')
                 ->where('id','=',$this->business['business_type_id'])
@@ -441,6 +552,7 @@ class Businesses extends Component
             ->insert([
                 'owner_id' => $this->business['owner_id'],
                 'brgy_id' => $this->business['brgy_id'],
+                'business_category_id' => $this->business['business_category_id'],
                 'occupancy_classification_id' => $this->business['occupancy_classification_id'],
                 'business_type_id'=>$this->business['business_type_id'],
                 'img_url' => $business['img_url'],
@@ -487,6 +599,7 @@ class Businesses extends Component
                 'b.owner_id',
                 'b.occupancy_classification_id',
                 'b.business_type_id',
+                'b.business_category_id',
                 'b.street_address',
                 'b.contact_number',
                 'b.email',
@@ -506,6 +619,7 @@ class Businesses extends Component
                 'id' => $edit->id,
                 'owner_id' => $edit->owner_id,
                 'brgy_id' => $edit->brgy_id,
+                'business_category_id' => $edit->business_category_id,
                 'occupancy_classification_id' => $edit->occupancy_classification_id,
                 'business_type_id'=>$edit->business_type_id,
                 'img_url' => NULL,
@@ -577,7 +691,21 @@ class Businesses extends Component
         }else{
            // no validation
         }
-
+        if(!intval($this->business['business_category_id']) && 
+            DB::table('business_types')
+                ->where('id','=',$this->business['business_category_id'])
+                ->first()
+        ){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'Please select business category!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return 0;
+        }
         if(!intval($this->business['business_type_id']) && 
             DB::table('business_types')
                 ->where('id','=',$this->business['business_type_id'])
@@ -586,7 +714,7 @@ class Businesses extends Component
             $this->dispatch('swal:redirect',
                 position         									: 'center',
                 icon              									: 'warning',
-                title             									: 'Please select business_type!',
+                title             									: 'Please select business type!',
                 showConfirmButton 									: 'true',
                 timer             									: '1000',
                 link              									: '#'
@@ -741,6 +869,7 @@ class Businesses extends Component
             ->update([
                 'owner_id' => $this->business['owner_id'],
                 'brgy_id' => $this->business['brgy_id'],
+                'business_category_id' => $this->business['business_category_id'],
                 'occupancy_classification_id' => $this->business['occupancy_classification_id'],
                 'business_type_id'=>$this->business['business_type_id'],
                 'img_url' => $business['img_url'],

@@ -18,7 +18,7 @@ return new class extends Migration
             date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         );');
 
-        DB::statement('CREATE INDEX idx_businesses_name ON business_types(name(10));');
+        DB::statement('CREATE INDEX idx_business_types_name ON business_types(name(10));');
         
         DB::statement('INSERT INTO business_types VALUES(
             NULL,

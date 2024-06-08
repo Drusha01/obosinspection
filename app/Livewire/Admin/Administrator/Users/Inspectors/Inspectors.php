@@ -19,6 +19,7 @@ class Inspectors extends Component
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
         ['column_name'=> 'img_url','active'=> true,'name'=>'Image'],
+        ['column_name'=> 'signature','active'=> true,'name'=>'E-Signature'],
         ['column_name'=> 'username','active'=> true,'name'=>'Username'],
         ['column_name'=> 'first_name','active'=> true,'name'=>'Firstname'],
         ['column_name'=> 'middle_name','active'=> true,'name'=>'Middlename'],
@@ -98,6 +99,7 @@ class Inspectors extends Component
                 'p.middle_name',
                 'p.last_name',
                 'p.img_url',
+                'p.signature',
                 "u.date_created",
                 "u.date_updated",
                 'wr.id as work_role_id',

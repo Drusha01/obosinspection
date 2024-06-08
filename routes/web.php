@@ -67,7 +67,10 @@ use App\Livewire\Admin\Administrator\Certifications\Generate\Certification  as A
 use App\Livewire\Admin\Administrator\Dashboard\Dashboard  as AdministratorDashboard;
 use App\Livewire\Admin\Administrator\Equipments\Category\Category as AdministratorCategory;
 use App\Livewire\Admin\Administrator\Equipments\Items\Items as AdministratorItems;
+use App\Livewire\Admin\Administrator\Establishments\BusinessCategory\BusinessCategory as AdministratorBusinessCategory;
 use App\Livewire\Admin\Administrator\Establishments\Businesses\Businesses as AdministratorBusinesses;
+use App\Livewire\Admin\Administrator\Establishments\BusinessOccuClass\BusinessOccuClass as AdministratorBusinessOccuClass;
+use App\Livewire\Admin\Administrator\Establishments\BusinessTypes\BusinessTypes as AdministratorBusinessTypes;
 use App\Livewire\Admin\Administrator\Establishments\Owner\Owner as AdministratorOwner;
 use App\Livewire\Admin\Administrator\Inspections\CompletedInspections\CompletedInspections as AdministratorCompletedInspections;
 use App\Livewire\Admin\Administrator\Inspections\DeletedInspections\DeletedInspections as AdministratorDeletedInspections;
@@ -75,6 +78,10 @@ use App\Livewire\Admin\Administrator\Inspections\Generate\Generate as Administra
 use App\Livewire\Admin\Administrator\Inspections\InspectionSchedules\InspectionSchedules as AdministratorInspectionSchedules;
 use App\Livewire\Admin\Administrator\Inspections\OngoingInspections\OngoingInspections as AdministratorOngoingInspections;
 use App\Livewire\Admin\Administrator\Profile\Profile as AdministratorProfile;
+use App\Livewire\Admin\Administrator\Request\AcceptedRequest\AcceptedRequest as AdministratorAcceptedRequest;
+use App\Livewire\Admin\Administrator\Request\GenerateRequest\GenerateRequest as AdministratorGenerateRequest;
+use App\Livewire\Admin\Administrator\Request\NoresponseRequest\NoresponseRequest as AdministratorNoresponseRequest;
+use App\Livewire\Admin\Administrator\Request\RejectedRequest\RejectedRequest as AdministratorRejectedRequest;
 use App\Livewire\Admin\Administrator\Users\Administrator\Administrator as AdministratorAdministrator;
 use App\Livewire\Admin\Administrator\Users\InspectorGroups\InspectorGroups as AdministratorInspectorGroups;
 use App\Livewire\Admin\Administrator\Users\Inspectors\Inspectors as AdministratorInspectors;
@@ -157,6 +164,9 @@ Route::middleware([Authenticated::class,IsValid::class,IsAdministrator::class])-
         Route::prefix('establishments')->group(function () {
             Route::get('/businesses', AdministratorBusinesses::class)->name('administrator-establishments-businesses');
             Route::get('/owners', AdministratorOwner::class)->name('administrator-establishments-owners');
+            Route::get('/business-category', AdministratorBusinessCategory::class)->name('administrator-establishments-business-category');
+            Route::get('/business-type', AdministratorBusinessTypes::class)->name('administrator-establishments-business-type');
+            Route::get('/business-occupation-classification', AdministratorBusinessOccuClass::class)->name('administrator-establishments-business-occupation-classification');
         });
         Route::prefix('equipments')->group(function () {
             Route::get('/categories', AdministratorCategory::class)->name('administrator-equipments-categories');
@@ -177,6 +187,12 @@ Route::middleware([Authenticated::class,IsValid::class,IsAdministrator::class])-
             Route::get('/deleted-inspections', AdministratorDeletedInspections::class)->name('administrator-inspections-deleted-inspections');
             Route::get('/generate/{id}', AdministratorGenerate::class)->name('administrator-inspections-generate');
             Route::get('/completed-inspections', AdministratorCompletedInspections::class)->name('administrator-inspections-completed-inspections');
+        });
+        Route::prefix('request')->group(function () {
+            Route::get('/accepted-request', AdministratorAcceptedRequest::class)->name('administrator-request-accepted-request');
+            Route::get('/generate-request', AdministratorGenerateRequest::class)->name('administrator-request-generate-request');
+            Route::get('/no-response-request', AdministratorNoresponseRequest::class)->name('administrator-request-no-response-request');
+            Route::get('/rejected-request', AdministratorRejectedRequest::class)->name('administrator-request-rejected-request');
         });
         Route::prefix('users')->group(function () {
             Route::get('/administrators', AdministratorAdministrator::class)->name('administrator-users-administrators');

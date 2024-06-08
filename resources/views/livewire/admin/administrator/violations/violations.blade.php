@@ -88,6 +88,15 @@
                                 <label for="description" class="form-label">Description</label>
                                 <input type="text" class="form-control" required wire:model="violation.description">
                             </div>
+                            <div class="mb-3">
+                                <label for="category_name" class="form-label">Category</label>
+                                <select class="form-select" id="category_name" required aria-label="Default select example" wire:model="violation.category_id">
+                                    <option value="">Select Category</option>
+                                    @foreach($categories as $key => $value)
+                                        <option value="{{$value->id}}">{{$value->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <button type="submit" class="btn btn-primary">Add</button>
                         </form>
                     </div>
@@ -106,8 +115,16 @@
                     <div class="modal-body">
                         <form wire:submit.prevent="save_edit({{$violation['id']}},'editModaltoggler')">
                             <div class="mb-3">
-                                <label for="description     " class="form-label">Description</label>
+                                <label for="description" class="form-label">Description</label>
                                 <input type="text" class="form-control" required wire:model="violation.description">
+                            </div>
+                            <div class="mb-3">
+                                <label for="category_name" class="form-label">Category</label>
+                                <select class="form-select" id="category_name" required aria-label="Default select example" wire:model="violation.category_id">
+                                    @foreach($categories as $key => $value)
+                                        <option value="{{$value->id}}">{{$value->name}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <button type="submit" class="btn btn-success">Save</button>
                         </form>

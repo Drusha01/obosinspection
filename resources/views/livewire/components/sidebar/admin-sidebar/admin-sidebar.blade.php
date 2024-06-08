@@ -36,18 +36,24 @@
                                 <span>Businesses</span>
                             </a>
                         </li>
-                        <!-- <li class="nav-item">
-                            <a class="nav-link" href="{{ route('administrator-establishments-owners') }}">
-                                <i class="fas fa-fw fa-user"></i>
+                        <li class="nav-item @if( Route::is('administrator-establishments-business-type') ) active @endif">
+                            <a class="nav-link" href="{{ route('administrator-establishments-business-category') }}">
+                                <i class="bi bi-grid-1x2"></i>
+                                <span>Business Category</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @if( Route::is('administrator-establishments-business-type') ) active @endif">
+                            <a class="nav-link" href="{{ route('administrator-establishments-business-type') }}">
+                                <i class="bi bi-list-nested"></i>
                                 <span>Business types</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('administrator-establishments-owners') }}">
-                                <i class="fas fa-fw fa-user"></i>
+                        <li class="nav-item @if( Route::is('administrator-establishments-business-occupation-classification') ) active @endif">
+                            <a class="nav-link" href="{{ route('administrator-establishments-business-occupation-classification') }}">
+                                <i class="bi bi-layout-wtf"></i>
                                 <span>Occupancy classifications</span>
                             </a>
-                        </li> -->
+                        </li>
                     </ul>
                 </div>
             </li>
@@ -133,6 +139,46 @@
             </li>
 
             <li class="nav-item">
+                <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Requestdropdown" aria-expanded="@if(Request()->route()->getPrefix() == 'administrator/request') true @else false @endif" aria-controls="Requestdropdown">
+                    <span class="d-flex justify-content-between align-items-center">
+                        <span>
+                            <i class="bi bi-files"></i>
+                            Requests
+                        </span>
+                        <i class="fas  @if(Request()->route()->getPrefix() == 'administrator/inspections') fa-chevron-up @else fa-chevron-down @endif"></i> 
+                    </span>
+                </a>
+                <div id="Requestdropdown" class="collapse @if(Request()->route()->getPrefix() == 'administrator/request') show @endif">
+                    <ul class="nav flex-column sub-menu" style="background-color: #50C878; border-radius: 8px; z-index: 9999;">
+                        <li class="nav-item @if(Route::is('administrator-request-generate-request')) active @endif">
+                            <a class="nav-link" href="{{ route('administrator-request-generate-request') }}">
+                                <i class="bi bi-file-earmark-plus"></i>
+                                <span>Generate Request</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @if(Route::is('administrator-request-accepted-request')) active @endif">
+                            <a class="nav-link" href="{{ route('administrator-request-accepted-request') }}">
+                                <i class="bi bi-file-earmark-check"></i>
+                                <span>Accepted Request</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @if(Route::is('administrator-request-rejected-request')) active @endif">
+                            <a class="nav-link" href="{{ route('administrator-request-rejected-request') }}">
+                                <i class="bi bi-file-earmark-x"></i>
+                                <span>Rejected Request</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @if(Route::is('administrator-request-no-response-request')) active @endif" >
+                            <a class="nav-link" href="{{ route('administrator-request-no-response-request') }}">
+                                <i class="bi bi-question-square"></i>
+                                <span>No Response Request</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Inspectionsdropdown" aria-expanded="@if(Request()->route()->getPrefix() == 'administrator/inspections') true @else false @endif" aria-controls="Inspectionsdropdown">
                     <span class="d-flex justify-content-between align-items-center">
                         <span>
@@ -204,7 +250,7 @@
                         </li>
                         <li class="nav-item @if(Route::is('administrator-users-work-roles')) active @endif">
                             <a class="nav-link" href="{{ route('administrator-users-work-roles') }}">
-                                <i class="fas fa-fw fa-user"></i>
+                                <i class="bi bi-person-badge"></i>
                                 <span>Work Roles</span>
                             </a>
                         </li>

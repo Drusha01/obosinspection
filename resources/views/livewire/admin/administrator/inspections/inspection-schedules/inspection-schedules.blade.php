@@ -3,8 +3,11 @@
         <div class="container-fluid">
             <div class="d-sm-flex align-items-center justify-content-between mt-4 mb-4">
                 <h1 class="h3 mb-0 text-gray-800">{{$title}}</h1>
-                <div class="p-0 m-0" wire:click="add('addModaltoggler')" >
-                    <button type="button" class="btn btn-primary">
+                <div class="p-0 m-0"  >
+                    <button type="button" class="btn btn-outline-primary" wire:click="add('addModaltoggler')">
+                        Add From Request
+                    </button>
+                    <button type="button" class="btn btn-primary" wire:click="add('addModaltoggler')">
                         Add Inspection Schedule
                     </button>
                 </div>
