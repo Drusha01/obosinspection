@@ -15,8 +15,15 @@ class Owner extends Component
     use WithFileUploads;
     public $title = "Owners";
     public $search = [
-        'owner_name'=> NULL,
-        'owner_name_prev'=> NULL,
+        'search'=> NULL,
+        'search_prev'=> NULL,
+        'type' => NULL,
+        'type_prev' => NULL,
+    ];
+    public $search_by = [
+        ['name'=>'Name','column_name'=>'b.name'],
+        // ['name'=>'Contact','column_name'=>'b.contact_number'],
+        ['name'=>'Email','column_name'=>'b.email'],
     ];
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
@@ -160,10 +167,9 @@ class Owner extends Component
             $this->activity_logs['inspector_team_id'] = 0;
         }
     }
-    public function render()
-    {
-        if($this->search['owner_name'] != $this->search['owner_name_prev']){
-            $this->search['owner_name_prev'] = $this->search['owner_name'];
+    public function render(){
+        if($this->search['search'] != $this->search['search_prev']){
+            $this->search['search_prev'] = $this->search['search'];
             $this->resetPage();
         }
         $table_data = DB::table('persons as p')
@@ -182,7 +188,7 @@ class Owner extends Component
         )
         ->join('person_types as pt','pt.id','p.person_type_id')
         ->where('pt.name','=','Owner')
-        ->where(DB::raw("CONCAT(p.first_name,' ',p.last_name)"),'like',$this->search['owner_name'] .'%')
+        ->where(DB::raw("CONCAT(p.first_name,' ',p.last_name)"),'like',$this->search['search'] .'%')
         ->orderBy('id','desc')
         ->paginate($this->table_filter['table_rows']);
         return view('livewire.admin.administrator.establishments.owner.owner',[

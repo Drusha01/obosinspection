@@ -1,7 +1,7 @@
 <div>
     <div class="content">
         <div class="container-fluid">
-        <div class="row d-flex mt-4 mb-4">
+            <div class="row d-flex mt-4 mb-4">
                 <div class="col">
                     <h1 class="h3 mb-0 text-gray-800">{{$title}}</h1>
                 </div>
@@ -26,7 +26,7 @@
                 <div class="col-8">
                     <div class="row d-flex">
                         <div class="col-lg-6 col-md-12">
-                            <input type="text" name="" id=""class="form-control" wire:model.live="search.search"placeholder="Search ... ">
+                            <input type="text" name="" id=""class="form-control" wire:model.live.debounce.500ms="search.search"placeholder="Search ... ">
                         </div>
                     </div>
                 </div>

@@ -26,16 +26,8 @@
                 <div class="col-8">
                     <div class="row d-flex">
                         <div class="col-lg-6 col-md-12">
-                            <input type="text" name="" id=""class="form-control" placeholder="Search ... ">
+                            <input type="text" name="" id=""class="form-control" wire:model.live.debounce.500ms="search.search" placeholder="Search owner name... ">
                         </div>
-                       <div class="col-lg-2 col-md-4 col-sm-4">
-                            <select name="" id="rows" class="form-select">
-                                <option selected value="10">Name</option>
-                                <option value="30">Contact #</option>
-                                <option value="30">Email</option>
-                            </select>
-                       </div>
-                        
                     </div>
                 </div>
                 <div class="col-4 d-flex justify-content-end ">

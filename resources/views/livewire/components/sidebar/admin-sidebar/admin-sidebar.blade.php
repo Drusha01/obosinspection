@@ -36,7 +36,7 @@
                                 <span>Businesses</span>
                             </a>
                         </li>
-                        <li class="nav-item @if( Route::is('administrator-establishments-business-type') ) active @endif">
+                        <li class="nav-item @if( Route::is('administrator-establishments-business-category') ) active @endif">
                             <a class="nav-link" href="{{ route('administrator-establishments-business-category') }}">
                                 <i class="bi bi-grid-1x2"></i>
                                 <span>Business Category</span>

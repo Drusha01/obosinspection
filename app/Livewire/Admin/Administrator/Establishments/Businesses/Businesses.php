@@ -15,8 +15,15 @@ class Businesses extends Component
     use WithFileUploads;
     public $title = "Businesses";
     public $search = [
-        'business_name'=> NULL,
-        'business_name_prev'=> NULL,
+        'search'=> NULL,
+        'search_prev'=> NULL,
+        'type' => NULL,
+        'type_prev' => NULL,
+    ];
+    public $search_by = [
+        ['name'=>'Name','column_name'=>'b.name'],
+        // ['name'=>'Contact','column_name'=>'b.contact_number'],
+        ['name'=>'Email','column_name'=>'b.email'],
     ];
     public $histfilter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
@@ -223,9 +230,19 @@ class Businesses extends Component
 
     public function render()
     {
-        if($this->search['business_name'] != $this->search['business_name_prev']){
-            $this->search['business_name_prev'] = $this->search['business_name'];
+        if($this->search['search'] != $this->search['search_prev']){
+            $this->search['search_prev'] = $this->search['search'];
             $this->resetPage();
+        }
+        if($this->search['type'] != $this->search['type_prev']){
+            $this->search['type_prev'] = $this->search['type'];
+            if($this->search['type'] == 'b.contact_number'){
+                $this->search['search'] = substr($this->search['search'],1);
+                dd($this->search['search']);
+            }
+            $this->resetPage();
+        }else{
+            $this->search['type'] = $this->search_by[0]['column_name'];
         }
         $table_data = DB::table('businesses as b')
             ->select(
@@ -252,7 +269,7 @@ class Businesses extends Component
             ->join('business_category as bc','bc.id','b.business_category_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-            ->where('b.name','like',$this->search['business_name'] .'%')
+            ->where($this->search['type'],'like',$this->search['search'] .'%')
             ->orderBy('id','desc')
             ->paginate(10);
         return view('livewire.admin.administrator.establishments.businesses.businesses',[

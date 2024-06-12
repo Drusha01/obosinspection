@@ -17,7 +17,7 @@
                         <button id="column-filter" class="mx-2 btn btn-outline-secondary d-flex"  data-bs-toggle="modal" data-bs-target="#filterModal">
                             <i class="bi bi-funnel mr-2"></i>
                             <span for="column-filter">Columns</span>
-                        </button>
+                        </butto@>
                     </div>
                 </div>
             </div>
@@ -26,13 +26,13 @@
                 <div class="col-8">
                     <div class="row d-flex">
                         <div class="col-lg-6 col-md-12">
-                            <input type="text" name="" id=""class="form-control" placeholder="Search ... ">
+                            <input type="text" name="" id=""class="form-control" wire:model.live.debounce.500ms="search.search" placeholder="Search ... " wire.change="">
                         </div>
                        <div class="col-lg-2 col-md-4 col-sm-4">
-                            <select name="" id="rows" class="form-select">
-                                <option selected value="10">Name</option>
-                                <option value="30">Contact #</option>
-                                <option value="30">Email</option>
+                            <select name="" id="rows" class="form-select" wire:model.live.debouce.500ms="search.type">
+                                @foreach($search_by as $key => $value)
+                                    <option @if($key == 0) selected @endif value="{{$value['column_name']}}" >{{$value['name']}}</option>
+                                @endforeach
                             </select>
                        </div>
                     </div>
