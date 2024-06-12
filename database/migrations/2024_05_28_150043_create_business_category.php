@@ -14,6 +14,7 @@ return new class extends Migration
         DB::statement('CREATE TABLE business_category(
             id INT PRIMARY KEY AUTO_INCREMENT,
             name VARCHAR(100) UNIQUE,
+            is_active BOOL DEFAULT 1 NOT NULL,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
             date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         );');
@@ -22,18 +23,21 @@ return new class extends Migration
         DB::statement('INSERT INTO business_category VALUES(
             NULL,
             "Small Business",
+            1,
             NOW(),
             NOW()
         );');
         DB::statement('INSERT INTO business_category VALUES(
             NULL,
             "Medium Business",
+            1,
             NOW(),
             NOW()
         );');
         DB::statement('INSERT INTO business_category VALUES(
             NULL,
             "Big Business",
+            1,
             NOW(),
             NOW()
         );');

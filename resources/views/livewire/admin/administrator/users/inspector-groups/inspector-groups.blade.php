@@ -88,10 +88,8 @@
         <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" id="editModaltoggler" style="display:none;"></button>
         <button type="button" data-bs-toggle="modal" data-bs-target="#deactivateModal" id="deactivateModaltoggler" style="display:none;"></button>
         <button type="button" data-bs-toggle="modal" data-bs-target="#activateModal" id="activateModaltoggler" style="display:none;"></button>
-
         <button type="button" data-bs-toggle="modal" data-bs-target="#addDesignationModal" id="addDesignationModaltoggler" style="display:none;"></button>
         <button type="button" data-bs-toggle="modal" data-bs-target="#viewDesignationModal" id="viewDesignationModaltoggler" style="display:none;"></button>
-
         <button type="button" data-bs-toggle="modal" data-bs-target="#viewMembersModal" id="viewMembersModaltoggler" style="display:none;"></button>
         
         

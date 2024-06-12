@@ -1,8 +1,25 @@
 <div>
     <div class="content">
         <div class="container-fluid">
-            <div class="d-sm-flex align-items-center justify-content-between mt-4 mb-4">
-                <h1 class="h3 mb-0 text-gray-800">{{$title}}</h1>
+            <div class="row d-flex mt-4 mb-4">
+                <div class="col">
+                    <h1 class="h3 mb-0 text-gray-800">{{$title}}</h1>
+                </div>
+                <div class="col-2">
+                    <div class=" d-flex ">
+                        <span for="rows" class="align-middle mt-2">Show</span>
+                        <select name="" id="rows" class="form-select text-center"  style="min:width:40px;" wire:change="save_filter()" wire:model.defer="table_filter.table_rows" >
+                            <option value="5">5</option>
+                            <option selected value="10">10</option>
+                            <option value="30">30</option>
+                            <option value="30">50</option>
+                        </select>
+                        <button id="column-filter" class="mx-2 btn btn-outline-secondary d-flex"  data-bs-toggle="modal" data-bs-target="#filterModal">
+                            <i class="bi bi-funnel mr-2"></i>
+                            <span for="column-filter">Columns</span>
+                        </button>
+                    </div>
+                </div>
             </div>
             <!-- Search bar and Add button -->
             <div class="row justify-content-between my-3">
@@ -18,24 +35,12 @@
                                 <option value="30">Email</option>
                             </select>
                        </div>
-                        <div class="col-md-4 col-sm-3 d-flex ">
-                            <span for="rows" class="align-middle mt-2 mx-1">Show</span>
-                            <select name="" id="rows" class="form-select" wire:change="save_filter()" wire:model.defer="table_filter.table_rows" >
-                                <option value="5">5</option>
-                                <option selected value="10">10</option>
-                                <option value="30">30</option>
-                                <option value="30">50</option>
-                            </select>
-                            <button id="column-filter" class="mx-2 btn btn-outline-secondary d-flex"  data-bs-toggle="modal" data-bs-target="#filterModal">
-                                <i class="bi bi-funnel mr-2"></i>
-                                <span for="column-filter">Columns</span>
-                            </button>
-                        </div>
+                        
                     </div>
                 </div>
                 <div class="col-4 d-flex justify-content-end ">
                     <button type="button" class="btn btn-primary"  wire:click="add('addModaltoggler')">
-                        Add Owner
+                        Add
                     </button>
                 </div>
 
@@ -253,7 +258,7 @@
                     </div>
                     <form wire:submit.prevent="save_deactivate({{$person['id']}},'deactivateModaltoggler')">
                         <div class="modal-body">
-                            <div>Are you sure you want to deactivate this owner?</div>
+                            <div>Are you sure you want to deactivate this?</div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
@@ -274,7 +279,7 @@
                     </div>
                     <form wire:submit.prevent="save_activate({{$person['id']}},'activateModaltoggler')">
                         <div class="modal-body">
-                            <div>Are you sure you want to activate this owner?</div>
+                            <div>Are you sure you want to activate this?</div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
