@@ -142,8 +142,8 @@
                     <form wire:submit.prevent="save_add('addModaltoggler')">
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Display type</label>
-                                <select class="form-select" aria-label="Default select example" wire:model="signage_billing.display_type_id">
+                                <label for="name" class="form-label">Display type <span class="text-danger">*</span></label>
+                                <select class="form-select" aria-label="Default select example" required wire:model="signage_billing.display_type_id">
                                     <option selected value="">Select Display type</option>
                                     @foreach($signage_billing_display_types as $key => $value)
                                         <option value="{{$value->id}}">{{$value->name}}</option>
@@ -151,8 +151,8 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="name" class="form-label">Signage type</label>
-                                <select class="form-select" aria-label="Default select example" wire:model="signage_billing.sign_type_id">
+                                <label for="name" class="form-label">Signage type <span class="text-danger">*</span></label>
+                                <select class="form-select" aria-label="Default select example" required wire:model="signage_billing.sign_type_id">
                                     <option selected value="">Select Section</option>
                                     @foreach($signage_billing_types as $key => $value)
                                         <option value="{{$value->id}}">{{$value->name}}</option>
@@ -160,8 +160,8 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="fee" class="form-label">Fee</label>
-                                <input type="number" class="form-control" required wire:model="signage_billing.fee" step="0.01" min="0.01">
+                                <label for="fee" class="form-label">Fee <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" required wire:model="signage_billing.fee" step="0.01" min="0.01" placeholder="Enter fee">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -184,8 +184,8 @@
                     <form wire:submit.prevent="save_edit({{$signage_billing['id']}},'editModaltoggler')">
                     <div class="modal-body">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Display type</label>
-                                <select class="form-select" aria-label="Default select example" wire:model="signage_billing.display_type_id">
+                                <label for="name" class="form-label">Display type <span class="text-danger">*</span></label>
+                                <select class="form-select" aria-label="Default select example" required wire:model="signage_billing.display_type_id">
                                     <option selected value="">Select Display type</option>
                                     @foreach($signage_billing_display_types as $key => $value)
                                         <option value="{{$value->id}}">{{$value->name}}</option>
@@ -193,8 +193,8 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="name" class="form-label">Signage type</label>
-                                <select class="form-select" aria-label="Default select example" wire:model="signage_billing.sign_type_id">
+                                <label for="name" class="form-label">Signage type <span class="text-danger">*</span></label>
+                                <select class="form-select" aria-label="Default select example" required wire:model="signage_billing.sign_type_id">
                                     <option selected value="">Select Section</option>
                                     @foreach($signage_billing_types as $key => $value)
                                         <option value="{{$value->id}}">{{$value->name}}</option>
@@ -202,8 +202,8 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="fee" class="form-label">Fee</label>
-                                <input type="number" class="form-control" required wire:model="signage_billing.fee" step="0.01" min="0.01">
+                                <label for="fee" class="form-label">Fee <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" required wire:model="signage_billing.fee" step="0.01" min="0.01" placeholder="Enter fee">
                             </div>
                         </div>
                         <div class="modal-footer">

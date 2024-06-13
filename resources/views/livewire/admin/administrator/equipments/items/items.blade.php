@@ -152,12 +152,12 @@
                                 <input type="file" class="form-control" wire:model="item.img_url">
                             </div>
                             <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" required wire:model="item.name">
+                                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required wire:model="item.name" placeholder="Enter item name">
                             </div>
                             <div class="mb-3">
-                                <label for="name" class="form-label">Category</label>
-                                <select class="form-select" aria-label="Default select example" wire:change="update_equipment_billing_sections()" wire:model="item.category_id">
+                                <label for="name" class="form-label">Category <span class="text-danger">*</span></label>
+                                <select class="form-select" aria-label="Default select example" required wire:change="update_equipment_billing_sections()" wire:model="item.category_id">
                                     <option selected value="">Select Category</option>
                                     @foreach($categories as $key => $value)
                                         <option value="{{$value->id}}">{{$value->name}}</option>
@@ -165,8 +165,8 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="name" class="form-label">Section</label>
-                                <select class="form-select" aria-label="Default select example" required  wire:model="item.section_id">
+                                <label for="name" class="form-label">Section <span class="text-danger">*</span></label>
+                                <select class="form-select" aria-label="Default select example" required  wire:model="item.section_id" >
                                     <option selected value="">Select Section</option>
                                     @foreach($equipment_billing_sections as $key => $value)
                                         <option value="{{$value->id}}">{{$value->name}}</option>
@@ -198,20 +198,20 @@
                                 <input type="file" class="form-control" wire:model="item.img_url">
                             </div>
                             <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" required wire:model="item.name">
+                                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required wire:model="item.name" placeholder="Enter item name">
                             </div>
                             <div class="mb-3">
-                                <label for="name" class="form-label">Category</label>
-                                <select class="form-select" aria-label="Default select example" wire:model="item.category_id">
+                                <label for="name" class="form-label">Category <span class="text-danger">*</span></label>
+                                <select class="form-select" aria-label="Default select example" required wire:model="item.category_id" placeholder="Enter item name">
                                     @foreach($categories as $key => $value)
                                         <option value="{{$value->id}}">{{$value->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="name" class="form-label">Section</label>
-                                <select class="form-select" aria-label="Default select example" required  wire:model="item.section_id">
+                                <label for="name" class="form-label">Section <span class="text-danger">*</span></label>
+                                <select class="form-select" aria-label="Default select example" required  wire:model="item.section_id" >
                                     <option selected value="">Select Section</option>
                                     @foreach($equipment_billing_sections as $key => $value)
                                         <option value="{{$value->id}}">{{$value->name}}</option>

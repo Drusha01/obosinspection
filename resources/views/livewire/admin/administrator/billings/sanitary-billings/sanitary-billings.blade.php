@@ -142,12 +142,12 @@
                     <form wire:submit.prevent="save_add('addModaltoggler')">
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" required wire:model="sanitary_billing.name">
+                                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required wire:model="sanitary_billing.name" placeholder="Enter sanitary billing name">
                             </div>
                             <div class="mb-3">
-                                <label for="fee" class="form-label">Fee</label>
-                                <input type="number" class="form-control" required wire:model="sanitary_billing.fee" step="0.01" min="0.01">
+                                <label for="fee" class="form-label">Fee <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" required wire:model="sanitary_billing.fee"  step="0.01" min="0.01" placeholder="Enter fee">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -170,12 +170,12 @@
                     <form wire:submit.prevent="save_edit({{$sanitary_billing['id']}},'editModaltoggler')">
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" required wire:model="sanitary_billing.name">
+                                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required wire:model="sanitary_billing.name" placeholder="Enter sanitary billing name">
                             </div>
                             <div class="mb-3">
-                                <label for="fee" class="form-label">Fee</label>
-                                <input type="number" class="form-control" required wire:model="sanitary_billing.fee"  step="0.01" min="0.01">
+                                <label for="fee" class="form-label">Fee <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" required wire:model="sanitary_billing.fee"  step="0.01" min="0.01" placeholder="Enter fee">
                             </div>
                         </div>
                         <div class="modal-footer">

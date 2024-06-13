@@ -142,12 +142,12 @@
                     <form wire:submit.prevent="save_add('addModaltoggler')">
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" required wire:model="equipment_billing_section.name">
+                                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required wire:model="equipment_billing_section.name" placeholder="Enter equipment billing name">
                             </div>
                             <div class="mb-3">
-                                <label for="name" class="form-label">Category</label>
-                                <select class="form-select" aria-label="Default select example" wire:model="equipment_billing_section.category_id">
+                                <label for="name" class="form-label">Category <span class="text-danger">*</span></label>
+                                <select class="form-select" aria-label="Default select example" reuqired wire:model="equipment_billing_section.category_id">
                                     <option value="">Select Category</option>
                                     @foreach($categories as $key => $value)
                                         <option value="{{$value->id}}">{{$value->name}}</option>
@@ -173,15 +173,15 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form wire:submit.prevent="save_edit({{$equipment_billing_section['id']}},'editModaltoggler')">
-                        <div class="modal-body">
+                    `   <div class="modal-body">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" required wire:model="equipment_billing_section.name">
+                                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required wire:model="equipment_billing_section.name" placeholder="Enter equipment billing name">
                             </div>
                             <div class="mb-3">
-                                <label for="name" class="form-label">Category</label>
-                                <select class="form-select" aria-label="Default select example" wire:model="equipment_billing_section.category_id">
-                                        <option value="">Select Category</option>
+                                <label for="name" class="form-label">Category <span class="text-danger">*</span></label>
+                                <select class="form-select" aria-label="Default select example" reuqired wire:model="equipment_billing_section.category_id">
+                                    <option value="">Select Category</option>
                                     @foreach($categories as $key => $value)
                                         <option value="{{$value->id}}">{{$value->name}}</option>
                                     @endforeach

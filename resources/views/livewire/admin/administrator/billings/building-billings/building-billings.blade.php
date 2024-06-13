@@ -142,8 +142,8 @@
                     <form wire:submit.prevent="save_add('addModaltoggler')">
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Section</label>
-                                <select class="form-select" aria-label="Default select example" wire:model="building_billing.section_id">
+                                <label for="name" class="form-label">Section <span class="text-danger">*</span></label>
+                                <select class="form-select" aria-label="Default select example" required wire:model="building_billing.section_id">
                                     <option selected value="">Select Section</option>
                                     @foreach($building_billing_sections as $key => $value)
                                         <option value="{{$value->id}}">{{$value->name}}</option>
@@ -151,12 +151,12 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="property_attribute" class="form-label">Property Attribute</label>
-                                <input type="text" class="form-control" required wire:model="building_billing.property_attribute">
+                                <label for="property_attribute" class="form-label">Property Attribute <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required wire:model="building_billing.property_attribute" placeholder="Enter property attribute">
                             </div>
                             <div class="mb-3">
-                                <label for="fee" class="form-label">Fee</label>
-                                <input type="number" class="form-control" required wire:model="building_billing.fee" step="0.01" min="0.01">
+                                <label for="fee" class="form-label">Fee <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" required wire:model="building_billing.fee" step="0.01" min="0.01" placeholder="Enter fee">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -167,6 +167,7 @@
                 </div>
             </div>
         </div>
+        
 
         <!-- Edit Modal -->
         <div wire:ignore.self class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
@@ -179,8 +180,8 @@
                     <form wire:submit.prevent="save_edit({{$building_billing['id']}},'editModaltoggler')">
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Section</label>
-                                <select class="form-select" aria-label="Default select example" wire:model="building_billing.section_id">
+                                <label for="name" class="form-label">Section <span class="text-danger">*</span></label>
+                                <select class="form-select" aria-label="Default select example" required wire:model="building_billing.section_id">
                                     <option selected value="">Select Section</option>
                                     @foreach($building_billing_sections as $key => $value)
                                         <option value="{{$value->id}}">{{$value->name}}</option>
@@ -188,12 +189,12 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="property_attribute" class="form-label">Property Attribute</label>
-                                <input type="text" class="form-control" required wire:model="building_billing.property_attribute">
+                                <label for="property_attribute" class="form-label">Property Attribute <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required wire:model="building_billing.property_attribute" placeholder="Enter property attribute">
                             </div>
                             <div class="mb-3">
-                                <label for="fee" class="form-label">Fee</label>
-                                <input type="number" class="form-control" required wire:model="building_billing.fee" step="0.01" min="0.01">
+                                <label for="fee" class="form-label">Fee <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" required wire:model="building_billing.fee" step="0.01" min="0.01" placeholder="Enter fee">
                             </div>
                         </div>
                         <div class="modal-footer">

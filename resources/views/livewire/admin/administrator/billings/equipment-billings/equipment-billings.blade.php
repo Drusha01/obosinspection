@@ -142,7 +142,7 @@
                     <form wire:submit.prevent="save_add('addModaltoggler')">
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Category</label>
+                                <label for="name" class="form-label">Category <span class="text-danger">*</span></label>
                                 <select class="form-select" aria-label="Default select example" required wire:model.live="equipment_billing.category_id">
                                     <option selected value="">Select Category</option>
                                     @foreach($categories as $key => $value)
@@ -151,7 +151,7 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="name" class="form-label">Section</label>
+                                <label for="name" class="form-label">Section <span class="text-danger">*</span></label>
                                 <select class="form-select" aria-label="Default select example" required wire:model="equipment_billing.section_id">
                                     <option selected value="">Select Section</option>
                                     @foreach($equipment_billing_sections as $key => $value)
@@ -161,18 +161,18 @@
                             </div>
                             @if($equipment_billing['category_id'] != 2)
                             <div class="mb-3">
-                                <label for="capacity" class="form-label">Capacity</label>
-                                <input type="text" class="form-control" required wire:model="equipment_billing.capacity">
+                                <label for="capacity" class="form-label">Capacity <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required wire:model="equipment_billing.capacity" placeholder="Enter capacity">
                             </div>
                             @else
                             <div class="mb-3">
-                                <label for="capacity" class="form-label">Per unit</label>
-                                <input type="text" class="form-control" required wire:model="equipment_billing.capacity">
+                                <label for="capacity" class="form-label">Per unit <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required wire:model="equipment_billing.capacity" placeholder="Enter per unit">
                             </div>
                             @endif
                             <div class="mb-3">
-                                <label for="fee" class="form-label">Fee</label>
-                                <input type="number" class="form-control" required wire:model="equipment_billing.fee" step="0.01" min="0.01">
+                                <label for="fee" class="form-label">Fee <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" required wire:model="equipment_billing.fee" step="0.01" min="0.01" placeholder="Enter fee">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -192,10 +192,10 @@
                         <h5 class="modal-title" id="editModalLabel">Edit  </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <form wire:submit.prevent="save_edit({{$equipment_billing['id']}},'editModaltoggler')">
+                    <form wire:submit.prevent="save_edit({{$equipment_billing['id']}},'editModaltoggler')">
+                        <div class="modal-body">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Category</label>
+                                <label for="name" class="form-label">Category <span class="text-danger">*</span></label>
                                 <select class="form-select" aria-label="Default select example" required wire:model.live="equipment_billing.category_id">
                                     <option selected value="">Select Category</option>
                                     @foreach($categories as $key => $value)
@@ -204,23 +204,30 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="name" class="form-label">Section</label>
-                                <select class="form-select" aria-label="Default select example"  required wire:model="equipment_billing.section_id">
+                                <label for="name" class="form-label">Section <span class="text-danger">*</span></label>
+                                <select class="form-select" aria-label="Default select example" required wire:model="equipment_billing.section_id">
                                     <option selected value="">Select Section</option>
                                     @foreach($equipment_billing_sections as $key => $value)
                                         <option value="{{$value->id}}">{{$value->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
+                            @if($equipment_billing['category_id'] != 2)
                             <div class="mb-3">
-                                <label for="capacity" class="form-label">Capacity</label>
-                                <input type="text" class="form-control" wire:model="equipment_billing.capacity">
+                                <label for="capacity" class="form-label">Capacity <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required wire:model="equipment_billing.capacity" placeholder="Enter capacity">
                             </div>
+                            @else
                             <div class="mb-3">
-                                <label for="fee" class="form-label">Fee</label>
-                                <input type="number" class="form-control" required wire:model="equipment_billing.fee" step="0.01" min="0.01">
+                                <label for="capacity" class="form-label">Per unit <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required wire:model="equipment_billing.capacity" placeholder="Enter per unit">
                             </div>
-                        </div>  
+                            @endif
+                            <div class="mb-3">
+                                <label for="fee" class="form-label">Fee <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" required wire:model="equipment_billing.fee" step="0.01" min="0.01" placeholder="Enter fee">
+                            </div>
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
                             <button type="submit" class="btn btn-success">Save</button>

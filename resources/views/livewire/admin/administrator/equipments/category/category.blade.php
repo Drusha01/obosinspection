@@ -152,8 +152,8 @@
                                 <input type="file" class="form-control" wire:model="category.img_url">
                             </div>
                             <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" required wire:model="category.name">
+                                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required wire:model="category.name" placeholder="Enter category name">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -180,8 +180,8 @@
                                 <input type="file" class="form-control" wire:model="category.img_url">
                             </div>
                             <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" required wire:model="category.name">
+                                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required wire:model="category.name"  placeholder="Enter category name">
                             </div>
                         </div>
                         <div class="modal-footer">

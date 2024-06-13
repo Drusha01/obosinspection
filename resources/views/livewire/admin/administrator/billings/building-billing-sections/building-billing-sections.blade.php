@@ -142,8 +142,8 @@
                     <form wire:submit.prevent="save_add('addModaltoggler')">
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" required wire:model="building_billing_section.name">
+                                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required wire:model="building_billing_section.name" placeholder="Enter billing section name">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -166,8 +166,8 @@
                     <form wire:submit.prevent="save_edit({{$building_billing_section['id']}},'editModaltoggler')">
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" required wire:model="building_billing_section.name">
+                                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required wire:model="building_billing_section.name" placeholder="Enter billing section name">
                             </div>
                         </div>
                         <div class="modal-footer">

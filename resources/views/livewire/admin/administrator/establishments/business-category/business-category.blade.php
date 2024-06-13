@@ -145,8 +145,8 @@
                     <form wire:submit.prevent="save_add('addModaltoggler')">
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Description</label>
-                                <input type="text" class="form-control" required wire:model="business_category.name">
+                                <label for="name" class="form-label">Description <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required wire:model="business_category.name"  placeholder="Enter description">
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
@@ -169,8 +169,8 @@
                     <form wire:submit.prevent="save_edit({{$business_category['id']}},'editModaltoggler')">
                             <div class="modal-body">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Description</label>
-                                <input type="text" class="form-control" required wire:model="business_category.name">
+                                <label for="name" class="form-label">Description <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required wire:model="business_category.name" placeholder="Enter description" >
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
