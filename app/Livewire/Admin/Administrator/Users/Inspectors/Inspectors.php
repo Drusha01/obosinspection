@@ -41,24 +41,11 @@ class Inspectors extends Component
         'contact_number' => NULL,
         'email' => NULL,
         'img_url' => NULL,
+        'signature' => NULL,
         'current_password'=>NULL,
         'password'=>NULL,
         'cpassword'=> NULL,
     ];
-    public function mount(){
-        $city_mun = DB::table('citymun')
-            ->where('citymunDesc','=','GENERAL SANTOS CITY (DADIANGAS)')
-            ->first();
-        $this->brgy = DB::table('brgy')
-            ->where('citymunCode','=',$city_mun->citymunCode)
-            ->get()
-            ->toArray();
-        $this->work_roles = DB::table('work_roles')
-            ->where('id','>',2)
-            ->where('is_active','=',1)
-            ->get()
-            ->toArray();
-    }
     public $activity_logs = [
         'created_by' => NULL,
         'inspector_team_id' => NULL,
@@ -88,8 +75,119 @@ class Inspectors extends Component
             $this->activity_logs['inspector_team_id'] = 0;
         }
     }
+    public $search = [
+        'search'=> NULL,
+        'search_prev'=> NULL,
+    ];
+
+    public $table_filter;
+    public function save_filter(Request $request){
+        $session = $request->session()->all();
+        $table_filter = DB::table('table_filters')
+        ->where('id',$this->table_filter['id'])
+        ->first();
+        if($table_filter){
+            DB::table('table_filters')
+            ->where('id',$this->table_filter['id'])
+            ->update([
+                'table_rows'=>$this->table_filter['table_rows'],
+                'filter'=>json_encode($this->table_filter['filter']),
+            ]);
+            $table_filter = DB::table('table_filters')
+                ->where('id',$this->table_filter['id'])
+                ->first();
+            $temp_filter = [];
+            foreach (json_decode($table_filter->filter) as $key => $value) {
+                array_push($temp_filter,[
+                    'column_name'=>$value->column_name,
+                    'active'=>$value->active,
+                    'name'=>$value->name,
+                ]);
+            }
+            $this->table_filter = [
+                'id'=>$table_filter->id,
+                'path'=>$table_filter->path,
+                'table_rows'=>$table_filter->table_rows,
+                'filter'=>$temp_filter,
+            ];
+        }
+        $this->dispatch('swal:redirect',
+            position         									: 'center',
+            icon              									: 'success',
+            title             									: 'Successfully updated!',
+            showConfirmButton 									: 'true',
+            timer             									: '1000',
+            link              									: '#'
+        );
+    }
+    public function mount(Request $request){
+        $city_mun = DB::table('citymun')
+            ->where('citymunDesc','=','GENERAL SANTOS CITY (DADIANGAS)')
+            ->first();
+        $this->brgy = DB::table('brgy')
+            ->where('citymunCode','=',$city_mun->citymunCode)
+            ->get()
+            ->toArray();
+        $this->work_roles = DB::table('work_roles')
+            ->where('id','>',2)
+            ->where('is_active','=',1)
+            ->get()
+            ->toArray();
+        $session = $request->session()->all();
+        $table_filter = DB::table('table_filters')
+        ->where('user_id',$session['id'])
+        ->where('path','=',$request->path())
+        ->first();
+        if($table_filter){
+            $temp_filter = [];
+            foreach (json_decode($table_filter->filter) as $key => $value) {
+                array_push($temp_filter,[
+                    'column_name'=>$value->column_name,
+                    'active'=>$value->active,
+                    'name'=>$value->name,
+                ]);
+            }
+            $this->table_filter = [
+                'id'=>$table_filter->id,
+                'path'=>$table_filter->path,
+                'table_rows'=>$table_filter->table_rows,
+                'filter'=>$temp_filter,
+            ];
+        }else{
+            DB::table('table_filters')
+            ->insert([
+                'user_id' =>$session['id'],
+                'path' =>$request->path(),
+                'table_rows' =>10,
+                'filter'=> json_encode($this->filter)
+            ]);
+            $table_filter = DB::table('table_filters')
+            ->where('user_id',$session['id'])
+            ->where('path','=',$request->path())
+            ->first();
+            $temp_filter = [];
+            foreach (json_decode($table_filter->filter) as $key => $value) {
+                array_push($temp_filter,[
+                    'column_name'=>$value->column_name,
+                    'active'=>$value->active,
+                    'name'=>$value->name,
+                ]);
+            }
+            $this->table_filter = [
+                'id'=>$table_filter->id,
+                'path'=>$table_filter->path,
+                'table_rows'=>$table_filter->table_rows,
+                'filter'=>$temp_filter,
+            ];
+        }
+    }
     public function render()
     {
+        if($this->search['search'] != $this->search['search_prev']){
+            $this->search['search_prev'] = $this->search['search'];
+            $this->resetPage();
+        }
+            
         $table_data = DB::table('users as u')
             ->select(
                 'u.id as id',
@@ -109,8 +207,9 @@ class Inspectors extends Component
             ->join('person_types as pt', 'pt.id','p.person_type_id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
             ->where('pt.name','=','Inspector')
+            ->where(DB::raw("CONCAT(p.first_name,' ',p.last_name)"),'like',$this->search['search'] .'%')
             ->orderBy('id','desc')
-            ->paginate(10);
+            ->paginate($this->table_filter['table_rows']);
         return view('livewire.admin.administrator.users.inspectors.inspectors',[
             'table_data'=>$table_data
         ])
@@ -171,7 +270,7 @@ class Inspectors extends Component
         return 0;
     }
     public function add($modal_id){
-        $person = [
+        $this->person = [
             'id' => NULL,
             'person_id'=>NULL,
             'person_type_id' => 1,
@@ -185,6 +284,7 @@ class Inspectors extends Component
             'contact_number' => NULL,
             'email' => NULL,
             'img_url' => NULL,
+            'signature' => NULL,
         ];
         $this->dispatch('openModal',$modal_id);
     }
@@ -402,6 +502,15 @@ class Inspectors extends Component
                 }
             } 
         }
+        $person['signature'] = NULL;
+        if($this->person['signature']){
+            if($this->person['signature']){
+                $person['signature'] = self::save_image($this->person['signature'],'signature','persons','signature');
+                if($person['signature'] == 0){
+                    return;
+                }
+            } 
+        }
         if(DB::table('persons')
             ->insert([
                 'person_type_id' => $this->person['person_type_id'],
@@ -414,6 +523,7 @@ class Inspectors extends Component
                 'contact_number' => $this->person['contact_number'],
                 'email' => $this->person['email'],
                 'img_url' => $person['img_url'],
+                'signature' => $person['signature'],
             ])){
             $person_details = DB::table('persons')
                 ->where('email','=',$this->person['email'])
@@ -462,6 +572,7 @@ class Inspectors extends Component
                 'wr.id as work_role_id',
                 'wr.name as work_role_name',
                 'p.img_url',
+                'p.signature',
                 "u.date_created",
                 "u.date_updated",
                 )
@@ -485,6 +596,7 @@ class Inspectors extends Component
                 'email' => $edit->email,
                 'contact_number' => $edit->contact_number,
                 'img_url' => NULL,
+                'signature' => NULL,
                 'current_password'=>NULL,
                 'password'=>NULL,
                 'cpassword'=> NULL,
@@ -507,6 +619,7 @@ class Inspectors extends Component
             'p.email',
             'p.contact_number',
             'p.img_url',
+            'p.signature',
             'r.name as role_name',
             "u.date_created",
             "u.date_updated",
@@ -673,13 +786,18 @@ class Inspectors extends Component
         }
         $person['img_url'] = $edit->img_url;
         if($this->person['img_url']){
-            if($this->person['img_url']){
-                $person['img_url'] = self::save_image($this->person['img_url'],'profile','persons','img_url');
-                if($person['img_url'] == 0){
-                    return;
-                }
-            } 
+            $person['img_url'] = self::save_image($this->person['img_url'],'profile','persons','img_url');
+            if($person['img_url'] == 0){
+                return;
+            }
         }
+        $person['signature'] = $edit->signature;
+        if($this->person['signature']){
+            $person['signature'] = self::save_image($this->person['signature'],'signature','persons','signature');
+            if($person['signature'] == 0){
+                return;
+            }
+        } 
         if(DB::table('persons as p')
             ->where('p.id','=',$id)
             ->update([
@@ -693,6 +811,7 @@ class Inspectors extends Component
                 'contact_number' => $this->person['contact_number'],
                 'email' => $this->person['email'],
                 'img_url' => $person['img_url'],
+                'signature' => $person['signature'],
             ])){
          
             }

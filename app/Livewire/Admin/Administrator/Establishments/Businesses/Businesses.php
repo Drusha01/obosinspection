@@ -238,11 +238,12 @@ class Businesses extends Component
             $this->search['type_prev'] = $this->search['type'];
             if($this->search['type'] == 'b.contact_number'){
                 $this->search['search'] = substr($this->search['search'],1);
-                dd($this->search['search']);
             }
             $this->resetPage();
         }else{
-            $this->search['type'] = $this->search_by[0]['column_name'];
+            if(!$this->search['type']){
+                $this->search['type'] = $this->search_by[0]['column_name'];
+            }
         }
         $table_data = DB::table('businesses as b')
             ->select(
@@ -271,7 +272,7 @@ class Businesses extends Component
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
             ->where($this->search['type'],'like',$this->search['search'] .'%')
             ->orderBy('id','desc')
-            ->paginate(10);
+            ->paginate($this->table_filter['table_rows']);
         return view('livewire.admin.administrator.establishments.businesses.businesses',[
            'table_data'=>$table_data 
         ])

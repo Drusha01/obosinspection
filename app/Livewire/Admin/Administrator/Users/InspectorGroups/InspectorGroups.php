@@ -11,15 +11,13 @@ use Livewire\WithFileUploads;
 
 class InspectorGroups extends Component
 {
+    use WithPagination;
+    use WithFileUploads;
     public $title = "Inspector groups";
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
         ['column_name'=> 'name','active'=> true,'name'=>'Group Name'],
-        ['column_name'=> 'username','active'=> true,'name'=>'Username'],
-        ['column_name'=> 'first_name','active'=> true,'name'=>'Firstname'],
-        ['column_name'=> 'middle_name','active'=> true,'name'=>'Middlename'],
-        ['column_name'=> 'last_name','active'=> true,'name'=>'Lastname'],
-        ['column_name'=> 'work_role_name','active'=> true,'name'=>'Work Role'],
+        ['column_name'=> 'Leader','active'=> true,'name'=>'Team Leader'],
         ['column_name'=> 'id','active'=> true,'name'=>'Members'],
         ['column_name'=> 'id','active'=> true,'name'=>'Designated Barangays'],
         ['column_name'=> 'id','active'=> true,'name'=>'Action'],
@@ -37,9 +35,6 @@ class InspectorGroups extends Component
     public $unassigned_brgy;
     public $members = [];
     public $inspector_members =[];
-    public function mount(){
-        
-    }
     public $activity_logs = [
         'created_by' => NULL,
         'inspector_team_id' => NULL,
@@ -69,8 +64,121 @@ class InspectorGroups extends Component
             $this->activity_logs['inspector_team_id'] = 0;
         }
     }
+    public $search = [
+        'search'=> NULL,
+        'search_prev'=> NULL,
+        'type' => NULL,
+        'type_prev' => NULL,
+    ];
+    public $search_by = [
+        ['name'=>'Team name','column_name'=>'it.name'],
+        ['name'=>'Leader','column_name'=>"CONCAT(p.first_name,' ',p.last_name)"],
+    ];
+
+    public $table_filter;
+    public function save_filter(Request $request){
+        $session = $request->session()->all();
+        $table_filter = DB::table('table_filters')
+        ->where('id',$this->table_filter['id'])
+        ->first();
+        if($table_filter){
+            DB::table('table_filters')
+            ->where('id',$this->table_filter['id'])
+            ->update([
+                'table_rows'=>$this->table_filter['table_rows'],
+                'filter'=>json_encode($this->table_filter['filter']),
+            ]);
+            $table_filter = DB::table('table_filters')
+                ->where('id',$this->table_filter['id'])
+                ->first();
+            $temp_filter = [];
+            foreach (json_decode($table_filter->filter) as $key => $value) {
+                array_push($temp_filter,[
+                    'column_name'=>$value->column_name,
+                    'active'=>$value->active,
+                    'name'=>$value->name,
+                ]);
+            }
+            $this->table_filter = [
+                'id'=>$table_filter->id,
+                'path'=>$table_filter->path,
+                'table_rows'=>$table_filter->table_rows,
+                'filter'=>$temp_filter,
+            ];
+        }
+        $this->dispatch('swal:redirect',
+            position         									: 'center',
+            icon              									: 'success',
+            title             									: 'Successfully updated!',
+            showConfirmButton 									: 'true',
+            timer             									: '1000',
+            link              									: '#'
+        );
+    }
+    public function mount(Request $request){
+        
+        $session = $request->session()->all();
+        $table_filter = DB::table('table_filters')
+        ->where('user_id',$session['id'])
+        ->where('path','=',$request->path())
+        ->first();
+        if($table_filter){
+            $temp_filter = [];
+            foreach (json_decode($table_filter->filter) as $key => $value) {
+                array_push($temp_filter,[
+                    'column_name'=>$value->column_name,
+                    'active'=>$value->active,
+                    'name'=>$value->name,
+                ]);
+            }
+            $this->table_filter = [
+                'id'=>$table_filter->id,
+                'path'=>$table_filter->path,
+                'table_rows'=>$table_filter->table_rows,
+                'filter'=>$temp_filter,
+            ];
+        }else{
+            DB::table('table_filters')
+            ->insert([
+                'user_id' =>$session['id'],
+                'path' =>$request->path(),
+                'table_rows' =>10,
+                'filter'=> json_encode($this->filter)
+            ]);
+            $table_filter = DB::table('table_filters')
+            ->where('user_id',$session['id'])
+            ->where('path','=',$request->path())
+            ->first();
+            $temp_filter = [];
+            foreach (json_decode($table_filter->filter) as $key => $value) {
+                array_push($temp_filter,[
+                    'column_name'=>$value->column_name,
+                    'active'=>$value->active,
+                    'name'=>$value->name,
+                ]);
+            }
+            $this->table_filter = [
+                'id'=>$table_filter->id,
+                'path'=>$table_filter->path,
+                'table_rows'=>$table_filter->table_rows,
+                'filter'=>$temp_filter,
+            ];
+        }
+    }
     public function render()
     {
+        if($this->search['search'] != $this->search['search_prev']){
+            $this->search['search_prev'] = $this->search['search'];
+            $this->resetPage();
+        }
+        if($this->search['type'] != $this->search['type_prev']){
+            $this->search['type_prev'] = $this->search['type'];
+            $this->resetPage();
+        }else{
+            if(!$this->search['type']){
+                $this->search['type'] = $this->search_by[0]['column_name'];
+            }
+        }
         $this->unassigned_inspectors = DB::table('persons as p')
             ->select(
                 "p.id",
@@ -156,8 +264,9 @@ class InspectorGroups extends Component
             ->join('person_types as pt', 'pt.id','p.person_type_id')
             ->join('users as u','u.person_id','p.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
+            ->where(DB::raw($this->search['type']),'like',$this->search['search'] .'%')
             ->orderBy('id','desc')
-            ->paginate(10);
+            ->paginate($this->table_filter['table_rows']);
         return view('livewire.admin.administrator.users.inspector-groups.inspector-groups',[
             'table_data'=>$table_data
         ])
