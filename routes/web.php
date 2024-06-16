@@ -19,6 +19,8 @@ use App\Livewire\Authentication\Disabled as AuthenticationDisabled;
 use App\Livewire\Authentication\Login as AuthenticationLogin;
 use App\Livewire\Authentication\Logout as AuthenticationLogout;
 
+use App\Livewire\Admin\Administrator\Request\Response\Response;
+
 // inspector
 use App\Livewire\Admin\Inspector\ActivityLogs\ActivityLogs as InspectorActivityLogs;
 use App\Livewire\Admin\Inspector\Certifications\Cetification\Certification as InspectorCertification;
@@ -106,7 +108,7 @@ Route::middleware([Unauthenticated::class])->group(function () {
 
 Route::get('/', function () {})->middleware([Authenticated::class,IsValid::class,checkRoles::class])->name('/');
 
-
+    Route::get('/request/{response}/{hash}',Response::class)->name('request-response');
 
 // inspector
 Route::middleware([Authenticated::class,IsValid::class,IsInspector::class])->group(function () {

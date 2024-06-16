@@ -13,7 +13,7 @@ return new class extends Migration
     {
         DB::statement('CREATE TABLE request_business_categories(
             id INT PRIMARY KEY AUTO_INCREMENT,
-        business_category_id INT NOT NULL UNIQUE,
+            business_category_id INT NOT NULL UNIQUE,
             is_active BOOL DEFAULT 1 NOT NULL,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
             date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
