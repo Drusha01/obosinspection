@@ -110,17 +110,15 @@
                                             </a>
                                         </td>
                                     @elseif ($filter_value['name'] == 'E-Signature'  && $filter_value['active'])
-                                        @if(isset($value->{$filter_value['column_name']}))
-                                            <td class="text-center align-middle">
-                                                <a href="{{asset('storage/content/signature/'.$value->{$filter_value['column_name']})}}" target="blank">
-                                                    <img class="img-fluid"src="{{asset('storage/content/signature/'.$value->{$filter_value['column_name']})}}" alt="" style="max-height:50px;max-width:50px; ">
-                                                </a>
-                                            </td>
+                                    <td class="text-center align-middle">
+                                        @if($value->{$filter_value['column_name']})
+                                            <a href="{{asset('storage/content/signature/'.$value->{$filter_value['column_name']})}}" target="blank">
+                                                <img class="img-fluid"src="{{asset('storage/content/signature/'.$value->{$filter_value['column_name']})}}" alt="" style="max-height:50px;max-width:50px; ">
+                                            </a>
                                         @else
-                                            <td class="text-center align-middle">
-                                                No E-Signature
-                                            </td>
+                                            No E-Signature
                                         @endif
+                                        </td>
                                     @else
                                         @if($filter_value['active'])
                                             <td class="align-middle">{{ $value->{$filter_value['column_name']} }}</td>
@@ -321,7 +319,7 @@
                                 <div class="col-lg-8">
                                     <div class="mb-3">
                                         <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" required wire:model="person.username" placeholder="Enter username">
+                                        <input type="text" class="form-control" required  disabled wire:model="person.username" placeholder="Enter username">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">

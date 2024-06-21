@@ -799,7 +799,7 @@ class Inspectors extends Component
             }
         } 
         if(DB::table('persons as p')
-            ->where('p.id','=',$id)
+            ->where('p.id','=', $edit->person_id)
             ->update([
                 'person_type_id' => $this->person['person_type_id'],
                 'brgy_id' => $this->person['brgy_id'],
