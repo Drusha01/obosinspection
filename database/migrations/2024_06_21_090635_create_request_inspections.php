@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement('CREATE TABLE inspection_requests(
+        DB::statement('CREATE TABLE request_inspections(
             id INT PRIMARY KEY AUTO_INCREMENT,
             business_id INT NOT NULL,
             status_id INT NOT NULL,
@@ -19,11 +19,11 @@ return new class extends Migration
             expiration_date DATE NOT NULL,
             accepted_date DATE DEFAULT NULL,
             is_responded BOOL DEFAULT 0,
-            reason DEFAULT NULL,
+            reason VARCHAR(510) DEFAULT NULL,
+            hash VARCHAR(50) UNIQUE NOT NULL,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
             date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         );');
-
     }
 
     /**
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('inspection_requests');
+        Schema::dropIfExists('request_inspections');
     }
 };

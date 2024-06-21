@@ -109,10 +109,10 @@
         <p><?php echo $content ?></p>
 
         <div class="div-link" >
-            <a href="@if($port == 443) https://{{$host_name}}/request/accept/{{$hash}} @else http://{{$host_name}}/request/accept/{{$hash}} @endif" class="button-link" >
+            <a href="@if($port == 443) https://{{$host_name}}/request-response/accept/{{$hash}} @else http://{{$host_name}}/request-response/accept/{{$hash}} @endif" class="button-link" >
                 <button class="button-accept"> Accept</button>
             </a>
-            <a href="@if($port == 443) https://{{$host_name}}/request/accept/{{$hash}} @else http://{{$host_name}}/request/accept/{{$hash}} @endif" class="button-link">
+            <a href="@if($port == 443) https://{{$host_name}}/request-response/decline/{{$hash}} @else http://{{$host_name}}/request-response/decline/{{$hash}} @endif" class="button-link">
                 <button class="button-reject" > Decline</button>
             </a>
         </div>

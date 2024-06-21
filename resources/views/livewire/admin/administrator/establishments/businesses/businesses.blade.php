@@ -6,6 +6,12 @@
                     <h1 class="h3 mb-0 text-gray-800">{{$title}}</h1>
                 </div>
                 <div class="col-2">
+                        <label for="business_search">Filter Barangay</label>
+                        <select name="" id=""  class="form-select">
+                            <option value="">Select Barangay</option>
+                        </select>
+                </div>
+                <div class="col-2">
                     <div class=" d-flex ">
                         <span for="rows" class="align-middle mt-2">Show</span>
                         <select name="" id="rows" class="form-select text-center"  style="min:width:40px;" wire:change="save_filter()" wire:model.defer="table_filter.table_rows" >

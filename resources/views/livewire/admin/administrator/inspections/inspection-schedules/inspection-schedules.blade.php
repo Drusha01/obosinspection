@@ -4,7 +4,7 @@
             <div class="d-sm-flex align-items-center justify-content-between mt-4 mb-4">
                 <h1 class="h3 mb-0 text-gray-800">{{$title}}</h1>
                 <div class="p-0 m-0"  >
-                    <button type="button" class="btn btn-outline-primary" wire:click="add('addModaltoggler')">
+                    <button type="button" class="btn btn-outline-primary" wire:click="add_from_request('addModaltoggler')">
                         Add From Request
                     </button>
                     <button type="button" class="btn btn-primary" wire:click="add('addModaltoggler')">
@@ -97,7 +97,7 @@
             
 
             <div wire:ignore.self class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="addModalLabel">Add Inspection Schedule</h5>
@@ -109,6 +109,23 @@
                             </div>
                             @if($inspection['step'] == 1)
                             <div >
+                                <h5 class="text-center my-2 text-black">
+                                    Inspection Details
+                                </h5>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <label for="business_search">Search Business</label>
+                                        <input type="text" name="" id="business_search" class="form-control" wire:model.live.debounce.500ms="search.search"placeholder="Search business ... ">
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div>
+                                            <label for="business_search">Filter Barangay</label>
+                                            <select name="" id=""  class="form-select">
+                                                <option value="">Select Barangay</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Business Name</label>
                                     <div class="mb-3">
@@ -127,6 +144,9 @@
                             </div>
                             @elseif($inspection['step'] == 2)
                             <div>
+                                <h5 class="text-center my-2 text-black">
+                                    Team Leaders
+                                </h5>
                                 <div class="input-group mb-3">
                                     <select class="form-select" id="teamLeaderSelect" wire:model.live="inspection.inspector_leader_id">
                                         <option value="">Select Team Leader</option>
@@ -162,6 +182,10 @@
                             </div>
                             @elseif($inspection['step'] == 3)
                             <div>
+                                <h5 class="text-center my-2 text-black">
+                                    Team Members
+                                </h5>
+                            
                                 <div class="input-group mb-3">
                                     <select class="form-select" id="teamLeaderSelect" wire:model.live="inspection.inspector_member_id">
                                         <option value="">Select Team Member</option>

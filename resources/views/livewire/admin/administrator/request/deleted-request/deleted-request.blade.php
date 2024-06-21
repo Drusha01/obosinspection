@@ -75,6 +75,8 @@
                                         <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                     @elseif($filter_value['name'] == 'Request Range' && $filter_value['active'])
                                         <th scope="col" class="text-center">{{$filter_value['name']}}</th>
+                                    @elseif($filter_value['name'] == 'Response Date' && $filter_value['active'])
+                                        <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                     @else 
                                         <th scope="col">{{$filter_value['name']}}</th>
                                     @endif
@@ -98,6 +100,10 @@
                                         <td class="align-middle text-center">
                                             {{date_format(date_create($value->request_date),"M d, Y")}} - {{date_format(date_create($value->expiration_date),"M d, Y") }}
                                         </td>
+                                    @elseif($filter_value['name'] == 'Response Date' && $filter_value['active'])
+                                        <td class="align-middle text-center">
+                                            {{date_format(date_create($value->request_date),"M d, Y")}} - {{date_format(date_create($value->expiration_date),"M d, Y") }}
+                                        </td>
                                     @else
                                         @if($filter_value['active'])
                                             <td class="align-middle">{{ $value->{$filter_value['column_name']} }}</td>
@@ -116,6 +122,8 @@
             <div class="container d-flex justify-content-center">
                 {{$table_data->links()}}
             </div>
+
+
         </div>    
     </div>
 </div>

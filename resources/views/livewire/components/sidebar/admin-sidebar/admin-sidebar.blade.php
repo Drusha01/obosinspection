@@ -162,16 +162,22 @@
                                 <span>Accepted Request</span>
                             </a>
                         </li>
-                        <li class="nav-item @if(Route::is('administrator-request-rejected-request')) active @endif">
-                            <a class="nav-link" href="{{ route('administrator-request-rejected-request') }}">
+                        <li class="nav-item @if(Route::is('administrator-request-declined-request')) active @endif">
+                            <a class="nav-link" href="{{ route('administrator-request-declined-request') }}">
                                 <i class="bi bi-file-earmark-x"></i>
-                                <span>Rejected Request</span>
+                                <span>Declined Request</span>
                             </a>
                         </li>
                         <li class="nav-item @if(Route::is('administrator-request-no-response-request')) active @endif" >
                             <a class="nav-link" href="{{ route('administrator-request-no-response-request') }}">
                                 <i class="bi bi-question-square"></i>
                                 <span>No Response Request</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @if(Route::is('administrator-request-deleted-request')) active @endif">
+                            <a class="nav-link" href="{{ route('administrator-request-deleted-request') }}">
+                                <i class="bi bi-folder-x"></i>
+                                <span>Deleted Request</span>
                             </a>
                         </li>
                     </ul>

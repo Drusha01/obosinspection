@@ -68,11 +68,13 @@ class InspectionSchedules extends Component
         'violations'  =>[],
     ];
     public function mount(){
-        $this->businesses = DB::table('businesses as b')
+        $this->businesses =DB::table('request_business_categories as rbc')
             ->select(
+                'rbc.id as rbc_id',
                 'b.id',
                 'b.img_url',
                 'b.name',
+                'b.business_category_id',
                 'p.first_name',
                 'p.middle_name',
                 'p.last_name',
@@ -84,13 +86,14 @@ class InspectionSchedules extends Component
                 'b.email',
                 'b.floor_area',
                 'b.signage_area',
-                'b.is_active'
-
+                'b.is_active',
             )
+            ->rightjoin('businesses as b','b.business_category_id','rbc.business_category_id')
             ->join('persons as p','p.id','b.owner_id')
             ->join('brgy as brg','brg.id','b.brgy_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+            ->whereNull('rbc.id')
             ->where('b.is_active','=',1)
             ->get()
             ->toArray();
@@ -217,58 +220,188 @@ class InspectionSchedules extends Component
             'title'=>$this->title]);
     }
     public function add($modal_id){
+        $this->businesses = DB::table('request_business_categories as rbc')
+            ->select(
+                'rbc.id as rbc_id',
+                'b.id',
+                'b.img_url',
+                'b.name',
+                'b.business_category_id',
+                'p.first_name',
+                'p.middle_name',
+                'p.last_name',
+                'p.suffix',
+                'brg.brgyDesc as barangay',
+                'bt.name as business_type_name',
+                'oc.character_of_occupancy as occupancy_classification_name',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'b.is_active',
+            )
+            ->rightjoin('businesses as b','b.business_category_id','rbc.business_category_id')
+            ->join('persons as p','p.id','b.owner_id')
+            ->join('brgy as brg','brg.id','b.brgy_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+            ->whereNull('rbc.id')
+            ->where('b.is_active','=',1)
+            ->get()
+            ->toArray();
         $this->inspector_members = DB::table('persons as p')
-        ->select(
-            "p.id",
-            "p.person_type_id",
-            "p.brgy_id",
-            "p.work_role_id",
-            "p.first_name",
-            "p.middle_name",
-            "p.last_name",
-            "p.suffix",
-            "p.contact_number",
-            "p.email",
-            "p.img_url",
-            'wr.name as work_role_name',
-            'iit.name as inspector_team',
-        )
-        ->leftjoin('inspector_members as im','p.id','im.member_id')
-        ->leftjoin('inspector_teams as iit','iit.id','im.inspector_team_id')
-        ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
-        ->join('person_types as pt','p.person_type_id','pt.id')
-        ->join('work_roles as wr', 'wr.id','p.work_role_id')
-        ->join('users as u','u.person_id','p.id')
-        ->where('u.is_active',1)
-        ->whereNull('it.team_leader_id')
-        ->where('pt.name','Inspector')
-        ->get()
-        ->toArray();
-    $this->inspector_leaders = DB::table('persons as p')
-        ->select(
-            "p.id",
-            "p.person_type_id",
-            "p.brgy_id",
-            "p.work_role_id",
-            "p.first_name",
-            "p.middle_name",
-            "p.last_name",
-            "p.suffix",
-            "p.contact_number",
-            "p.email",
-            "p.img_url",
-            'wr.name as work_role_name',
-            'it.name as inspector_team',
-        )
-        ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
-        ->join('person_types as pt','p.person_type_id','pt.id')
-        ->join('work_roles as wr', 'wr.id','p.work_role_id')
-        ->join('users as u','u.person_id','p.id')
-        ->where('u.is_active',1)
-        ->whereNotNull('it.team_leader_id')
-        ->where('pt.name','Inspector')
-        ->get()
-        ->toArray();
+            ->select(
+                "p.id",
+                "p.person_type_id",
+                "p.brgy_id",
+                "p.work_role_id",
+                "p.first_name",
+                "p.middle_name",
+                "p.last_name",
+                "p.suffix",
+                "p.contact_number",
+                "p.email",
+                "p.img_url",
+                'wr.name as work_role_name',
+                'iit.name as inspector_team',
+            )
+            ->leftjoin('inspector_members as im','p.id','im.member_id')
+            ->leftjoin('inspector_teams as iit','iit.id','im.inspector_team_id')
+            ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
+            ->join('person_types as pt','p.person_type_id','pt.id')
+            ->join('work_roles as wr', 'wr.id','p.work_role_id')
+            ->join('users as u','u.person_id','p.id')
+            ->where('u.is_active',1)
+            ->whereNull('it.team_leader_id')
+            ->where('pt.name','Inspector')
+            ->get()
+            ->toArray();
+        $this->inspector_leaders = DB::table('persons as p')
+            ->select(
+                "p.id",
+                "p.person_type_id",
+                "p.brgy_id",
+                "p.work_role_id",
+                "p.first_name",
+                "p.middle_name",
+                "p.last_name",
+                "p.suffix",
+                "p.contact_number",
+                "p.email",
+                "p.img_url",
+                'wr.name as work_role_name',
+                'it.name as inspector_team',
+            )
+            ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
+            ->join('person_types as pt','p.person_type_id','pt.id')
+            ->join('work_roles as wr', 'wr.id','p.work_role_id')
+            ->join('users as u','u.person_id','p.id')
+            ->where('u.is_active',1)
+            ->whereNotNull('it.team_leader_id')
+            ->where('pt.name','Inspector')
+            ->get()
+            ->toArray();
+        $this->inspection = [
+            'id'=>NULL,
+            'inspector_leaders' =>[],
+            'inspector_leader_id'=>NULL,
+            'inspector_members' => [],
+            'inspector_member_id'=>NULL,
+            'business_id' =>NULL,
+            'schedule_date'=>date_format(date_create(now()),"Y-m-d"),
+            'step'=> 1,
+        ];
+        $this->dispatch('openModal',$modal_id);
+    }
+    public function add_from_request($modal_id){
+        $this->businesses = DB::table('request_inspections as ri')
+            ->select(
+                'ri.id',
+                'b.img_url',
+                'b.name',
+                'b.business_category_id',
+                'p.first_name',
+                'p.middle_name',
+                'p.last_name',
+                'p.suffix',
+                'brg.brgyDesc as barangay',
+                'bt.name as business_type_name',
+                'oc.character_of_occupancy as occupancy_classification_name',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'b.is_active',
+                'rs.name as status_name',
+                'ri.request_date',
+                'ri.expiration_date',
+                'ri.accepted_date',
+                'ri.reason',
+                'brg.brgyDesc as barangay',
+            )
+            ->join('request_status as rs','rs.id','ri.status_id')
+            ->join('businesses as b','b.id','ri.business_id')
+            ->join('persons as p','p.id','b.owner_id')
+            ->join('brgy as brg','brg.id','b.brgy_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+            ->where('rs.name','=','Accepted')
+            ->orderBy('ri.id','desc')
+            ->get()
+            ->toArray();
+            // dd($this->businesses );
+            $this->inspector_members = DB::table('persons as p')
+            ->select(
+                "p.id",
+                "p.person_type_id",
+                "p.brgy_id",
+                "p.work_role_id",
+                "p.first_name",
+                "p.middle_name",
+                "p.last_name",
+                "p.suffix",
+                "p.contact_number",
+                "p.email",
+                "p.img_url",
+                'wr.name as work_role_name',
+                'iit.name as inspector_team',
+            )
+            ->leftjoin('inspector_members as im','p.id','im.member_id')
+            ->leftjoin('inspector_teams as iit','iit.id','im.inspector_team_id')
+            ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
+            ->join('person_types as pt','p.person_type_id','pt.id')
+            ->join('work_roles as wr', 'wr.id','p.work_role_id')
+            ->join('users as u','u.person_id','p.id')
+            ->where('u.is_active',1)
+            ->whereNull('it.team_leader_id')
+            ->where('pt.name','Inspector')
+            ->get()
+            ->toArray();
+        $this->inspector_leaders = DB::table('persons as p')
+            ->select(
+                "p.id",
+                "p.person_type_id",
+                "p.brgy_id",
+                "p.work_role_id",
+                "p.first_name",
+                "p.middle_name",
+                "p.last_name",
+                "p.suffix",
+                "p.contact_number",
+                "p.email",
+                "p.img_url",
+                'wr.name as work_role_name',
+                'it.name as inspector_team',
+            )
+            ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
+            ->join('person_types as pt','p.person_type_id','pt.id')
+            ->join('work_roles as wr', 'wr.id','p.work_role_id')
+            ->join('users as u','u.person_id','p.id')
+            ->where('u.is_active',1)
+            ->whereNotNull('it.team_leader_id')
+            ->where('pt.name','Inspector')
+            ->get()
+            ->toArray();
         $this->inspection = [
             'id'=>NULL,
             'inspector_leaders' =>[],

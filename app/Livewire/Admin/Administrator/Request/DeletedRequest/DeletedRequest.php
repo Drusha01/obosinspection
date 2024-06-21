@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Admin\Administrator\Request\AcceptedRequest;
+namespace App\Livewire\Admin\Administrator\Request\DeletedRequest;
 
 use Livewire\Component;
 use Illuminate\Http\Request;
@@ -9,17 +9,16 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 
-class AcceptedRequest extends Component
+class DeletedRequest extends Component
 {
-    public $title = "Accepted Requests";
+    use WithPagination;
+    use WithFileUploads;
+    public $title = "Deleted Requests";
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
         ['column_name'=> 'business_name','active'=> true,'name'=>'Business Name'],
-        ['column_name'=> 'barangay','active'=> true,'name'=>'Barangay'],
         ['column_name'=> 'status_name','active'=> true,'name'=>'Status'],
         ['column_name'=> 'request_date','active'=> true,'name'=>'Request Range'],
-        ['column_name'=> 'accepted_date','active'=> true,'name'=>'Response Date'],
-        ['column_name'=> 'id','active'=> true,'name'=>'Action'],
     ];
     
     public $activity_logs = [
@@ -30,16 +29,6 @@ class AcceptedRequest extends Component
     public $search = [
         'search'=> NULL,
         'search_prev'=> NULL,
-    ];
-    public $request  = [
-        'id' =>NULL,
-        'business_id' =>NULL,
-        'status_id' =>NULL,
-        'request_date' =>NULL,
-        'expiration_date' =>NULL,
-        'accepted_date' =>NULL,
-        'is_responded' =>NULL,
-        'reason' =>NULL,
     ];
     public function boot(Request $request){
         $session = $request->session()->all();
@@ -155,7 +144,6 @@ class AcceptedRequest extends Component
             ];
         }
     }
-
     public function render()
     {
         if($this->search['search'] != $this->search['search_prev']){
@@ -193,10 +181,11 @@ class AcceptedRequest extends Component
             ->join('brgy as brg','brg.id','b.brgy_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-            ->where('rs.name','=','Accepted')
+            ->where('rs.name','=','Deleted')
             ->orderBy('ri.id','desc')
             ->paginate($this->table_filter['table_rows']);
-        return view('livewire.admin.administrator.request.accepted-request.accepted-request',[
+        
+        return view('livewire.admin.administrator.request.deleted-request.deleted-request',[
             'table_data'=>$table_data
         ])
         ->layout('components.layouts.admin',[

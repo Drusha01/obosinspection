@@ -98,6 +98,13 @@
                                         <td class="align-middle text-center">
                                             {{date_format(date_create($value->request_date),"M d, Y")}} - {{date_format(date_create($value->expiration_date),"M d, Y") }}
                                         </td>
+                                    @elseif($filter_value['name'] == 'Reason' && $filter_value['active'])
+                                        <td class="align-middle">
+                                            <span class="d-inline-block text-truncate" style="max-height: 200px;max-width: 500px;">
+                                                {{ $value->{$filter_value['column_name']} }}
+                                            </span>
+                                        </td>
+
                                     @else
                                         @if($filter_value['active'])
                                             <td class="align-middle">{{ $value->{$filter_value['column_name']} }}</td>

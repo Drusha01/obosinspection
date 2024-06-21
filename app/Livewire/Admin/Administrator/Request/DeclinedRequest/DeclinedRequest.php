@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Admin\Administrator\Request\AcceptedRequest;
+namespace App\Livewire\Admin\Administrator\Request\DeclinedRequest;
 
 use Livewire\Component;
 use Illuminate\Http\Request;
@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 
-class AcceptedRequest extends Component
+class DeclinedRequest extends Component
 {
-    public $title = "Accepted Requests";
+    public $title = "Declined Requests";
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
         ['column_name'=> 'business_name','active'=> true,'name'=>'Business Name'],
@@ -19,6 +19,7 @@ class AcceptedRequest extends Component
         ['column_name'=> 'status_name','active'=> true,'name'=>'Status'],
         ['column_name'=> 'request_date','active'=> true,'name'=>'Request Range'],
         ['column_name'=> 'accepted_date','active'=> true,'name'=>'Response Date'],
+        ['column_name'=> 'reason','active'=> true,'name'=>'Reason'],
         ['column_name'=> 'id','active'=> true,'name'=>'Action'],
     ];
     
@@ -183,8 +184,8 @@ class AcceptedRequest extends Component
                 'rs.name as status_name',
                 'ri.request_date',
                 'ri.expiration_date',
-                'ri.accepted_date',
                 'ri.reason',
+                'ri.accepted_date',
                 'brg.brgyDesc as barangay',
             )
             ->join('request_status as rs','rs.id','ri.status_id')
@@ -193,10 +194,10 @@ class AcceptedRequest extends Component
             ->join('brgy as brg','brg.id','b.brgy_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-            ->where('rs.name','=','Accepted')
+            ->where('rs.name','=','Declined')
             ->orderBy('ri.id','desc')
             ->paginate($this->table_filter['table_rows']);
-        return view('livewire.admin.administrator.request.accepted-request.accepted-request',[
+        return view('livewire.admin.administrator.request.declined-request.declined-request',[
             'table_data'=>$table_data
         ])
         ->layout('components.layouts.admin',[

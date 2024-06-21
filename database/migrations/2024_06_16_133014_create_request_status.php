@@ -31,7 +31,13 @@ return new class extends Migration
         );');
         DB::statement('INSERT INTO request_status VALUES(
             NULL,
-            "Rejected",
+            "Declined",
+            NOW(),
+            NOW()
+        );');
+        DB::statement('INSERT INTO request_status VALUES(
+            NULL,
+            "Deleted",
             NOW(),
             NOW()
         );');

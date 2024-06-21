@@ -51,6 +51,11 @@
                                                 Generate Certificate
                                             </a>
                                         </td>
+                                        <td class="text-center align-middle">
+                                            <a class="btn btn-outline-primary my-1" target="_blank" href="/administrator/certifications/generate/reportdsavdkafjlsk">
+                                                Generate Report
+                                            </a>
+                                        </td>
                                     @elseif($filter_value['name'] == 'Inspection Details' && $filter_value['active'])
                                         <td class="text-center align-middle">
                                             <button class="btn btn-primary" wire:click="issue({{$value->id}},'issueModaltoggler')">

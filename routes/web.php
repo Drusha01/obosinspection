@@ -81,9 +81,10 @@ use App\Livewire\Admin\Administrator\Inspections\InspectionSchedules\InspectionS
 use App\Livewire\Admin\Administrator\Inspections\OngoingInspections\OngoingInspections as AdministratorOngoingInspections;
 use App\Livewire\Admin\Administrator\Profile\Profile as AdministratorProfile;
 use App\Livewire\Admin\Administrator\Request\AcceptedRequest\AcceptedRequest as AdministratorAcceptedRequest;
+use App\Livewire\Admin\Administrator\Request\DeletedRequest\DeletedRequest as AdministratorDeletedRequest;
 use App\Livewire\Admin\Administrator\Request\GenerateRequest\GenerateRequest as AdministratorGenerateRequest;
 use App\Livewire\Admin\Administrator\Request\NoresponseRequest\NoresponseRequest as AdministratorNoresponseRequest;
-use App\Livewire\Admin\Administrator\Request\RejectedRequest\RejectedRequest as AdministratorRejectedRequest;
+use App\Livewire\Admin\Administrator\Request\DeclinedRequest\DeclinedRequest as AdministratorDeclinedRequest;
 use App\Livewire\Admin\Administrator\Users\Administrator\Administrator as AdministratorAdministrator;
 use App\Livewire\Admin\Administrator\Users\InspectorGroups\InspectorGroups as AdministratorInspectorGroups;
 use App\Livewire\Admin\Administrator\Users\Inspectors\Inspectors as AdministratorInspectors;
@@ -108,7 +109,7 @@ Route::middleware([Unauthenticated::class])->group(function () {
 
 Route::get('/', function () {})->middleware([Authenticated::class,IsValid::class,checkRoles::class])->name('/');
 
-    Route::get('/request/{response}/{hash}',Response::class)->name('request-response');
+    Route::get('/request-response/{response}/{hash}',Response::class)->name('request-response');
 
 // inspector
 Route::middleware([Authenticated::class,IsValid::class,IsInspector::class])->group(function () {
@@ -194,7 +195,9 @@ Route::middleware([Authenticated::class,IsValid::class,IsAdministrator::class])-
             Route::get('/accepted-request', AdministratorAcceptedRequest::class)->name('administrator-request-accepted-request');
             Route::get('/generate-request', AdministratorGenerateRequest::class)->name('administrator-request-generate-request');
             Route::get('/no-response-request', AdministratorNoresponseRequest::class)->name('administrator-request-no-response-request');
-            Route::get('/rejected-request', AdministratorRejectedRequest::class)->name('administrator-request-rejected-request');
+            Route::get('/declined-request', AdministratorDeclinedRequest::class)->name('administrator-request-declined-request');
+            Route::get('/deleted-request', AdministratorDeletedRequest::class)->name('administrator-request-deleted-request');
+            
         });
         Route::prefix('users')->group(function () {
             Route::get('/administrators', AdministratorAdministrator::class)->name('administrator-users-administrators');
