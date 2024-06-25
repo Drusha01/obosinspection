@@ -16,6 +16,14 @@ class Inspectors extends Component
     public $title = "Inspectors";
     public $brgy;
     public $work_roles;
+    public $categories = [];
+    public $inspector_category = [];
+    public $temp_inspector_category = [];
+    public $category_role = [
+        'id' => NULL,
+        'person_id' => NULL,
+        'category_id' => NULL,
+    ];
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
         ['column_name'=> 'img_url','active'=> true,'name'=>'Image'],
@@ -25,6 +33,7 @@ class Inspectors extends Component
         ['column_name'=> 'middle_name','active'=> true,'name'=>'Middlename'],
         ['column_name'=> 'last_name','active'=> true,'name'=>'Lastname'],
         ['column_name'=> 'work_role_name','active'=> true,'name'=>'Work Role'],
+        ['column_name'=> 'category_role','active'=> true,'name'=>'Category Role'],
         ['column_name'=> 'id','active'=> true,'name'=>'Action'],
     ];
     public $person = [
@@ -193,6 +202,7 @@ class Inspectors extends Component
                 'u.id as id',
                 'u.username',
                 'u.is_active',
+                'p.id as person_id',
                 'p.first_name',
                 'p.middle_name',
                 'p.last_name',
@@ -286,6 +296,16 @@ class Inspectors extends Component
             'img_url' => NULL,
             'signature' => NULL,
         ];
+        $this->category_role = [
+            'id' => NULL,
+            'person_id' => NULL,
+            'category_id' => NULL,
+        ];
+        $this->categories = DB::table('categories')
+            ->where('is_active','=',1)
+            ->get()
+            ->toArray();
+        $this->temp_inspector_category = [];
         $this->dispatch('openModal',$modal_id);
     }
     public function save_add($modal_id){
@@ -529,6 +549,13 @@ class Inspectors extends Component
                 ->where('email','=',$this->person['email'])
                 ->first();
 
+            foreach ($this->temp_inspector_category as $key => $value) {
+                DB::table('inspector_category')
+                    ->insert([
+                        'person_id' =>  $person_details->id,
+                        'category_id' =>  $value->id,
+                    ]);
+            }
             DB::table('users')
                 ->insert([
                     'username'=> $this->person['username'],
@@ -974,5 +1001,100 @@ class Inspectors extends Component
             ]);
             $this->dispatch('openModal',$modal_id);
         }
+    }
+    public function view_category_role($id,$modal_id){
+        $this->category_role = [
+            'id' => NULL,
+            'person_id' => $id,
+            'category_id' => NULL,
+        ];
+        $this->inspector_category = DB::table('inspector_category as ic')
+            ->select(
+                'ic.id',
+                'c.name',
+            )
+            ->join('categories as c','c.id','ic.category_id')
+            ->where('person_id','=',$id)
+            ->get()
+            ->toArray(); 
+        $this->categories = DB::table('categories')
+            ->where('is_active','=',1)
+            ->get()
+            ->toArray();
+        $this->dispatch('openModal',$modal_id);
+    }
+    public function add_category_role(){
+        if(intval($this->category_role['category_id'])){
+            $category_role = DB::table('inspector_category')
+                ->where('category_id','=',$this->category_role['category_id'])
+                ->where('person_id','=',$this->category_role['person_id'])
+                ->first();
+            if($category_role){
+
+            }else{
+                DB::table('inspector_category')
+                ->insert([
+                    'person_id' => $this->category_role['person_id'],
+                    'category_id' => $this->category_role['category_id'],
+                ]);
+                $this->inspector_category = DB::table('inspector_category as ic')
+                    ->select(
+                        'ic.id',
+                        'c.name',
+                    )
+                    ->join('categories as c','c.id','ic.category_id')
+                    ->where('person_id','=',$this->category_role['person_id'])
+                    ->get()
+                    ->toArray(); 
+                $this->categories = DB::table('categories')
+                    ->where('is_active','=',1)
+                    ->get()
+                    ->toArray();
+            }
+        }
+    }
+    public function delete_category_role($id){
+        if(DB::table('inspector_category')
+            ->where('id','=',$id)
+            ->delete()   
+        ){
+            $this->inspector_category = DB::table('inspector_category as ic')
+                ->select(
+                    'ic.id',
+                    'c.name',
+                )
+                ->join('categories as c','c.id','ic.category_id')
+                ->where('person_id','=',$this->category_role['person_id'])
+                ->get()
+                ->toArray(); 
+            $this->categories = DB::table('categories')
+                ->where('is_active','=',1)
+                ->get()
+                ->toArray();
+        }
+    }
+    public function add_temp_category(){
+        $valid = true;
+        foreach ($this->temp_inspector_category as $key => $value) {
+            if($this->category_role['category_id'] == $value->id){
+                $valid = false;
+            }
+        }
+        if($valid){
+            $category = DB::table('categories')
+            ->where('is_active','=',1)
+            ->where('id','=',$this->category_role['category_id'])
+            ->first();
+            array_push($this->temp_inspector_category,$category);
+        }
+    }
+    public function delete_temp_category($id){
+        $temp = [];
+        foreach ($this->temp_inspector_category as $key => $value) {
+            if($id != $value->id){
+                array_push($temp,$value);
+            }
+        }
+        $this->temp_inspector_category = $temp;
     }
 }

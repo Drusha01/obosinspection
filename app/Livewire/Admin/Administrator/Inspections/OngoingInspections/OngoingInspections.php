@@ -51,6 +51,7 @@ class OngoingInspections extends Component
         'step'=> 1,
         'item_id'=> NULL,
         'sanitary_billing_id'=> NULL,
+        'segragated'=> true,
 
         'inspection_business_name' => NULL,
         'inspection_items' =>[],
@@ -149,7 +150,9 @@ class OngoingInspections extends Component
         'inspector_team_id' => NULL,
         'log_details' => NULL,
     ];
-    public $user_details = [
+    public $user = [
+        'person_id'=> NULL,
+        'user_id' => NULL,
         'work_role' => NULL,
     ];
     public function boot(Request $request){
@@ -162,10 +165,14 @@ class OngoingInspections extends Component
                 'im.inspector_team_id',
                 'it.team_leader_id',
                 'it.id',
+                'u.person_id',
+                'u.id',
+                'wr.name as work_role_name',
                 )
             ->join('persons as p','p.id','u.person_id')
             ->leftjoin('inspector_members as im','im.member_id','p.id')
             ->leftjoin('inspector_teams as it','it.team_leader_id','p.id')
+            ->leftjoin('work_roles as wr','wr.id','p.work_role_id')
             ->where('u.id','=',$session['id'])
             ->first();
         if($user_details->member_id){
@@ -175,6 +182,11 @@ class OngoingInspections extends Component
         }else{
             $this->activity_logs['inspector_team_id'] = 0;
         }
+        $this->user = [
+            'person_id'=> $user_details->person_id,
+            'user_id' => $user_details->id,
+            'work_role' => $user_details->work_role_name,
+        ];
     }
     public function render()
     {
@@ -463,10 +475,32 @@ class OngoingInspections extends Component
             ->get()
             ->toArray();
            
-        $violations = DB::table('violations')
-            ->where('is_active','=',1)
-            ->get()
-            ->toArray();
+        if($this->issue_inspection['segratated']){
+            $violations = DB::table('violations as v')
+                ->select(
+                    'v.id',
+                    'description',
+                    'c.name as category_name',
+                    'v.is_active'
+                )
+                ->join('categories as c','v.category_id','c.id')
+                ->where('v.is_active','=',1)
+                ->get()
+                ->toArray();
+        }else{
+            $violations = DB::table('violations as v')
+                ->select(
+                    'v.id',
+                    'description',
+                    'c.name as category_name',
+                    'v.is_active'
+                )
+                ->join('categories as c','v.category_id','c.id')
+                ->where('v.is_active','=',1)
+                ->get()
+                ->toArray();
+        }
+        
 
         $inspection = DB::table('inspections as i')
             ->select(
@@ -630,10 +664,14 @@ class OngoingInspections extends Component
         $inspection_violations = DB::table('inspection_violations as iv')
             ->select(
                 'iv.id',
-                'description'
+                'v.id as violation_id',
+                'description',
+                'c.name as category_name',
+                'v.is_active'
             )
             ->join('violations as v','v.id','iv.violation_id')
-            ->where('inspection_id','=',$id)
+            ->join('categories as c','v.category_id','c.id')
+            ->where('iv.inspection_id','=',$id)
             ->get()
             ->toArray();
         $temp = [];
@@ -653,6 +691,7 @@ class OngoingInspections extends Component
         foreach ($inspection_violations as $key => $value) {
             array_push($temp,[
                 'description'=> $value->description,
+                'category_name'=> $value->category_name,
                 "id" => $value->id,
             ]);
         }
@@ -1260,6 +1299,7 @@ class OngoingInspections extends Component
                 DB::table('inspection_violations')
                 ->insert([
                     'violation_id' =>$this->issue_inspection['violation_id'],
+                    'added_By' =>$this->user['person_id'],
                     'inspection_id'=>$this->issue_inspection['id']
                 ]);
 

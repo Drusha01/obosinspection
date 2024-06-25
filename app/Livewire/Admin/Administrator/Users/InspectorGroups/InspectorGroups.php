@@ -26,6 +26,7 @@ class InspectorGroups extends Component
         'id'=>NULL,
         'name'=>NULL,
         'team_leader_id'=>NULL,
+        'team_leader'=>NULL,
         'is_active'=>NULL,
     ];
     public $unassigned_inspectors;
@@ -34,6 +35,7 @@ class InspectorGroups extends Component
     public $brgy = []; 
     public $unassigned_brgy;
     public $members = [];
+    public $temp_members = [];
     public $inspector_members =[];
     public $activity_logs = [
         'created_by' => NULL,
@@ -192,7 +194,9 @@ class InspectorGroups extends Component
                 "p.contact_number",
                 "p.email",
                 "p.img_url",
-            )
+                'wr.name as work_role_name',
+                )
+            ->join('work_roles as wr', 'wr.id','p.work_role_id')
             ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->leftjoin('inspector_members as im','p.id','im.member_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
@@ -239,8 +243,10 @@ class InspectorGroups extends Component
                 "p.contact_number",
                 "p.email",
                 "p.img_url",
-                'it.team_leader_id'
-            )
+                'it.team_leader_id',
+                'wr.name as work_role_name',
+                )
+            ->join('work_roles as wr', 'wr.id','p.work_role_id')
             ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
             ->where('pt.name','Inspector')
@@ -280,6 +286,7 @@ class InspectorGroups extends Component
             'team_leader_id'=>NULL,
             'is_active'=>NULL,
         ];
+        $this->temp_members = [];
         $this->dispatch('openModal',$modal_id);  
     }
     public function save_add($modal_id){
@@ -326,6 +333,18 @@ class InspectorGroups extends Component
                 'team_leader_id'=>$this->inspector_team['team_leader_id'],
         ])
         ){
+            $inspector_team = DB::table('inspector_teams')
+                ->where('team_leader_id','=',$this->inspector_team['team_leader_id'])
+                ->orderBy('id','desc')
+                ->first();
+            foreach ($this->temp_members as $key => $value) {
+                DB::table('inspector_members')
+                ->insert([
+                    'inspector_team_id'=>$inspector_team->id,
+                    'member_id'=> $value->id
+                ]);
+            }
+           
             $this->dispatch('swal:redirect',
                 position         									: 'center',
                 icon              									: 'success',
@@ -362,14 +381,34 @@ class InspectorGroups extends Component
         ->join('work_roles as wr', 'wr.id','p.work_role_id')
         ->where('it.id','=',$id)
         ->first()){
+            $this->members = DB::table('inspector_members as im')
+            ->select(
+                'im.id',
+                'im.member_id',
+                'p.first_name',
+                'p.middle_name',
+                'p.last_name',
+                'p.suffix',
+                'wr.id as work_role_id',
+                'wr.name as work_role_name',
+                )
+            ->join('persons as p','p.id','im.member_id')
+            ->join('person_types as pt', 'pt.id','p.person_type_id')
+            ->join('work_roles as wr', 'wr.id','p.work_role_id')
+            ->where('im.inspector_team_id','=',$id)
+            ->get()
+            ->toArray();
             $this->inspector_team = [
                 'id'=>$edit->id,
                 'name'=>$edit->name,
                 'team_leader_id'=>$edit->team_leader_id,
+                'team_leader'=>$edit,
+                'member_id'=>NULL,
                 'is_active'=>$edit->is_active,
             ];
             $this->dispatch('openModal',$modal_id);  
         }
+       
     }
     public function save_edit($id,$modal_id){
         if(!strlen($this->inspector_team['name'])){
@@ -531,6 +570,37 @@ class InspectorGroups extends Component
                 'log_details' => 'has activated '.$this->inspector_team['name'], 
             ]);
             $this->dispatch('openModal',$modal_id);
+        }
+    }
+    public function add_temp_members(){
+        if(intval($this->inspector_team['member_id'])){
+            foreach ($this->inspector_members as $key => $value) {
+                if($this->inspector_team['member_id'] == $value->id){
+                    if($this->inspector_team['team_leader_id'] != $value->id){
+                        array_push($this->temp_members,$value);
+                    }
+                }
+            }
+        }
+    }
+    public function delete_temp_member($id){
+        $temp = [];
+        foreach ($this->temp_members as $key => $value) {
+            if($id != $value->id){
+                array_push( $temp,$value);
+            }
+        }
+        $this->temp_members = $temp;
+    }
+    public function update_temp_members(){
+        if(intval($this->inspector_team['team_leader_id'])){
+            $temp = [];
+            foreach ($this->temp_members as $key => $value) {
+                if($this->inspector_team['team_leader_id'] != $value->id){
+                    array_push( $temp,$value);
+                }
+            }
+            $this->temp_members = $temp;
         }
     }
    

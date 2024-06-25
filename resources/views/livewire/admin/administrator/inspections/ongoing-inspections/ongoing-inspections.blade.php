@@ -248,6 +248,13 @@
                                     <h5 class="text-center my-2 text-black">
                                         Item Details
                                     </h5>
+                                    <div class="row d-flex justify-content-end">
+                                        <div class="col-2 d-flex justify-content-end my-2">
+                                            <button class="btn btn-primary">
+                                                Add Item
+                                            </button>
+                                        </div>
+                                    </div>
                                     <div class="input-group mb-3">
                                         <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.item_id">
                                             <option value="">Select Item</option>
@@ -272,7 +279,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($issue_inspection['inspection_items']  as $key => $value)
+                                                @forelse($issue_inspection['inspection_items']  as $key => $value)
                                                     <tr>
                                                         <td class="align-middle">{{$value['name']}}</td>
                                                         <td class="align-middle">{{$value['category_name']}}</td>
@@ -312,7 +319,11 @@
                                                             </button>
                                                         </td>
                                                     </tr>
-                                                @endforeach
+                                                @empty
+                                                    <tr>
+                                                        <th colspan="42" class="text-center">NO DATA</th>
+                                                    </tr>
+                                                @endforelse
 
                                             </tbody>
                                         </table>
@@ -368,7 +379,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($issue_inspection['inspection_sanitary_billings']  as $key => $value)
+                                                @forelse($issue_inspection['inspection_sanitary_billings']  as $key => $value)
                                                     <tr>
                                                         <td class="align-middle">{{$value['sanitary_name']}}</td>
                                                         <td class="align-middle">
@@ -381,7 +392,11 @@
                                                             </button>
                                                         </td>
                                                     </tr>
-                                                @endforeach
+                                                @empty
+                                                    <tr>
+                                                        <th colspan="42" class="text-center">NO DATA</th>
+                                                    </tr>
+                                                @endforelse
 
                                             </tbody>
                                         </table>
@@ -435,7 +450,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($issue_inspection['inspector_team_leaders']  as $key =>$value)
+                                                @forelse($issue_inspection['inspector_team_leaders']  as $key =>$value)
                                                     <tr>
                                                         <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                         <td class="align-middle text-center">
@@ -444,7 +459,11 @@
                                                             </button>
                                                         </td>
                                                     </tr>
-                                                @endforeach
+                                                @empty
+                                                    <tr>
+                                                        <th colspan="42" class="text-center">NO DATA</th>
+                                                    </tr>
+                                                @endforelse
                                             </tbody>
                                         </table>
                                     </div>
@@ -472,7 +491,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($issue_inspection['inspection_inspector_members']  as $key =>$value)
+                                                @forelse($issue_inspection['inspection_inspector_members']  as $key =>$value)
                                                     <tr>
                                                         <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                         <td class="align-middle text-center">
@@ -481,7 +500,11 @@
                                                             </button>
                                                         </td>
                                                     </tr>
-                                                @endforeach
+                                                @empty
+                                                    <tr>
+                                                        <th colspan="42" class="text-center">NO DATA</th>
+                                                    </tr>
+                                                @endforelse
 
                                             </tbody>
                                         </table>
@@ -496,7 +519,7 @@
                                         <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.violation_id">
                                             <option value="">Select Violation</option>
                                             @foreach($issue_inspection['violations'] as $key =>  $value)
-                                                <option selected value="{{$value->id}}">{{$value->description}}</option>
+                                                <option selected value="{{$value->id}}">{{$value->description.' ( '.$value->category_name. ' ) '}}</option>
                                             @endforeach
                                         </select>
                                         <button class="btn btn-primary" type="button" wire:click="update_inspection_violation()" ><i class="bi bi-plus"></i></button>
@@ -506,21 +529,32 @@
                                             <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                                                 <tr>
                                                     <th>Description</th>
+                                                    <td>
+                                                        Photo/s
+                                                    </td>
                                                     <th class="align-middle text-center">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($issue_inspection['inspection_violations']  as $key => $value)
+                                                @forelse($issue_inspection['inspection_violations']  as $key => $value)
                                                     <tr>
-                                                        <td class="align-middle">{{$value['description']}}</td>
+                                                        <td class="align-middle">{{$value['description'].' ( '.$value['category_name']. ' ) '}}</td>
+                                                        <td>
+                                                            <button class="btn btn-primary "wire:click="update_delete_violation({{$value['id']}})"> 
+                                                                Proof
+                                                            </button>
+                                                        </td>
                                                         <td class="align-middle text-center">
                                                             <button class="btn btn-danger "wire:click="update_delete_violation({{$value['id']}})"> 
                                                                 Delete
                                                             </button>
                                                         </td>
                                                     </tr>
-                                                @endforeach
-
+                                                @empty
+                                                    <tr>
+                                                        <th colspan="42" class="text-center">NO DATA</th>
+                                                    </tr>
+                                                @endforelse
                                             </tbody>
                                         </table>
                                     </div>

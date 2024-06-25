@@ -163,7 +163,7 @@
         
         
         <div wire:ignore.self class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="addModalLabel">Add Inspector Group</h5>
@@ -177,12 +177,54 @@
                             </div>
                             <div class="mb-3">
                                 <label for="brgy_id" class="form-label">Team Leader <span class="text-danger">*</span></label>
-                                <select class="form-select" aria-label="Select Barangay" required wire:model="inspector_team.team_leader_id">
+                                <select class="form-select" aria-label="Select Barangay" required wire:model="inspector_team.team_leader_id" wire:change="update_temp_members()">
                                     <option value="">Select Team Leader</option>
                                     @foreach($unassigned_inspectors as $key => $value)
-                                        <option value="{{$value->id}}">{{'( '.$value->first_name.' ) '.$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix}}</option>
+                                        <option value="{{$value->id}}">{{'( '.$value->first_name.' ) '.$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                            <div class="row">
+                                <label for="inspectors" class="form-label">Member Inspector</label>
+                                <div class="col-8">
+                                    <div class="mb-3">
+                                        <select class="form-select" id="inspectors" aria-label="Select Member" required wire:model="inspector_team.member_id">
+                                            <option value="">Select Inspector Member</option>
+                                            @foreach($inspector_members as $key => $value)
+                                                <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-3 mx-3" >
+                                    <button class="btn btn-primary" type="button" wire:click="add_temp_members()">Add</button>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
+                                    <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                                        <tr>
+                                            <th class="align-middle text-center"></th>
+                                            <th class="align-middle"> Member</th>
+                                            <th class="align-middle text-center">Action </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($temp_members as $key => $value)
+                                            <tr>
+                                                <td class="align-middle text-center">{{$key+1}}</td>
+                                                <td class="mx-2 align-middle">
+                                                    {{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <button class="btn btn-danger" type="button" wire:click="delete_temp_member({{$value->id}})">
+                                                        Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -195,7 +237,7 @@
         </div>
 
         <div wire:ignore.self class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="editModalLabel">Edit Inspector Group</h5>
@@ -210,15 +252,55 @@
                             <div class="mb-3">
                                 <label for="brgy_id" class="form-label">Team Leader <span class="text-danger">*</span></label>
                                 <select class="form-select" aria-label="Select Barangay" required wire:model="inspector_team.team_leader_id">
-                                    <option value="">Select Team Leader</option>
-                                    @foreach($all_inspectors as $key => $value)
-                                        @if($value->team_leader_id && $inspector_team['team_leader_id'] ==  $value->team_leader_id)
-                                            <option selected value="{{$value->id}}">{{'( '.$value->first_name.' ) '.$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix}}</option>
-                                        @elseif(!isset($value->team_leader_id))
-                                            <option value="{{$value->id}}">{{'( '.$value->first_name.' ) '.$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix}}</option>
-                                        @endif
+                                    @if(isset($inspector_team['team_leader']))
+                                        <option selected value="{{$inspector_team['team_leader']->id}}">{{'( '.$inspector_team['team_leader']->first_name.' ) '.$inspector_team['team_leader']->first_name.' '.$inspector_team['team_leader']->middle_name.' '.$inspector_team['team_leader']->last_name.' '.$inspector_team['team_leader']->suffix.' ( '.$inspector_team['team_leader']->work_role_name.' ) '}}</option>
+                                    @endif
+                                    @foreach($unassigned_inspectors as $key => $value)
+                                        <option value="{{$value->id}}">{{'( '.$value->first_name.' ) '.$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                            <div class="row">
+                                <label for="inspectors" class="form-label">Team Member Inspector </label>
+                                <div class="col-8">
+                                    <div class="mb-3">
+                                        <select class="form-select" id="inspectors" aria-label="Select Member" wire:model="inspector_team.member_id">
+                                            <option value="">Select Inspector Member</option>
+                                            @foreach($inspector_members as $key => $value)
+                                                <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-3 mx-3" >
+                                    <button class="btn btn-primary" type="button" wire:click="save_add_member()">Add</button>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
+                                    <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                                        <tr>
+                                            <th class="align-middle text-center"></th>
+                                            <th class="align-middle"> Member</th>
+                                            <th class="align-middle text-center">Action </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($members as $key => $value)
+                                            <tr>
+                                                <td class="align-middle text-center">{{$key+1}}</td>
+                                                <td class="mx-2 align-middle">
+                                                    {{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <button class="btn btn-danger" type="button" wire:click="delete_member({{$value->id}},{{$value->member_id}})">
+                                                        Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                         <div class="modal-footer">
