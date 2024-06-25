@@ -108,7 +108,7 @@ class Response extends Component
                 title             									: 'You have successfully declined!',
                 showConfirmButton 									: 'true',
                 timer             									: '3000',
-                link              									: '/request/decline/'.$this->request_inspection['request']->hash,
+                link              									: '/request-response/decline/'.$this->request_inspection['request']->hash,
             );
             return;
         }
@@ -132,7 +132,7 @@ class Response extends Component
                 title             									: 'You have successfully accepted!',
                 showConfirmButton 									: 'true',
                 timer             									: '3000',
-                link              									: '/request/accept/'.$this->request_inspection['request']->hash,
+                link              									: '/request-response/accept/'.$this->request_inspection['request']->hash,
             );
             return;
         }
