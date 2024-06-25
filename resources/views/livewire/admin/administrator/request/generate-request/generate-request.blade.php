@@ -73,14 +73,16 @@
                     <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                         <tr>
                             @foreach($table_filter['filter'] as $filter_key => $filter_value)
-                                @if($filter_value['name'] == 'Action')
-                                    <th scope="col" class="text-center">{{$filter_value['name']}}</th>
-                                @elseif($filter_value['name'] == 'Inspection Details')
-                                    <th scope="col" class="text-center">{{$filter_value['name']}}</th>
-                                @elseif($filter_value['name'] == 'Request Range' && $filter_value['active'])
-                                    <th scope="col" class="text-center">{{$filter_value['name']}}</th>
-                                @else 
-                                    <th scope="col">{{$filter_value['name']}}</th>
+                                @if($filter_value['active'])
+                                    @if($filter_value['name'] == 'Action')
+                                        <th scope="col" class="text-center">{{$filter_value['name']}}</th>
+                                    @elseif($filter_value['name'] == 'Inspection Details')
+                                        <th scope="col" class="text-center">{{$filter_value['name']}}</th>
+                                    @elseif($filter_value['name'] == 'Request Range' && $filter_value['active'])
+                                        <th scope="col" class="text-center">{{$filter_value['name']}}</th>
+                                    @else 
+                                        <th scope="col">{{$filter_value['name']}}</th>
+                                    @endif
                                 @endif
                             @endforeach
                         </tr>
@@ -164,13 +166,16 @@
                                 <div class="row mb-3">
                                     <div class="col-lg-8">
                                         <label for="business_search">Search Business</label>
-                                        <input type="text" name="" id="business_search" class="form-control" wire:model.live.debounce.500ms="search.search"placeholder="Search business ... ">
+                                        <input type="text" name="" id="business_search" class="form-control" wire:model.live.debounce.500ms="modal.search" placeholder="Search business ... ">
                                     </div>
                                     <div class="col-lg-4">
                                         <div>
                                             <label for="business_search">Filter Barangay</label>
-                                            <select name="" id=""  class="form-select">
+                                            <select name="" id=""  class="form-select" wire:model.live.debounce="modal.brgy_id">
                                                 <option value="">Select Barangay</option>
+                                                @foreach($brgy as $key => $value)
+                                                    <option value="{{$value->id}}">{{$value->brgyDesc}}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>

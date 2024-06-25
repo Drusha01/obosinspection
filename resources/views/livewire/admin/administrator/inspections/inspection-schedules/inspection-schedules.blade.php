@@ -127,7 +127,7 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">Business Name</label>
+                                    <label for="name" class="form-label">Business Name  <span class="text-danger">*</span></label>
                                     <div class="mb-3">
                                         <select class="form-select" aria-label="Select Barangay" required wire:model.live="inspection.business_id">
                                             <option value="">Select Business</option>
@@ -138,14 +138,14 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="inspection_date" class="form-label">Inspection Date</label>
+                                    <label for="inspection_date" class="form-label">Inspection Date  <span class="text-danger">*</span></label>
                                     <input type="date" class="form-control" id="inspection_date" wire:model.live="inspection.schedule_date" required min="{{$inspection['schedule_date']}}">
                                 </div>
                             </div>
                             @elseif($inspection['step'] == 2)
                             <div>
                                 <h5 class="text-center my-2 text-black">
-                                    Team Leaders
+                                    Team Leaders  <span class="text-danger">*</span> 
                                 </h5>
                                 <div class="input-group mb-3">
                                     <select class="form-select" id="teamLeaderSelect" wire:model.live="inspection.inspector_leader_id">

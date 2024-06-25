@@ -19,6 +19,7 @@ class Businesses extends Component
         'search_prev'=> NULL,
         'type' => NULL,
         'type_prev' => NULL,
+        'brgy_id'=>NULL,
     ];
     public $search_by = [
         ['name'=>'Name','column_name'=>'b.name'],
@@ -214,7 +215,7 @@ class Businesses extends Component
                 'it.team_leader_id',
                 'it.id',
                 )
-            ->join('persons as p','p.id','u.id')
+            ->join('persons as p','p.id','u.person_id')
             ->leftjoin('inspector_members as im','im.member_id','p.id')
             ->leftjoin('inspector_teams as it','it.team_leader_id','p.id')
             ->where('u.id','=',$session['id'])
@@ -245,7 +246,38 @@ class Businesses extends Component
                 $this->search['type'] = $this->search_by[0]['column_name'];
             }
         }
-        $table_data = DB::table('businesses as b')
+        if(intval($this->search['brgy_id'])){
+            $table_data = DB::table('businesses as b')
+            ->select(
+                'b.id',
+                'b.img_url',
+                'b.name',
+                'p.first_name',
+                'p.middle_name',
+                'p.last_name',
+                'p.suffix',
+                'brg.brgyDesc as barangay',
+                'bc.name as business_category_name',
+                'bt.name as business_type_name',
+                'oc.character_of_occupancy as occupancy_classification_name',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'b.is_active'
+
+            )
+            ->join('persons as p','p.id','b.owner_id')
+            ->join('brgy as brg','brg.id','b.brgy_id')
+            ->join('business_category as bc','bc.id','b.business_category_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+            ->where('b.brgy_id','=',$this->search['brgy_id'] )
+            ->where($this->search['type'],'like',$this->search['search'] .'%')
+            ->orderBy('id','desc')
+            ->paginate($this->table_filter['table_rows']);
+        }else{
+            $table_data = DB::table('businesses as b')
             ->select(
                 'b.id',
                 'b.img_url',
@@ -273,6 +305,8 @@ class Businesses extends Component
             ->where($this->search['type'],'like',$this->search['search'] .'%')
             ->orderBy('id','desc')
             ->paginate($this->table_filter['table_rows']);
+        }
+        
         return view('livewire.admin.administrator.establishments.businesses.businesses',[
            'table_data'=>$table_data 
         ])

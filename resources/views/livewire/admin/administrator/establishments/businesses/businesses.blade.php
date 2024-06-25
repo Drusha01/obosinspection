@@ -6,10 +6,16 @@
                     <h1 class="h3 mb-0 text-gray-800">{{$title}}</h1>
                 </div>
                 <div class="col-2">
-                        <label for="business_search">Filter Barangay</label>
-                        <select name="" id=""  class="form-select">
-                            <option value="">Select Barangay</option>
+                    <div class=" d-flex ">
+                        <span for="rows" class="align-middle mt-2">Brgy</span>
+                            <select name="" id=""  class="form-select" wire:model.live.debounce="search.brgy_id">
+                                <option value="">Select Barangay</option>
+                                @foreach($brgy as $key => $value)
+                                    <option value="{{$value->id}}">{{$value->brgyDesc}}</option>
+                                @endforeach
+                            </select>
                         </select>
+                    </div>
                 </div>
                 <div class="col-2">
                     <div class=" d-flex ">

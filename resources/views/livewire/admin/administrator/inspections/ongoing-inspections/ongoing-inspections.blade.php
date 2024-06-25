@@ -216,10 +216,13 @@
                         </div>
                         <div class="modal-body">
                             <div class="progress mb-4">
-                                <div id="progressBar" class="progress-bar" role="progressbar-2" style="width:{{($issue_inspection['step']/8)*100}} %" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div id="progressBar" class="progress-bar" role="progressbar" style="width:{{($issue_inspection['step']/8)*100}}%" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             @if($issue_inspection['step'] == 1)
                                 <div wire:key="{{$issue_inspection['step']}}">
+                                    <h5 class="text-center my-2 text-black">
+                                        Inspection Details
+                                    </h5>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">Application type</label>
                                         <div class="mb-3">
@@ -242,6 +245,9 @@
                                 </div>
                             @elseif($issue_inspection['step'] == 2)
                                 <div wire:key="{{$issue_inspection['step']}}">
+                                    <h5 class="text-center my-2 text-black">
+                                        Item Details
+                                    </h5>
                                     <div class="input-group mb-3">
                                         <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.item_id">
                                             <option value="">Select Item</option>
@@ -314,6 +320,9 @@
                                 </div>
                             @elseif($issue_inspection['step'] == 3)
                                 <div wire:key="{{$issue_inspection['step']}}">
+                                    <h5 class="text-center my-2 text-black">
+                                        Building Details
+                                    </h5>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">Building Information</label>
                                         <div class="mb-3">
@@ -336,6 +345,9 @@
                                 </div>
                             @elseif($issue_inspection['step'] == 4)
                                 <div wire:key="{{$issue_inspection['step']}}">
+                                    <h5 class="text-center my-2 text-black">
+                                        Sanitary Details
+                                    </h5>
                                     <div class="input-group mb-3">
                                         <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.sanitary_billing_id">
                                             <option value="">Select Sanitary Item</option>
@@ -377,6 +389,9 @@
                                 </div>
                             @elseif($issue_inspection['step'] == 5)
                                 <div wire:key="{{$issue_inspection['step']}}">
+                                    <h5 class="text-center my-2 text-black">
+                                        Signage Details
+                                    </h5>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">Signage Information</label>
                                         <div class="mb-3">
@@ -399,6 +414,9 @@
                                 </div>
                             @elseif($issue_inspection['step'] == 6)
                                 <div wire:key="{{$issue_inspection['step']}}">
+                                    <h5 class="text-center my-2 text-black">
+                                        Team Leader Details
+                                    </h5>
                                     <div class="input-group mb-3">
                                         <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.inspector_leader_id">
                                             <option value="">Select Team Leader</option>
@@ -433,6 +451,9 @@
                                 </div>
                             @elseif($issue_inspection['step'] == 7)
                                 <div wire:key="{{$issue_inspection['step']}}">
+                                    <h5 class="text-center my-2 text-black">
+                                        Team Member Details
+                                    </h5>
                                     <div class="input-group mb-3">
                                         <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.inspector_member_id">
                                             <option value="">Select Team Member</option>
@@ -468,6 +489,9 @@
                                 </div>
                             @elseif($issue_inspection['step'] == 8)
                                 <div wire:key="{{$issue_inspection['step']}}">
+                                <h5 class="text-center my-2 text-black">
+                                        Violation Details
+                                    </h5>
                                     <div class="input-group mb-3">
                                         <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.violation_id">
                                             <option value="">Select Violation</option>

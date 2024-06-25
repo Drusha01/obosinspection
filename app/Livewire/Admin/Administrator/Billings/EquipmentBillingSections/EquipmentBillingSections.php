@@ -46,7 +46,7 @@ class EquipmentBillingSections extends Component
                 'it.team_leader_id',
                 'it.id',
                 )
-            ->join('persons as p','p.id','u.id')
+            ->join('persons as p','p.id','u.person_id')
             ->leftjoin('inspector_members as im','im.member_id','p.id')
             ->leftjoin('inspector_teams as it','it.team_leader_id','p.id')
             ->where('u.id','=',$session['id'])

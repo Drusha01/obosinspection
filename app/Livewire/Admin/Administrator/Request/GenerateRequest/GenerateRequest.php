@@ -13,6 +13,9 @@ use Mail;
 
 class GenerateRequest extends Component
 {
+    use WithPagination;
+    use WithFileUploads;
+
     public $email;
     public $title = "Generate Requests";
     public $establishment;
@@ -47,6 +50,14 @@ class GenerateRequest extends Component
         'is_responded' =>NULL,
         'reason' =>NULL,
     ];
+    public $brgy = [];
+
+    public $modal = [
+        'search'=>NULL,
+        'search_prev'=> NULL,
+        'brgy_id'=> NULL,
+        'prev_brgy_id'=> NULL,
+    ];
     public function boot(Request $request){
         $session = $request->session()->all();
         $this->activity_logs['created_by'] = $session['id'];
@@ -58,7 +69,7 @@ class GenerateRequest extends Component
                 'it.team_leader_id',
                 'it.id',
                 )
-            ->join('persons as p','p.id','u.id')
+            ->join('persons as p','p.id','u.person_id')
             ->leftjoin('inspector_members as im','im.member_id','p.id')
             ->leftjoin('inspector_teams as it','it.team_leader_id','p.id')
             ->where('u.id','=',$session['id'])
@@ -113,6 +124,15 @@ class GenerateRequest extends Component
     }
 
     public function mount(Request $request){
+
+        $city_mun = DB::table('citymun')
+        ->where('citymunDesc','=','GENERAL SANTOS CITY (DADIANGAS)')
+        ->first();
+        $this->brgy = DB::table('brgy')
+            ->where('citymunCode','=',$city_mun->citymunCode)
+            ->get()
+            ->toArray();
+
         $session = $request->session()->all();
         $table_filter = DB::table('table_filters')
         ->where('user_id',$session['id'])
@@ -160,6 +180,8 @@ class GenerateRequest extends Component
                 'filter'=>$temp_filter,
             ];
         }
+
+        
     }
 
     public function render()
@@ -167,6 +189,74 @@ class GenerateRequest extends Component
         if($this->search['search'] != $this->search['search_prev']){
             $this->search['search_prev'] = $this->search['search'];
             $this->resetPage();
+        }
+        
+            
+        if(intval($this->modal['brgy_id'])){
+            $this->business = DB::table('request_business_categories as rbc')
+                ->select(
+                    'rbc.id as rbc_id',
+                    'b.id',
+                    'b.img_url',
+                    'b.name',
+                    'b.business_category_id',
+                    'p.first_name',
+                    'p.middle_name',
+                    'p.last_name',
+                    'p.suffix',
+                    'brg.brgyDesc as barangay',
+                    'bt.name as business_type_name',
+                    'oc.character_of_occupancy as occupancy_classification_name',
+                    'b.contact_number',
+                    'b.email',
+                    'b.floor_area',
+                    'b.signage_area',
+                    'b.is_active',
+                )
+                ->rightjoin('businesses as b','b.business_category_id','rbc.business_category_id')
+                ->whereNotNull('rbc.id')
+                ->where('b.is_active','=',1)
+                ->join('persons as p','p.id','b.owner_id')
+                ->join('brgy as brg','brg.id','b.brgy_id')
+                ->join('business_types as bt','bt.id','b.business_type_id')
+                ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+                ->where('b.brgy_id','=',$this->modal['brgy_id'] )
+                ->where('b.name','like',$this->modal['search'] .'%')
+                ->limit(15)
+                ->get()
+                ->toArray();
+        }else{
+            $this->business = DB::table('request_business_categories as rbc')
+                ->select(
+                    'rbc.id as rbc_id',
+                    'b.id',
+                    'b.img_url',
+                    'b.name',
+                    'b.business_category_id',
+                    'p.first_name',
+                    'p.middle_name',
+                    'p.last_name',
+                    'p.suffix',
+                    'brg.brgyDesc as barangay',
+                    'bt.name as business_type_name',
+                    'oc.character_of_occupancy as occupancy_classification_name',
+                    'b.contact_number',
+                    'b.email',
+                    'b.floor_area',
+                    'b.signage_area',
+                    'b.is_active',
+                )
+                ->rightjoin('businesses as b','b.business_category_id','rbc.business_category_id')
+                ->whereNotNull('rbc.id')
+                ->where('b.is_active','=',1)
+                ->join('persons as p','p.id','b.owner_id')
+                ->join('brgy as brg','brg.id','b.brgy_id')
+                ->join('business_types as bt','bt.id','b.business_type_id')
+                ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+                ->where('b.name','like',$this->modal['search'] .'%')
+                ->limit(15)
+                ->get()
+                ->toArray();
         }
         $table_data = DB::table('request_inspections as ri')
             ->select(
@@ -200,6 +290,8 @@ class GenerateRequest extends Component
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
             ->where('rs.name','=','Pending')
+            ->where('b.name','like',$this->search['search'] .'%')
+            ->where('ri.expiration_date', '>=', date('Y-m-d'))
             ->orderBy('ri.id','desc')
             ->paginate($this->table_filter['table_rows']);
         return view('livewire.admin.administrator.request.generate-request.generate-request',[
@@ -338,34 +430,34 @@ class GenerateRequest extends Component
 
     public function generate_request($modal_id){
         $this->business = DB::table('request_business_categories as rbc')
-        ->select(
-            'rbc.id as rbc_id',
-            'b.id',
-            'b.img_url',
-            'b.name',
-            'b.business_category_id',
-            'p.first_name',
-            'p.middle_name',
-            'p.last_name',
-            'p.suffix',
-            'brg.brgyDesc as barangay',
-            'bt.name as business_type_name',
-            'oc.character_of_occupancy as occupancy_classification_name',
-            'b.contact_number',
-            'b.email',
-            'b.floor_area',
-            'b.signage_area',
-            'b.is_active',
-        )
-        ->rightjoin('businesses as b','b.business_category_id','rbc.business_category_id')
-        ->whereNotNull('rbc.id')
-        ->where('b.is_active','=',1)
-        ->join('persons as p','p.id','b.owner_id')
-        ->join('brgy as brg','brg.id','b.brgy_id')
-        ->join('business_types as bt','bt.id','b.business_type_id')
-        ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-        ->get()
-        ->toArray();
+            ->select(
+                'rbc.id as rbc_id',
+                'b.id',
+                'b.img_url',
+                'b.name',
+                'b.business_category_id',
+                'p.first_name',
+                'p.middle_name',
+                'p.last_name',
+                'p.suffix',
+                'brg.brgyDesc as barangay',
+                'bt.name as business_type_name',
+                'oc.character_of_occupancy as occupancy_classification_name',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'b.is_active',
+            )
+            ->rightjoin('businesses as b','b.business_category_id','rbc.business_category_id')
+            ->whereNotNull('rbc.id')
+            ->where('b.is_active','=',1)
+            ->join('persons as p','p.id','b.owner_id')
+            ->join('brgy as brg','brg.id','b.brgy_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+            ->get()
+            ->toArray();
         $this->request  = [
             'id' =>NULL,
             'business_id' =>NULL,
@@ -459,4 +551,5 @@ class GenerateRequest extends Component
             return;
         }
     }
+
 }

@@ -41,7 +41,7 @@ class DeletedRequest extends Component
                 'it.team_leader_id',
                 'it.id',
                 )
-            ->join('persons as p','p.id','u.id')
+            ->join('persons as p','p.id','u.person_id')
             ->leftjoin('inspector_members as im','im.member_id','p.id')
             ->leftjoin('inspector_teams as it','it.team_leader_id','p.id')
             ->where('u.id','=',$session['id'])
@@ -182,6 +182,7 @@ class DeletedRequest extends Component
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
             ->where('rs.name','=','Deleted')
+            ->where('b.name','like',$this->search['search'] .'%')
             ->orderBy('ri.id','desc')
             ->paginate($this->table_filter['table_rows']);
         
@@ -190,5 +191,62 @@ class DeletedRequest extends Component
         ])
         ->layout('components.layouts.admin',[
             'title'=>$this->title]);
+    }
+    public function edit($id,$modal_id){
+        $request = DB::table('request_inspections as ri')
+            ->select(
+                'ri.id' ,
+                'ri.business_id',
+                'ri.status_id' ,
+                'ri.request_date' ,
+                'ri.expiration_date' ,
+                'ri.accepted_date' ,
+                'ri.is_responded' ,
+                'ri.reason' ,
+                'ri.hash' ,
+                'rs.name as status_name',
+            )
+            ->join('request_status as rs','ri.status_id','rs.id')
+            ->where('rs.name','=','Pending')
+            ->where('ri.id','=',$id)
+            ->first();
+        if($request){
+            $this->request  = [
+                'id' =>$request->id,
+                'business_id' =>$request->business_id,
+                'status_id' =>$request->status_id,
+                'request_date' =>$request->request_date,
+                'expiration_date' =>$request->expiration_date,
+                'accepted_date' =>$request->accepted_date,
+                'is_responded' =>$request->is_responded,
+                'reason' =>$request->reason,
+            ];
+            $this->dispatch('openModal',$modal_id);
+        }
+
+    }
+    public function save_delete($id,$modal_id){
+        $status = DB::table('request_status')
+        ->where('name','=',"Deleted")
+        ->first();
+        if(DB::table('request_inspections as ri')
+            ->join('request_status as rs','ri.status_id','rs.id')
+            ->where('rs.name','=','Pending')
+            ->where('ri.id','=',$id)
+            ->update([
+                'status_id'=>$status->id,
+            ])
+        ){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'success',
+                title             									: 'Successfully deleted!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#',
+            );
+            $this->dispatch('openModal',$modal_id);
+            return;
+        }
     }
 }

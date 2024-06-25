@@ -120,7 +120,6 @@ class OngoingInspections extends Component
             ->where('pt.name','Inspector')
             ->get()
             ->toArray();
-        // dd($this->inspector_members);
         $this->inspector_leaders = DB::table('persons as p')
             ->select(
                 "p.id",
@@ -150,6 +149,9 @@ class OngoingInspections extends Component
         'inspector_team_id' => NULL,
         'log_details' => NULL,
     ];
+    public $user_details = [
+        'work_role' => NULL,
+    ];
     public function boot(Request $request){
         $session = $request->session()->all();
         $this->activity_logs['created_by'] = $session['id'];
@@ -161,7 +163,7 @@ class OngoingInspections extends Component
                 'it.team_leader_id',
                 'it.id',
                 )
-            ->join('persons as p','p.id','u.id')
+            ->join('persons as p','p.id','u.person_id')
             ->leftjoin('inspector_members as im','im.member_id','p.id')
             ->leftjoin('inspector_teams as it','it.team_leader_id','p.id')
             ->where('u.id','=',$session['id'])

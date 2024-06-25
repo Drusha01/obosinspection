@@ -98,6 +98,16 @@
                                         <td class="align-middle text-center">
                                             {{date_format(date_create($value->request_date),"M d, Y")}} - {{date_format(date_create($value->expiration_date),"M d, Y") }}
                                         </td>
+                                    @elseif($filter_value['name'] == 'Response Date' && $filter_value['active'])
+                                        <td class="align-middle">
+                                            {{date_format(date_create($value->accepted_date),"M d, Y")}}
+                                        </td>
+                                    @elseif($filter_value['name'] == 'Action' && $filter_value['active'])
+                                        <td class="text-center align-middle">
+                                            <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
+                                                Delete
+                                            </button>
+                                        </td>
                                     @else
                                         @if($filter_value['active'])
                                             <td class="align-middle">{{ $value->{$filter_value['column_name']} }}</td>
@@ -116,6 +126,30 @@
             <div class="container d-flex justify-content-center">
                 {{$table_data->links()}}
             </div>
+
+            <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="deleteModaltoggler" style="display:none;"></button>
+            
+            <div wire:ignore.self class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Delete</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form wire:submit.prevent="save_delete({{$request['id']}},'deleteModaltoggler')">
+                            <div class="modal-body">
+                                <div>Are you sure you want to delete this?</div>
+                                <div class="text-danger">Once deleted, it cannot be undone</div>
+                                </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </div>
+                        </form> 
+                    </div>
+                </div>
+            </div>
+
         </div>    
     </div>
 </div>
