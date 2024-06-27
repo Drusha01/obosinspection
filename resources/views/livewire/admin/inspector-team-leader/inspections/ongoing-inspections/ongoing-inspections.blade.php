@@ -89,6 +89,8 @@
             <button type="button" data-bs-toggle="modal" data-bs-target="#activateModal" id="activateModaltoggler" style="display:none;"></button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#issueModal" id="issueModaltoggler" style="display:none;"></button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#completeModal" id="completeModaltoggler" style="display:none;"></button>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#ProofModal" id="ProofModaltoggler" style="display:none;"></button>
+            
             
 
             <div wire:ignore.self class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
@@ -474,7 +476,7 @@
                                                     <tr>
                                                         <td class="align-middle">{{$value['description']}}</td>
                                                         <td class="align-middle text-center">
-                                                            <button class="btn btn-danger "wire:click="update_delete_violation({{$value['id']}})"> 
+                                                            <button class="btn btn-danger "wire:click="update_delete_violation({{$value['id']}},'ProofModaltoggler')"> 
                                                                 Delete
                                                             </button>
                                                         </td>
@@ -511,6 +513,21 @@
                                     <button type="button" disabled id="nextButton" class="btn btn-primary opacity-0" wire:click="next_issue()">Next</button>
                                 @endif
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div wire:ignore.self class="modal fade" id="ProofModal" tabindex="-1" aria-labelledby="ProofModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ProofModalLabel">Inspection Violation Proof</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div>Are you sure you want to delete this inspection?</div>
+                            <button type="submit" class="btn btn-danger">Delete</button>
                         </div>
                     </div>
                 </div>

@@ -212,6 +212,7 @@
             window.addEventListener('closeModal', function(modal_id){
                 $('#'+modal_id.detail).click();
             }); 
+           
         });
     </script>
 

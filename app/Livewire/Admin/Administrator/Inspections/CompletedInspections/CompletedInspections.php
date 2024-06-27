@@ -23,6 +23,7 @@ class CompletedInspections extends Component
         ['column_name'=> 'business_type_name','active'=> true,'name'=>'Business Type'],
         ['column_name'=> 'schedule_date','active'=> true,'name'=>'Schedule'],
         ['column_name'=> 'id','active'=> true,'name'=>'Generate'],
+        ['column_name'=> 'id','active'=> true,'name'=>'Violation'],
         ['column_name'=> 'id','active'=> true,'name'=>'Inspection Details'],
     ];
     public $annual_certificate_inspection = [
@@ -204,7 +205,6 @@ class CompletedInspections extends Component
         self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
     }
     public function update_inspection_data($id,$step){
-        
         $application_types = DB::table('application_types')
             ->where('is_active','=',1)
             ->get()

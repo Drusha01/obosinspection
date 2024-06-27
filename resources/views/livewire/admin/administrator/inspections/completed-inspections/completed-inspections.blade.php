@@ -19,6 +19,8 @@
                                     <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                 @elseif($filter_value['name'] == 'Inspection Details')
                                     <th scope="col" class="text-center">{{$filter_value['name']}}</th>
+                                @elseif($filter_value['name'] == 'Violation')
+                                    <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                 @else 
                                     <th scope="col">{{$filter_value['name']}}</th>
                                 @endif
@@ -27,7 +29,7 @@
                     </thead>
                     <tbody>
                         @forelse($table_data as $key => $value)
-                            <tr>
+                            <tr wire:key="{{$value->id}}">
                                 @foreach($filter as $filter_key => $filter_value)
                                     @if($filter_value['name'] == '#' && $filter_value['active'])
                                         <th class="align-middle">{{($table_data->currentPage()-1)*$table_data->perPage()+$key+1 }}</th>
@@ -46,6 +48,36 @@
                                                 Generate Certificate
                                             </button>
                                         </td> 
+                                    @elseif($filter_value['name'] == 'Violation' && $filter_value['active'])
+                                    <td class="text-center align-middle">
+                                        <?php 
+                                            $violations = DB::table('inspection_violations as iv')
+                                            ->select(
+                                                'iv.id',
+                                                'description',
+                                                'remarks'
+                                            )
+                                            ->join('violations as v','v.id','iv.violation_id')
+                                            ->where('inspection_id','=',$value->id)
+                                            ->get()
+                                            ->toArray();
+                                        if(count($violations)<=0){
+                                            echo '<span class="badge text-light p-2 bg-primary">No Violation</span>';
+                                        }elseif(count($violations)>0){
+                                            $valid = true;
+                                            foreach ($violations as $key => $value_violation) {
+                                                if(!isset($value_violation->remarks)){
+                                                    $valid = false;
+                                                }
+                                            }
+                                            if($valid){
+                                                echo '<span class="badge text-light p-2 bg-primary">Complied</span>';
+                                            }else{
+                                                echo '<span class="badge text-light p-2 bg-warning">Un-complied</span>';
+                                            }
+                                        }
+                                        ?>
+                                    </td> 
                                     @elseif($filter_value['name'] == 'Inspection Details' && $filter_value['active'])
                                         <td class="text-center align-middle">
                                             <button class="btn btn-primary" wire:click="issue({{$value->id}},'issueModaltoggler')">
