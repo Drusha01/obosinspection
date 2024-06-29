@@ -52,6 +52,36 @@ class Certification extends Component
         'time_in' => NULL,
         'time_out' => NULL,
     ];
+    public $activity_logs = [
+        'created_by' => NULL,
+        'inspector_team_id' => NULL,
+        'log_details' => NULL,
+    ];
+    public function booted(Request $request){
+        $session = $request->session()->all();
+        $this->activity_logs['created_by'] = $session['id'];
+        $user_details = 
+            DB::table('users as u')
+            ->select(
+                'im.member_id',
+                'im.inspector_team_id',
+                'it.team_leader_id',
+                'it.id',
+                )
+            ->join('persons as p','p.id','u.person_id')
+            ->leftjoin('inspector_members as im','im.member_id','p.id')
+            ->leftjoin('inspector_teams as it','it.team_leader_id','p.id')
+            ->where('u.id','=',$session['id'])
+            ->first();
+        if($user_details->member_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->member_id;
+        }elseif($user_details->team_leader_id){
+            $this->activity_logs['inspector_team_id'] = $user_details->team_leader_id;
+        }else{
+            $this->activity_logs['inspector_team_id'] = 0;
+        }
+    }
+
     public $search = [
         'search'=> NULL,
         'search_prev'=> NULL,
@@ -159,41 +189,11 @@ class Certification extends Component
             ->first();
         $this->brgy = DB::table('brgy')
             ->where('citymunCode','=',$city_mun->citymunCode)
+            ->orderby('brgyDesc','asc')
             ->get()
             ->toArray();
 
     }
-
-    public $activity_logs = [
-        'created_by' => NULL,
-        'inspector_team_id' => NULL,
-        'log_details' => NULL,
-    ];
-    public function booted(Request $request){
-        $session = $request->session()->all();
-        $this->activity_logs['created_by'] = $session['id'];
-        $user_details = 
-            DB::table('users as u')
-            ->select(
-                'im.member_id',
-                'im.inspector_team_id',
-                'it.team_leader_id',
-                'it.id',
-                )
-            ->join('persons as p','p.id','u.person_id')
-            ->leftjoin('inspector_members as im','im.member_id','p.id')
-            ->leftjoin('inspector_teams as it','it.team_leader_id','p.id')
-            ->where('u.id','=',$session['id'])
-            ->first();
-        if($user_details->member_id){
-            $this->activity_logs['inspector_team_id'] = $user_details->member_id;
-        }elseif($user_details->team_leader_id){
-            $this->activity_logs['inspector_team_id'] = $user_details->team_leader_id;
-        }else{
-            $this->activity_logs['inspector_team_id'] = 0;
-        }
-    }
-
 
     public function render()
     {

@@ -1,7 +1,7 @@
 <div>
     <div class="content">
         <div class="container-fluid">
-        <div class="row d-flex mt-4 mb-4">
+            <div class="row d-flex mt-4 mb-4">
                 <div class="col">
                     <h1 class="h3 mb-0 text-gray-800">{{$title}}</h1>
                 </div>
