@@ -70,6 +70,10 @@ class OngoingInspections extends Component
         'violations'  =>[],
     ];
     public function mount(){
+        $this->categories = DB::table('categories')
+            ->where('is_active','=',1)
+            ->get()
+            ->toArray();
         $this->businesses = DB::table('businesses as b')
             ->select(
                 'b.id',
@@ -447,7 +451,327 @@ class OngoingInspections extends Component
             ->toArray()){
             $segragated = true;
 
+            $application_types = DB::table('application_types')
+                ->where('is_active','=',1)
+                ->get()
+                ->toArray();
+            $signage_billings = DB::table('signage_billings as sb')
+                ->select(
+                    'sb.id',
+                    'sbdt.name as display_type_name',
+                    'sbt.name as sign_type_name',
+                    'sb.fee',
+                    'sb.is_active'
+                )
+                ->join('signage_billing_types as sbt','sbt.id','sb.sign_type_id')
+                ->join('signage_billing_display_types as sbdt','sbdt.id','sb.display_type_id')
+                ->where('sb.is_active','=',1)
+                ->get()
+                ->toArray();
+            $temp = [];
+            foreach ($signage_billings as $key => $value) {
+                array_push($temp,[
+                    "id" => $value->id,
+                    'display_type_name'=> $value->display_type_name,
+                    'sign_type_name' =>$value->sign_type_name,
+                    "fee" => $value->fee,
+                    "is_active" => $value->is_active,
+                ]);
+            }
+            $signage_billings = $temp;
+            $sanitary_billings = DB::table('sanitary_billings')
+                ->select(
+                    'id' ,
+                    'name' ,
+                    'is_active',
+                    'fee' ,
+                )
+                ->where('is_active','=',1)
+                ->get()
+                ->toArray();
+            $temp = [];
+            foreach ($sanitary_billings as $key => $value) {
+                array_push($temp,[
+                    'id' => $value->id,
+                    'name' => $value->name,
+                    'is_active'=> $value->is_active,
+                    'fee' => $value->fee,
+                ]);
+            }
+            $sanitary_billings = $temp;
+            $inspector_members = DB::table('persons as p')
+                ->select(
+                    "p.id",
+                    "p.person_type_id",
+                    "p.brgy_id",
+                    "p.work_role_id",
+                    "p.first_name",
+                    "p.middle_name",
+                    "p.last_name",
+                    "p.suffix",
+                    "p.contact_number",
+                    "p.email",
+                    "p.img_url",
+                    'wr.name as work_role_name',
+                    'iit.name as inspector_team',
+                )
+                ->leftjoin('inspector_members as im','im.member_id','p.id')
+                ->leftjoin('inspector_teams as iit','iit.id','im.inspector_team_id')
+                ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
+                ->join('person_types as pt','p.person_type_id','pt.id')
+                ->join('work_roles as wr', 'wr.id','p.work_role_id')
+                ->whereNull('it.team_leader_id')
+                ->where('pt.name','Inspector')
+                ->get()
+                ->toArray();
+            $inspection_inspector_team_leaders = DB::table('persons as p')
+                ->select(
+                    "p.id",
+                    "p.person_type_id",
+                    "p.brgy_id",
+                    "p.work_role_id",
+                    "p.first_name",
+                    "p.middle_name",
+                    "p.last_name",
+                    "p.suffix",
+                    "p.contact_number",
+                    "p.email",
+                    "p.img_url",
+                    'wr.name as work_role_name',
+                    'it.name as inspector_team',
+                )
+                ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
+                ->join('person_types as pt','p.person_type_id','pt.id')
+                ->join('work_roles as wr', 'wr.id','p.work_role_id')
+                ->whereNotNull('it.team_leader_id')
+                ->where('pt.name','Inspector')
+                ->get()
+                ->toArray();
+        
+            $violations = DB::table('violations as v')
+                ->select(
+                    'v.id',
+                    'description',
+                    'c.name as category_name',
+                    'v.is_active'
+                )
+                ->join('categories as c','v.category_id','c.id')
+                ->where('v.is_active','=',1)
+                ->get()
+                ->toArray();
+            $inspection_items = DB::table('inspection_items as ii')
+                ->select(
+                    'c.name as category_name',
+                    'c.id as category_id',
+                    'i.name',
+                    'i.section_id',
+                    'i.img_url',
+                    'i.is_active',
+                    "ii.id",
+                    "ii.inspection_id",
+                    "ii.item_id",
+                    "ii.equipment_billing_id",
+                    "ii.power_rating",
+                    "ii.quantity",
+                    "eb.fee",
+                    'ebs.name as section_name',
+                    )
+                ->join('items as i','i.id','ii.item_id')
+                ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
+                ->join('categories as c','c.id','i.category_id')
+                ->leftjoin('equipment_billings as eb','eb.id','ii.equipment_billing_id')
+                ->where('ii.inspection_id','=',$id)
+                ->get()
+                ->toArray();
+            $temp = [];
+            foreach ($inspection_items as $key => $value) {
+                array_push($temp,[
+                    'category_name' => $value->category_name,
+                    'category_id' => $value->category_id,
+                    'name'=> $value->name,
+                    'section_id' => $value->section_id,
+                    'img_url' => $value->img_url,
+                    'is_active' => $value->is_active,
+                    "id" => $value->id,
+                    "inspection_id" => $value->inspection_id,
+                    "item_id" => $value->item_id,
+                    "equipment_billing_id" => $value->equipment_billing_id,
+                    "power_rating" => $value->power_rating,
+                    "quantity" => $value->quantity,
+                    "fee" => $value->fee,
+                    'section_name'=>$value->section_name
+                ]);
+            }
+            $inspection_items = $temp;
+            $inspection_inspector_members = DB::table('persons as p')
+                ->select(
+                    "iim.id",
+                    "p.person_type_id",
+                    "p.brgy_id",
+                    "p.work_role_id",
+                    "p.first_name",
+                    "p.middle_name",
+                    "p.last_name",
+                    "p.suffix",
+                    "p.contact_number",
+                    "p.email",
+                    "p.img_url",
+                    'wr.name as work_role_name',
+                    'it_member_team.name as inspector_team',
+                )
+                ->leftjoin('inspector_members as im','im.member_id','p.id')
+                ->leftjoin('inspector_teams as it_member_team','it_member_team.id','im.inspector_team_id')
+                ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
+                ->leftjoin('inspection_inspector_members as iim','p.id','iim.person_id')
+                ->join('person_types as pt','p.person_type_id','pt.id')
+                ->join('work_roles as wr', 'wr.id','p.work_role_id')
+                ->where('pt.name','Inspector')
+                ->where('iim.inspection_id','=',$id)
+                ->get()
+                ->toArray();
 
+
+            $inspector_team_leaders = DB::table('persons as p')
+                ->select(
+                    "iitl.id",
+                    "p.person_type_id",
+                    "p.brgy_id",
+                    "p.work_role_id",
+                    "p.first_name",
+                    "p.middle_name",
+                    "p.last_name",
+                    "p.suffix",
+                    "p.contact_number",
+                    "p.email",
+                    "p.img_url",
+                    'wr.name as work_role_name',
+                    'it.name as inspector_team',
+                )
+                ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
+                ->join('inspection_inspector_team_leaders as iitl','p.id','iitl.person_id')
+                ->join('person_types as pt','p.person_type_id','pt.id')
+                ->join('work_roles as wr', 'wr.id','p.work_role_id')
+                ->where('pt.name','Inspector')
+                ->where('iitl.inspection_id','=',$id)
+                ->get()
+                ->toArray();
+
+            $inspection_sanitary_billings = DB::table('inspection_sanitary_billings as isb')
+                ->select(
+                    'isb.id' ,
+                    'isb.inspection_id' ,
+                    'isb.sanitary_billing_id' ,
+                    'isb.sanitary_quantity' ,
+                    'sb.fee' ,
+                    'sb.name as sanitary_name',
+                )
+                ->join('sanitary_billings as sb','sb.id','isb.sanitary_billing_id')
+                ->where('isb.inspection_id','=',$id)
+                ->get()
+                ->toArray();
+            $temp = [];
+            foreach ($inspection_sanitary_billings as $key => $value) {
+                array_push($temp,[
+                    "id" => $value->id,
+                    "inspection_id" => $value->inspection_id,
+                    "sanitary_billing_id" => $value->sanitary_billing_id,
+                    "sanitary_quantity" => $value->sanitary_quantity,
+                    "sanitary_quantity" => $value->sanitary_quantity,
+                    "fee" => $value->fee,
+                    "sanitary_name" => $value->sanitary_name,
+                ]);
+            }
+            $inspection_sanitary_billings = $temp;
+            $inspection_violations = DB::table('inspection_violations as iv')
+                ->select(
+                    'iv.id',
+                    'v.id as violation_id',
+                    'description',
+                    'c.name as category_name',
+                    'v.is_active'
+                )
+                ->join('violations as v','v.id','iv.violation_id')
+                ->join('categories as c','v.category_id','c.id')
+                ->where('iv.inspection_id','=',$id)
+                ->get()
+                ->toArray();
+            $temp = [];
+            if(count($inspection_violations)){
+                DB::table('inspections as i')
+                    ->where('i.id','=',$id)
+                    ->update([
+                        'remarks'=> 'With Violation/s'
+                    ]);
+            }else{
+                DB::table('inspections as i')
+                    ->where('i.id','=',$id)
+                    ->update([
+                        'remarks'=> 'No Violation'
+                    ]);
+            }
+            foreach ($inspection_violations as $key => $value) {
+                array_push($temp,[
+                    'description'=> $value->description,
+                    'category_name'=> $value->category_name,
+                    "id" => $value->id,
+                ]);
+            }
+            $inspection_violations = $temp;
+            $items = DB::table('items as i')
+                ->select(
+                    'i.id',
+                    'c.name as category_name',
+                    'i.name',
+                    'i.section_id',
+                    'i.img_url',
+                    'i.is_active',
+                    'ebs.name as section_name',
+                    )
+                ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
+                ->join('categories as c','c.id','i.category_id')
+                ->where('i.is_active','=',1)
+                ->get()
+                ->toArray();
+
+            $building_billings = DB::table('building_billings as bb')
+                ->select(
+                    "bb.id",
+                    "bb.section_id",
+                    'bbs.name as section_name',
+                    "bb.property_attribute",
+                    "bb.fee",
+                )
+                ->join('building_billing_sections as bbs','bbs.id','bb.section_id')
+                ->where('bb.is_active','=',1)
+                ->get()
+                ->toArray();
+            $temp = [];
+            foreach ($building_billings as $key => $value) {
+                array_push($temp,[
+                    'id' => $value->id,
+                    'section_id' => $value->section_id,
+                    'section_name'=> $value->section_name,
+                    'property_attribute'=> $value->property_attribute,
+                    'fee' => $value->fee,
+                ]);
+            }
+            $building_billings = $temp;
+
+            $building_billing = DB::table('building_billings')
+                ->where('id','=',$inspection->building_billing_id)
+                ->first();
+            $building_billing_fee = 0;
+            if($building_billing){
+                $building_billing_fee = $building_billing->fee;
+            }
+            $signage_billing = DB::table('signage_billings')
+                ->where('id','=',$inspection->signage_id)
+                ->first();
+            $signage_billing_fee = 0;
+            if($signage_billing){
+                $signage_billing_fee = $signage_billing->fee;
+            }
+        
         }else{
             $segragated = false;
             $application_types = DB::table('application_types')
@@ -879,7 +1203,8 @@ class OngoingInspections extends Component
                 DB::table('inspection_items')
                 ->insert([
                     'item_id' =>$this->issue_inspection['item_id'],
-                    'inspection_id'=>$this->issue_inspection['id']
+                    'inspection_id'=>$this->issue_inspection['id'],
+                    'added_by'=>$this->activity_logs['inspector_team_id']
                 ]);
 
 
@@ -1322,7 +1647,7 @@ class OngoingInspections extends Component
                 DB::table('inspection_violations')
                 ->insert([
                     'violation_id' =>$this->issue_inspection['violation_id'],
-                    'added_By' =>$this->user['person_id'],
+                    'added_by'=>$this->activity_logs['inspector_team_id'],
                     'inspection_id'=>$this->issue_inspection['id']
                 ]);
 
@@ -1970,5 +2295,212 @@ class OngoingInspections extends Component
             } 
         }
         return 0;
+    }
+
+    public $violation = [
+        'id'=> NULL,
+        'category_id'=>NULL,
+        'description'=>NULL,
+        'is_active'=>NULL,
+    ];
+    public $categories = [];
+    public function add_violation($modal_id){
+        $this->violation = [
+            'id'=> NULL,
+            'category_id'=>NULL,
+            'description'=>NULL,
+            'is_active'=>NULL,
+        ];
+        $this->dispatch('openModal',$modal_id);
+    }
+    public function save_add_violation($modal_id){
+        if(!strlen($this->violation['description'])){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'Please enter violation description!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return 0;
+        }else{
+            $edit = DB::table('violations')
+                ->where('description','=',$this->violation['description'])
+                ->first();
+            if($edit){
+                $this->dispatch('swal:redirect',
+                    position         									: 'center',
+                    icon              									: 'warning',
+                    title             									: 'Violation name exist!',
+                    showConfirmButton 									: 'true',
+                    timer             									: '1000',
+                    link              									: '#'
+                );
+                return 0;
+            }
+        }
+        if(!intval($this->violation['category_id'])){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'Please select category!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return 0;
+        }
+        if(DB::table('violations')
+            ->insert([
+                'description'=>$this->violation['description'],
+                'category_id'=>$this->violation['category_id']
+            ])){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'success',
+                title             									: 'Successfully added!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            $temp = DB::table('violations')
+            ->where('description','=',$this->violation['description'])
+            ->first();
+            
+            $this->issue_inspection['violation_id'] = $temp->id;
+            self::update_inspection_violation();
+            sleep(1);
+            self::reopenModal();
+            $this->issue_inspection['violation_id'] = NULL;
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has added a violation with the description of '.$this->violation['description'],
+            ]);
+        }
+    }
+    public $item = [
+        'id' => NULL,
+        'category_id' => NULL,
+        'name' => NULL,
+        'section_id' => NULL,
+        'img_url' => NULL,
+        'is_active' => NULL,
+    ];
+    public $equipment_billing_sections = [];
+    public function add_item($modal_id){
+        $this->item = [
+            'id' => NULL,
+            'category_id' => NULL,
+            'name' => NULL,
+            'section_id' => NULL,
+            'img_url' => NULL,
+            'is_active' => NULL,
+        ];
+        $this->dispatch('openModal',$modal_id);
+    }
+    public function save_add_item($modal_id){
+        if(!strlen($this->item['name'])){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'Please enter item name!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return 0;
+        }else{
+            if(DB::table('items')
+                ->where('name','=',$this->item['name'])
+                ->first()){
+                $this->dispatch('swal:redirect',
+                    position         									: 'center',
+                    icon              									: 'warning',
+                    title             									: 'Item Exist!',
+                    showConfirmButton 									: 'true',
+                    timer             									: '1000',
+                    link              									: '#'
+                );
+                return 0;
+            }
+        }
+        if(!intval($this->item['category_id'])){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'Invalid category!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return 0;
+        }else{
+            if(DB::table('categories')
+                ->where('id','=',$this->item['category_id'])
+                ->where('is_active','=',1)
+                ->first()){
+
+            }else{
+                $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'Invalid category!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return 0;
+            }
+        }
+        $item['img_url'] = 'default.png';
+        if($this->item['img_url']){
+            if($this->item['img_url']){
+                $item['img_url'] = self::save_image($this->item['img_url'],'items','items','img_url');
+                if($item['img_url'] == 0){
+                    return;
+                }
+            } 
+        }
+        if(DB::table('items')
+            ->insert([
+                'category_id' => $this->item['category_id'],
+                'name' => $this->item['name'],
+                'section_id' => $this->item['section_id'],
+                'img_url' => $item['img_url'],
+                ])){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'success',
+                title             									: 'Successfully added!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            $temp = DB::table('items')
+            ->where('name','=',$this->item['name'])
+            ->first();
+            $this->issue_inspection['item_id'] = $temp->id;
+            self::update_inspection_items();
+            sleep(1);
+            self::reopenModal();
+            $this->issue_inspection['item_id'] = NULL;
+            DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has added an item with the description of '.$this->item['name'],
+            ]);
+            $this->dispatch('openModal',$modal_id);
+        }
+    }
+    public function update_equipment_billing_sections(){
+        $this->equipment_billing_sections = DB::table('equipment_billing_sections')
+            ->where('category_id','=',$this->item['category_id'])
+            ->where('is_active','=',1)
+            ->get()
+            ->toArray();
     }
 }

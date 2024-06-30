@@ -100,8 +100,9 @@
             <button type="button" data-bs-toggle="modal" data-bs-target="#issueModal" id="issueModaltoggler" style="display:none;"></button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#completeModal" id="completeModaltoggler" style="display:none;"></button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#ProofModal" id="ProofModaltoggler" style="display:none;"></button>
-            
-            
+            <button type="button" data-bs-toggle="modal" data-bs-target="#addViolationModal" id="addViolationModaltoggler" style="display:none;"></button>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#addItemModal" id="addItemModaltoggler" style="display:none;"></button>
+
 
             <div wire:ignore.self class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -261,7 +262,7 @@
                                     </h5>
                                     <div class="row d-flex justify-content-end">
                                         <div class="col-2 d-flex justify-content-end my-2">
-                                            <button class="btn btn-primary">
+                                            <button class="btn btn-primary" wire:click="add_item('addItemModaltoggler')">
                                                 Add Item
                                             </button>
                                         </div>
@@ -523,12 +524,12 @@
                                 </div>
                             @elseif($issue_inspection['step'] == 8)
                                 <div wire:key="{{$issue_inspection['step']}}">
-                                <h5 class="text-center my-2 text-black">
+                                    <h5 class="text-center my-2 text-black">
                                         Violation Details
                                     </h5>
                                     <div class="row d-flex justify-content-end">
                                         <div class="col-2 d-flex justify-content-end my-2">
-                                            <button class="btn btn-primary">
+                                            <button class="btn btn-primary" wire:click="add_violation('addViolationModaltoggler')">
                                                 Add Violation
                                             </button>
                                         </div>
@@ -621,6 +622,48 @@
                 </div>
             </div>
 
+            
+
+            <div wire:ignore.self class="modal fade" id="deactivateModal" tabindex="-1" aria-labelledby="deactivateModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deactivateModalLabel">Delete Inspection</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form wire:submit.prevent="save_deactivate({{$inspection['id']}},'deactivateModaltoggler')">
+                            <div class="modal-body">
+                                <div>Are you sure you want to delete this inspection?</div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div wire:ignore.self class="modal fade" id="completeModal" tabindex="-1" aria-labelledby="completeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="completeModalLabel">Complete Inspection</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form wire:submit.prevent="save_complete({{$inspection['id']}},'completeModaltoggler')">
+                            <div class="modal-body">
+                                <div>Are you sure you want to complete this inspection?</div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                                <button type="submit" class="btn btn-success">Complete</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <div wire:ignore.self class="modal fade" id="ProofModal" tabindex="-1" aria-labelledby="ProofModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
                 <div class="modal-dialog modal-xl modal-dialog-scrollable">
                     <div class="modal-content">
@@ -686,40 +729,77 @@
                 </div>
             </div>
 
-            <div wire:ignore.self class="modal fade" id="deactivateModal" tabindex="-1" aria-labelledby="deactivateModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
+            <div wire:ignore.self class="modal fade" id="addViolationModal" tabindex="-1" aria-labelledby="addViolationModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="deactivateModalLabel">Delete Inspection</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <h5 class="modal-title" id="addViolationModalLabel">Add</h5>
+                            <button type="button" class="btn-close" wire:click="reopenModal()" aria-label="Close"></button>
                         </div>
-                        <form wire:submit.prevent="save_deactivate({{$inspection['id']}},'deactivateModaltoggler')">
+                        <form wire:submit.prevent="save_add_violation('addViolationModaltoggler')">
                             <div class="modal-body">
-                                <div>Are you sure you want to delete this inspection?</div>
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description</label>
+                                    <input type="text" class="form-control" required wire:model="violation.description">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="category_name" class="form-label">Category</label>
+                                    <select class="form-select" id="category_name" required aria-label="Default select example" wire:model="violation.category_id">
+                                        <option value="">Select Category</option>
+                                        @foreach($categories as $key => $value)
+                                            <option value="{{$value->id}}">{{$value->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <button type="button" class="btn btn-secondary" wire:click="reopenModal()" aria-label="Close">Close</button>
+                                <button type="submit" class="btn btn-primary">Add</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
 
-            <div wire:ignore.self class="modal fade" id="completeModal" tabindex="-1" aria-labelledby="completeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
+            <div wire:ignore.self class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="completeModalLabel">Complete Inspection</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <h5 class="modal-title" id="addItemModalLabel">Add</h5>
+                            <button type="button" class="btn-close" wire:click="reopenModal()" aria-label="Close"></button>
                         </div>
-                        <form wire:submit.prevent="save_complete({{$inspection['id']}},'completeModaltoggler')">
+                        <form wire:submit.prevent="save_add_item('addItemModaltoggler')">
                             <div class="modal-body">
-                                <div>Are you sure you want to complete this inspection?</div>
+                                <div class="mb-3">
+                                    <label for="image" class="form-label">Image</label>
+                                    <input type="file" class="form-control" wire:model="item.img_url">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" required wire:model="item.name" placeholder="Enter item name">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Category <span class="text-danger">*</span></label>
+                                    <select class="form-select" aria-label="Default select example" required wire:change="update_equipment_billing_sections()" wire:model="item.category_id">
+                                        <option selected value="">Select Category</option>
+                                        @foreach($categories as $key => $value)
+                                            <option value="{{$value->id}}">{{$value->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Section <span class="text-danger">*</span></label>
+                                    <select class="form-select" aria-label="Default select example" required  wire:model="item.section_id" >
+                                        <option selected value="">Select Section</option>
+                                        @foreach($equipment_billing_sections as $key => $value)
+                                            <option value="{{$value->id}}">{{$value->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
-                                <button type="submit" class="btn btn-success">Complete</button>
+                                <button type="button" class="btn btn-secondary" wire:click="reopenModal()" aria-label="Close">Close</button>
+                                <button type="submit" class="btn btn-primary">Add</button>
                             </div>
                         </form>
                     </div>

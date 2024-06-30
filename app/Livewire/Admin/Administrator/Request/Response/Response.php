@@ -38,7 +38,22 @@ class Response extends Component
             ->first();
         $business = [];
         if($request){
-            $this->content = 'OBOS Inspection would like to request to inspect your establishment from <strong>'.date_format(date_create($request->request_date),"M d, Y ").' to '.date_format(date_create($request->expiration_date),"M d, Y ").'</strong>, to accept please click the accept button. Thank you.'; 
+            $this->content = '
+                Sir/Madam:
+                <br>
+                <br>
+                Pursuant to PD 1096, otherwise known as the National Building Code of the Philippines and its IRR, the Building Official shall undertake annual inspection of all buildings/structures and keep an updated record of their status. Also in the performance of his duties, a Building Official may enter any building or its premises at all reasonable times to inspect and determine compliance with the requirements of the NBPC.
+                <br>
+                <br>
+                You are hereby inform that the OBO Inspectorate team will conduct an Annual Inspection of your establishment on  <strong>'.date_format(date_create($request->request_date),"M d, Y ").' to '.date_format(date_create($request->expiration_date),"M d, Y ").' </strong> , to ensure safety of your building and update the fees and status of your equipment.
+                <br>
+                <br>
+                Please prepare the approve plans (Structural, Electrical, Mechanical, Plumbing & Electronics), Occupancy Permit, Update site Development Plan, and a consolidated list of equipment during the scheduled inspection
+                <br>
+                <br>
+                A certificate of Annual Inspection will be issued to you after we found your building to be safe for use and/or after the compliance of deficiencies and payment of necessary fees have been made.';
+
+            
             $business = DB::table('businesses as b')
                 ->select(
                     'b.id',

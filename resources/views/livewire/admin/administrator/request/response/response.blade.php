@@ -2,7 +2,7 @@
     <div class="container">
         <div class="vh-100 d-flex align-items-center justify-content-center">
             <div class="col-xl-12 col-lg-12 col-md-9 col-sm-12 d-flex flex-column flex-sm-row justify-content-center align-items-center login-flexgap">
-                <div class="card o-hidden border-0 shadow-lg my-2 my-sm-2 col-xl-4 col-lg-5 col-md-8 col-sm-6">
+                <div class="card o-hidden border-0 shadow-lg my-2 my-sm-2 col-lg-8 col-sm-6">
                     <div class="card-body p-0">
                         @if($request_inspection['request'])
                             @if($request_inspection['request']->is_responded == 0)
@@ -29,7 +29,7 @@
                                         <div class="col-lg-12">
                                             <div class="p-5">
                                                 <div class="text-center">
-                                                    <h1 class="h4 text-gray-900 mb-4 text-c">Hi, {{$request_inspection['business']->name}}</h1>
+                                                    <h1 class="h4 text-gray-900 mb-4 text-center">{{$request_inspection['business']->name}}<br>{{' ( '.$request_inspection['business']->first_name.' '.$request_inspection['business']->middle_name.' '.$request_inspection['business']->last_name.' '.$request_inspection['business']->suffix.' )'}}</h1>
                                                 </div>
                                                 <p>
                                                     To decline, please state the reason:

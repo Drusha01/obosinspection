@@ -80,6 +80,10 @@
             <button type="button" data-bs-toggle="modal" data-bs-target="#activateModal" id="activateModaltoggler" style="display:none;"></button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#issueModal" id="issueModaltoggler" style="display:none;"></button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#completeModal" id="completeModaltoggler" style="display:none;"></button>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#ProofModal" id="ProofModaltoggler" style="display:none;"></button>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#addViolationModal" id="addViolationModaltoggler" style="display:none;"></button>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#addItemModal" id="addItemModaltoggler" style="display:none;"></button>
+            
             
 
             <div wire:ignore.self class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
@@ -206,10 +210,13 @@
                         </div>
                         <div class="modal-body">
                             <div class="progress mb-4">
-                                <div id="progressBar" class="progress-bar" role="progressbar-2" style="width:{{($issue_inspection['step']/8)*100}} %" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div id="progressBar" class="progress-bar" role="progressbar" style="width:{{($issue_inspection['step']/8)*100}}%" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             @if($issue_inspection['step'] == 1)
                                 <div wire:key="{{$issue_inspection['step']}}">
+                                    <h5 class="text-center my-2 text-black">
+                                        Inspection Details
+                                    </h5>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">Application type</label>
                                         <div class="mb-3">
@@ -232,6 +239,16 @@
                                 </div>
                             @elseif($issue_inspection['step'] == 2)
                                 <div wire:key="{{$issue_inspection['step']}}">
+                                    <h5 class="text-center my-2 text-black">
+                                        Item Details
+                                    </h5>
+                                    <!-- <div class="row d-flex justify-content-end">
+                                        <div class="col-2 d-flex justify-content-end my-2">
+                                            <button class="btn btn-primary" wire:click="add_item('addItemModaltoggler')">
+                                                Add Item
+                                            </button>
+                                        </div>
+                                    </div> -->
                                     <div class="input-group mb-3">
                                         <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.item_id">
                                             <option value="">Select Item</option>
@@ -256,7 +273,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($issue_inspection['inspection_items']  as $key => $value)
+                                                @forelse($issue_inspection['inspection_items']  as $key => $value)
                                                     <tr>
                                                         <td class="align-middle">{{$value['name']}}</td>
                                                         <td class="align-middle">{{$value['category_name']}}</td>
@@ -291,12 +308,18 @@
                                                         </td>
                                                         <td class="align-middle">{{$value['fee']*$value['quantity']}}</td>
                                                         <td class="align-middle text-center">
-                                                            <button class="btn btn-danger " wire:click="update_delete_item({{$value['id']}})">
-                                                                Delete
-                                                            </button>
+                                                            @if($value['added_by'] == $this->activity_logs['inspector_team_id'])
+                                                                <button class="btn btn-danger " wire:click="update_delete_item({{$value['id']}})">
+                                                                    Delete
+                                                                </button>
+                                                            @endif
                                                         </td>
                                                     </tr>
-                                                @endforeach
+                                                @empty
+                                                    <tr>
+                                                        <th colspan="42" class="text-center">NO DATA</th>
+                                                    </tr>
+                                                @endforelse
 
                                             </tbody>
                                         </table>
@@ -304,6 +327,9 @@
                                 </div>
                             @elseif($issue_inspection['step'] == 3)
                                 <div wire:key="{{$issue_inspection['step']}}">
+                                    <h5 class="text-center my-2 text-black">
+                                        Building Details
+                                    </h5>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">Building Information</label>
                                         <div class="mb-3">
@@ -326,6 +352,9 @@
                                 </div>
                             @elseif($issue_inspection['step'] == 4)
                                 <div wire:key="{{$issue_inspection['step']}}">
+                                    <h5 class="text-center my-2 text-black">
+                                        Sanitary Details
+                                    </h5>
                                     <div class="input-group mb-3">
                                         <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.sanitary_billing_id">
                                             <option value="">Select Sanitary Item</option>
@@ -346,7 +375,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($issue_inspection['inspection_sanitary_billings']  as $key => $value)
+                                                @forelse($issue_inspection['inspection_sanitary_billings']  as $key => $value)
                                                     <tr>
                                                         <td class="align-middle">{{$value['sanitary_name']}}</td>
                                                         <td class="align-middle">
@@ -359,7 +388,11 @@
                                                             </button>
                                                         </td>
                                                     </tr>
-                                                @endforeach
+                                                @empty
+                                                    <tr>
+                                                        <th colspan="42" class="text-center">NO DATA</th>
+                                                    </tr>
+                                                @endforelse
 
                                             </tbody>
                                         </table>
@@ -367,6 +400,9 @@
                                 </div>
                             @elseif($issue_inspection['step'] == 5)
                                 <div wire:key="{{$issue_inspection['step']}}">
+                                    <h5 class="text-center my-2 text-black">
+                                        Signage Details
+                                    </h5>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">Signage Information</label>
                                         <div class="mb-3">
@@ -389,6 +425,9 @@
                                 </div>
                             @elseif($issue_inspection['step'] == 6)
                                 <div wire:key="{{$issue_inspection['step']}}">
+                                    <h5 class="text-center my-2 text-black">
+                                        Team Leader Details
+                                    </h5>
                                     <div class="table-responsive">
                                         <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
                                             <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
@@ -397,17 +436,24 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($issue_inspection['inspector_team_leaders']  as $key =>$value)
+                                                @forelse($issue_inspection['inspector_team_leaders']  as $key =>$value)
                                                     <tr>
-                                                        <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
+                                                        <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                     </tr>
-                                                @endforeach
+                                                @empty
+                                                    <tr>
+                                                        <th colspan="42" class="text-center">NO DATA</th>
+                                                    </tr>
+                                                @endforelse
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                             @elseif($issue_inspection['step'] == 7)
                                 <div wire:key="{{$issue_inspection['step']}}">
+                                    <h5 class="text-center my-2 text-black">
+                                        Team Member Details
+                                    </h5>
                                     <div class="table-responsive">
                                         <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
                                             <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
@@ -416,11 +462,15 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($issue_inspection['inspection_inspector_members']  as $key =>$value)
+                                                @forelse($issue_inspection['inspection_inspector_members']  as $key =>$value)
                                                     <tr>
-                                                        <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
+                                                        <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                     </tr>
-                                                @endforeach
+                                                @empty
+                                                    <tr>
+                                                        <th colspan="42" class="text-center">NO DATA</th>
+                                                    </tr>
+                                                @endforelse
 
                                             </tbody>
                                         </table>
@@ -428,11 +478,21 @@
                                 </div>
                             @elseif($issue_inspection['step'] == 8)
                                 <div wire:key="{{$issue_inspection['step']}}">
+                                    <h5 class="text-center my-2 text-black">
+                                        Violation Details
+                                    </h5>
+                                    <div class="row d-flex justify-content-end">
+                                        <!-- <div class="col-2 d-flex justify-content-end my-2">
+                                            <button class="btn btn-primary" wire:click="add_violation('addViolationModaltoggler')">
+                                                Add Violation
+                                            </button>
+                                        </div> -->
+                                    </div>
                                     <div class="input-group mb-3">
                                         <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.violation_id">
                                             <option value="">Select Violation</option>
                                             @foreach($issue_inspection['violations'] as $key =>  $value)
-                                                <option selected value="{{$value->id}}">{{$value->description}}</option>
+                                                <option selected value="{{$value->id}}">{{$value->description.' ( '.$value->category_name. ' ) '}}</option>
                                             @endforeach
                                         </select>
                                         <button class="btn btn-primary" type="button" wire:click="update_inspection_violation()" ><i class="bi bi-plus"></i></button>
@@ -442,21 +502,47 @@
                                             <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                                                 <tr>
                                                     <th>Description</th>
+                                                    <th class="text-center">Has Proof</th>
+                                                    <th>
+                                                        Proof
+                                                    </th>
                                                     <th class="align-middle text-center">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($issue_inspection['inspection_violations']  as $key => $value)
+                                                @forelse($issue_inspection['inspection_violations']  as $key => $value)
                                                     <tr>
-                                                        <td class="align-middle">{{$value['description']}}</td>
+                                                        <td class="align-middle">{{$value['description'].' ( '.$value['category_name']. ' ) '}}</td>
                                                         <td class="align-middle text-center">
-                                                            <button class="btn btn-danger "wire:click="update_delete_violation({{$value['id']}})"> 
-                                                                Delete
+                                                            <?php
+                                                                if(DB::table('inspection_violation_contents')
+                                                                    ->where('inspection_violation_id','=',$value['id'])
+                                                                    ->first()
+                                                                ){
+                                                                    echo '<span class="badge text-light p-2 bg-primary">W/ Proof</span>';
+                                                                }else{
+                                                                    echo '<span class="badge text-light p-2 bg-warning">W/out Proof</span>';
+                                                                }
+                                                            ?>
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-primary "wire:click="view_violation_proof({{$value['id']}},'ProofModaltoggler')"> 
+                                                                View
                                                             </button>
                                                         </td>
+                                                        <td class="align-middle text-center">
+                                                            @if($value['added_by'] == $this->activity_logs['inspector_team_id'])
+                                                                <button class="btn btn-danger "wire:click="update_delete_violation({{$value['id']}})"> 
+                                                                    Delete
+                                                                </button>
+                                                            @endif
+                                                        </td>
                                                     </tr>
-                                                @endforeach
-
+                                                @empty
+                                                    <tr>
+                                                        <th colspan="42" class="text-center">NO DATA</th>
+                                                    </tr>
+                                                @endforelse
                                             </tbody>
                                         </table>
                                     </div>
@@ -490,7 +576,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> 
 
             <div wire:ignore.self class="modal fade" id="deactivateModal" tabindex="-1" aria-labelledby="deactivateModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -522,6 +608,160 @@
                                 <button type="submit" class="btn btn-success">Complete</button>
                             </form>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div wire:ignore.self class="modal fade" id="ProofModal" tabindex="-1" aria-labelledby="ProofModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ProofModalLabel">Inspection Violation Proof</h5>
+                            <button type="button" class="btn-close" wire:click="reopenModal()" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div>Violation: @if(isset($violation_contents['violation'])) {{$violation_contents['violation']->description}} @endif</div>
+                                @if(isset($violation_contents['violation']))
+                                    @if($violation_contents['violation']->added_by == $this->activity_logs['inspector_team_id'])
+                                        <form  wire:submit.prevent="upload_photos()">
+                                            <div class="row d-flex">
+                                                <label for="formFileSm" class="form-label text-dark mt-2">Upload Proof</label>
+                                                <div class="col-11">
+                                                    <div class="mb-3">
+                                                        <input class="form-control form-control" id="formFileSm"   accept="image/jpeg, image/png" wire:model="violation_contents.photos" type="file" multiple>
+                                                    </div>
+                                                </div>
+                                                <div class="col-1 ">
+                                                    <button class="btn btn-primary">
+                                                        Upload
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    @endif
+                                @endif
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
+                                    <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                                        <tr>
+                                            <th>#</th>
+                                            <th class="align-middle text-center">
+                                                Image
+                                            </th>
+                                            @if(isset($violation_contents['violation']))
+                                                @if($violation_contents['violation']->added_by == $this->activity_logs['inspector_team_id'])
+                                                    <th class="align-middle text-center">Action</th>
+                                                @endif
+                                            @endif
+                                        </tr>
+                                    </thead>
+                                    <tbody  class="overflow-auto" style="max-height500px">
+                                        @forelse($violation_contents['inspection_violation_contents']  as $key => $value)
+                                            <tr>
+                                                <td class="align-middle">
+                                                   {{$key+1}}
+                                                </td>
+                                                <td class="text-center align-middle">
+                                                    <a href="{{asset('storage/content/proof/'.$value->img_url)}}" target="blank">
+                                                        <img class="img-fluid"src="{{asset('storage/content/proof/'.$value->img_url)}}" alt="" style="max-height:200px;max-width:200px; ">
+                                                    </a>
+                                                </td>
+                                                @if(isset($violation_contents['violation']))
+                                                    @if($violation_contents['violation']->added_by == $this->activity_logs['inspector_team_id'])
+                                                        <td class="align-middle text-center">
+                                                            <button class="btn btn-danger "wire:click="delete_proof_photo({{$value->id}})"> 
+                                                                Delete
+                                                            </button>
+                                                        </td>
+                                                    @endif
+                                                @endif
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <th colspan="42" class="text-center">NO DATA</th>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div wire:ignore.self class="modal fade" id="addViolationModal" tabindex="-1" aria-labelledby="addViolationModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addViolationModalLabel">Add</h5>
+                            <button type="button" class="btn-close" wire:click="reopenModal()" aria-label="Close"></button>
+                        </div>
+                        <form wire:submit.prevent="save_add_violation('addViolationModaltoggler')">
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description</label>
+                                    <input type="text" class="form-control" required wire:model="violation.description">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="category_name" class="form-label">Category</label>
+                                    <select class="form-select" id="category_name" required aria-label="Default select example" wire:model="violation.category_id">
+                                        <option value="">Select Category</option>
+                                        @foreach($categories as $key => $value)
+                                            <option value="{{$value->id}}">{{$value->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" wire:click="reopenModal()" aria-label="Close">Close</button>
+                                <button type="submit" class="btn btn-primary">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div wire:ignore.self class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addItemModalLabel">Add</h5>
+                            <button type="button" class="btn-close" wire:click="reopenModal()" aria-label="Close"></button>
+                        </div>
+                        <form wire:submit.prevent="save_add_item('addItemModaltoggler')">
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="image" class="form-label">Image</label>
+                                    <input type="file" class="form-control" wire:model="item.img_url">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" required wire:model="item.name" placeholder="Enter item name">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Category <span class="text-danger">*</span></label>
+                                    <select class="form-select" aria-label="Default select example" required wire:change="update_equipment_billing_sections()" wire:model="item.category_id">
+                                        <option selected value="">Select Category</option>
+                                        @foreach($categories as $key => $value)
+                                            <option value="{{$value->id}}">{{$value->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Section <span class="text-danger">*</span></label>
+                                    <select class="form-select" aria-label="Default select example" required  wire:model="item.section_id" >
+                                        <option selected value="">Select Section</option>
+                                        @foreach($equipment_billing_sections as $key => $value)
+                                            <option value="{{$value->id}}">{{$value->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" wire:click="reopenModal()" aria-label="Close">Close</button>
+                                <button type="submit" class="btn btn-primary">Add</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

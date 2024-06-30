@@ -525,12 +525,15 @@
                             <h5 class="modal-title" id="deactivateModalLabel">Delete Inspection</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            <form wire:submit.prevent="save_deactivate({{$inspection['id']}},'deactivateModaltoggler')">
+                        <form wire:submit.prevent="save_deactivate({{$inspection['id']}},'deactivateModaltoggler')">
+                            <div class="modal-body">
                                 <div>Are you sure you want to delete this inspection?</div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
                                 <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
-                        </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -542,12 +545,15 @@
                             <h5 class="modal-title" id="completeModalLabel">Complete Inspection</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            <form wire:submit.prevent="save_complete({{$inspection['id']}},'completeModaltoggler')">
+                        <form wire:submit.prevent="save_complete({{$inspection['id']}},'completeModaltoggler')">
+                            <div class="modal-body">
                                 <div>Are you sure you want to complete this inspection?</div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
                                 <button type="submit" class="btn btn-success">Complete</button>
-                            </form>
-                        </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

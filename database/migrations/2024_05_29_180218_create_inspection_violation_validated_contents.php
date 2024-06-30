@@ -11,20 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement('CREATE TABLE inspection_items(
+        DB::statement('CREATE TABLE inspection_violation_validated_contents(
             id INT PRIMARY KEY AUTO_INCREMENT,
             inspection_id INT NOT NULL,
-            item_id INT NOT NULL,
-            equipment_billing_id INT ,
-            power_rating DOUBLE DEFAULT 0,
-            quantity INT NOT NULL DEFAULT 1,
-            fee DOUBLE NOT NULL DEFAULT 0, # saving data regardless of changes from eqiupment fees
-            added_by INT NOT NULL,
+            inspection_violation_id INT NOT NULL,
+            img_url varchar(50) NOT NULL,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
             date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             FOREIGN KEY (inspection_id) REFERENCES inspections(id),
-            FOREIGN KEY (item_id) REFERENCES items(id),
-            FOREIGN KEY (equipment_billing_id) REFERENCES equipment_billings(id)
+            FOREIGN KEY (inspection_violation_id) REFERENCES inspection_violations(id)
         );');
     }
 
@@ -33,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('inspection_items');
+        Schema::dropIfExists('inspection_violation_validated_contents');
     }
 };

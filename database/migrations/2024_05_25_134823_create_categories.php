@@ -28,7 +28,8 @@ return new class extends Migration
         (2, 'Electronics', 'default.png'),
         (3, 'Electrical', 'default.png'),
         (4, 'Building', 'default.png'),
-        (5, 'Plumbing', 'default.png');");
+        (5, 'Plumbing', 'default.png'),
+        (6, 'Signage', 'default.png');");
 
         
     }
