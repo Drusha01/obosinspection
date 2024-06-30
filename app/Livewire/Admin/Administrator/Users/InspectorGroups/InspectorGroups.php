@@ -271,7 +271,7 @@ class InspectorGroups extends Component
             ->join('users as u','u.person_id','p.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
             ->where(DB::raw($this->search['type']),'like',$this->search['search'] .'%')
-            ->orderBy('id','desc')
+            ->orderBy('it.id','desc')
             ->paginate($this->table_filter['table_rows']);
         return view('livewire.admin.administrator.users.inspector-groups.inspector-groups',[
             'table_data'=>$table_data

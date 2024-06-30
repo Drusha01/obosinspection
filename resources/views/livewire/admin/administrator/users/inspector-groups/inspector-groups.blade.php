@@ -188,7 +188,7 @@
                                 <label for="inspectors" class="form-label">Member Inspector</label>
                                 <div class="col-8">
                                     <div class="mb-3">
-                                        <select class="form-select" id="inspectors" aria-label="Select Member" required wire:model="inspector_team.member_id">
+                                        <select class="form-select" id="inspectors" aria-label="Select Member" wire:model="inspector_team.member_id">
                                             <option value="">Select Inspector Member</option>
                                             @foreach($inspector_members as $key => $value)
                                                 <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</option>
