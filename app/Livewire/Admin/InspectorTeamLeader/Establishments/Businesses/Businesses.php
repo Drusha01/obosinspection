@@ -14,10 +14,7 @@ class Businesses extends Component
     use WithPagination;
     use WithFileUploads;
     public $title = "Businesses";
-    public $search = [
-        'business_name'=> NULL,
-        'business_name_prev'=> NULL,
-    ];
+    
     public $histfilter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
         ['column_name'=> 'img_url','active'=> true,'name'=>'Image'],
@@ -60,41 +57,7 @@ class Businesses extends Component
     public $owners;
     public $business_types;
     public $history = [];
-    public function mount(){
-        $city_mun = DB::table('citymun')
-            ->where('citymunDesc','=','GENERAL SANTOS CITY (DADIANGAS)')
-            ->first();
-        $this->brgy = DB::table('brgy')
-            ->where('citymunCode','=',$city_mun->citymunCode)
-            ->get()
-            ->toArray();
-        $this->owners = DB::table('persons as p')
-        ->select(
-            'p.id',
-            'p.first_name',
-            'p.middle_name',
-            'p.last_name',
-            'p.suffix',
-            'p.contact_number',
-            'p.email',
-            'p.img_url',
-            'p.is_active',
-            "p.date_created",
-            "p.date_updated",
-        )
-        ->join('person_types as pt','pt.id','p.person_type_id')
-        ->where('pt.name','=','Owner')
-        ->where('is_active','=',1)
-        ->get()
-        ->toArray();
-        $this->occupancy_classifications = DB::table('occupancy_classifications')
-            ->where('is_active','=',1)
-            ->get()
-            ->toArray();
-        $this->business_types = DB::table('business_types')
-            ->get()
-            ->toArray();
-    }
+    
     public $activity_logs = [
         'created_by' => NULL,
         'inspector_team_id' => NULL,
@@ -124,6 +87,145 @@ class Businesses extends Component
             $this->activity_logs['inspector_team_id'] = 0;
         }
     }
+    public $search = [
+        'search'=> NULL,
+        'search_prev'=> NULL,
+        'type' => NULL,
+        'type_prev' => NULL,
+        'brgy_id'=>NULL,
+    ];
+    public $search_by = [
+        ['name'=>'Name','column_name'=>'b.name'],
+        // ['name'=>'Contact','column_name'=>'b.contact_number'],
+        ['name'=>'Email','column_name'=>'b.email'],
+    ];
+    public $table_filter;
+    public function save_filter(Request $request){
+        $session = $request->session()->all();
+        $table_filter = DB::table('table_filters')
+        ->where('id',$this->table_filter['id'])
+        ->first();
+        if($table_filter){
+            DB::table('table_filters')
+            ->where('id',$this->table_filter['id'])
+            ->update([
+                'table_rows'=>$this->table_filter['table_rows'],
+                'filter'=>json_encode($this->table_filter['filter']),
+            ]);
+            $table_filter = DB::table('table_filters')
+                ->where('id',$this->table_filter['id'])
+                ->first();
+            $temp_filter = [];
+            foreach (json_decode($table_filter->filter) as $key => $value) {
+                array_push($temp_filter,[
+                    'column_name'=>$value->column_name,
+                    'active'=>$value->active,
+                    'name'=>$value->name,
+                ]);
+            }
+            $this->table_filter = [
+                'id'=>$table_filter->id,
+                'path'=>$table_filter->path,
+                'table_rows'=>$table_filter->table_rows,
+                'filter'=>$temp_filter,
+            ];
+        }
+        $this->dispatch('swal:redirect',
+            position         									: 'center',
+            icon              									: 'success',
+            title             									: 'Successfully updated!',
+            showConfirmButton 									: 'true',
+            timer             									: '1000',
+            link              									: '#'
+        );
+    }
+
+    public function mount(Request $request){
+        $session = $request->session()->all();
+        $table_filter = DB::table('table_filters')
+        ->where('user_id',$session['id'])
+        ->where('path','=',$request->path())
+        ->first();
+        if($table_filter){
+            $temp_filter = [];
+            foreach (json_decode($table_filter->filter) as $key => $value) {
+                array_push($temp_filter,[
+                    'column_name'=>$value->column_name,
+                    'active'=>$value->active,
+                    'name'=>$value->name,
+                ]);
+            }
+            $this->table_filter = [
+                'id'=>$table_filter->id,
+                'path'=>$table_filter->path,
+                'table_rows'=>$table_filter->table_rows,
+                'filter'=>$temp_filter,
+            ];
+        }else{
+            DB::table('table_filters')
+            ->insert([
+                'user_id' =>$session['id'],
+                'path' =>$request->path(),
+                'table_rows' =>10,
+                'filter'=> json_encode($this->filter)
+            ]);
+            $table_filter = DB::table('table_filters')
+            ->where('user_id',$session['id'])
+            ->where('path','=',$request->path())
+            ->first();
+            $temp_filter = [];
+            foreach (json_decode($table_filter->filter) as $key => $value) {
+                array_push($temp_filter,[
+                    'column_name'=>$value->column_name,
+                    'active'=>$value->active,
+                    'name'=>$value->name,
+                ]);
+            }
+            $this->table_filter = [
+                'id'=>$table_filter->id,
+                'path'=>$table_filter->path,
+                'table_rows'=>$table_filter->table_rows,
+                'filter'=>$temp_filter,
+            ];
+        }
+        $this->business_category = DB::table('business_category')
+        ->get()
+        ->toArray();
+        $city_mun = DB::table('citymun')
+            ->where('citymunDesc','=','GENERAL SANTOS CITY (DADIANGAS)')
+            ->first();
+        $this->brgy = DB::table('brgy')
+            ->where('citymunCode','=',$city_mun->citymunCode)
+            ->orderBy('brgyDesc','asc')
+            ->get()
+            ->toArray();
+        $this->owners = DB::table('persons as p')
+        ->select(
+            'p.id',
+            'p.first_name',
+            'p.middle_name',
+            'p.last_name',
+            'p.suffix',
+            'p.contact_number',
+            'p.email',
+            'p.img_url',
+            'p.is_active',
+            "p.date_created",
+            "p.date_updated",
+        )
+        ->join('person_types as pt','pt.id','p.person_type_id')
+        ->where('pt.name','=','Owner')
+        ->where('is_active','=',1)
+        ->get()
+        ->toArray();
+        $this->occupancy_classifications = DB::table('occupancy_classifications')
+            ->where('is_active','=',1)
+            ->get()
+            ->toArray();
+        $this->business_types = DB::table('business_types')
+            ->get()
+            ->toArray();
+    }
 
     public function render(Request $request)
     {
@@ -133,65 +235,84 @@ class Businesses extends Component
             ->where('u.id','=',$session['id'])
             ->first();
             
-        if($this->search['business_name'] != $this->search['business_name_prev']){
-            $this->search['business_name_prev'] = $this->search['business_name'];
+
+        if($this->search['search'] != $this->search['search_prev']){
+            $this->search['search_prev'] = $this->search['search'];
             $this->resetPage();
         }
-        $table_data = DB::table('businesses as b')
-            ->select(
-                'b.id',
-                'b.img_url',
-                'b.name',
-                'p.first_name',
-                'p.middle_name',
-                'p.last_name',
-                'p.suffix',
-                'brg.brgyDesc as barangay',
-                'bt.name as business_type_name',
-                'oc.character_of_occupancy as occupancy_classification_name',
-                'b.contact_number',
-                'b.email',
-                'b.floor_area',
-                'b.signage_area',
-                'b.is_active'
-            )
-            ->join('persons as p','p.id','b.owner_id')
-            ->join('business_types as bt','bt.id','b.business_type_id')
-            ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-        
-            ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
-            ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
-            ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
-            ->where('it.team_leader_id','=',$person->person_id)
-            ->where('b.name','like',$this->search['business_name'] .'%')
-            ->orderBy('id','desc')
-            ->paginate(10);
-        // $table_data = DB::table('businesses as b')
-        //     ->select(
-        //         'b.id',
-        //         'b.img_url',
-        //         'b.name',
-        //         'p.first_name',
-        //         'p.middle_name',
-        //         'p.last_name',
-        //         'p.suffix',
-        //         'brg.brgyDesc as barangay',
-        //         'bt.name as business_type_name',
-        //         'oc.character_of_occupancy as occupancy_classification_name',
-        //         'b.contact_number',
-        //         'b.email',
-        //         'b.floor_area',
-        //         'b.signage_area',
-        //         'b.is_active'
-
-        //     )
-        //     ->join('persons as p','p.id','b.owner_id')
-        //     ->join('brgy as brg','brg.id','b.brgy_id')
-        //     ->join('business_types as bt','bt.id','b.business_type_id')
-        //     ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-        //     ->where('b.name','like',$this->search['business_name'] .'%')
-        //     ->orderBy('id','desc')
-        //     ->paginate(10);
+        if($this->search['type'] != $this->search['type_prev']){
+            $this->search['type_prev'] = $this->search['type'];
+            if($this->search['type'] == 'b.contact_number'){
+                $this->search['search'] = substr($this->search['search'],1);
+            }
+            $this->resetPage();
+        }else{
+            if(!$this->search['type']){
+                $this->search['type'] = $this->search_by[0]['column_name'];
+            }
+        }
+        if(intval($this->search['brgy_id'])){
+            $table_data = DB::table('businesses as b')
+                ->select(
+                    'b.id',
+                    'b.img_url',
+                    'b.name',
+                    'p.first_name',
+                    'p.middle_name',
+                    'p.last_name',
+                    'p.suffix',
+                    'brg.brgyDesc as barangay',
+                    'bt.name as business_type_name',
+                    'oc.character_of_occupancy as occupancy_classification_name',
+                    'b.contact_number',
+                    'b.email',
+                    'b.floor_area',
+                    'b.signage_area',
+                    'b.is_active'
+                )
+                ->join('persons as p','p.id','b.owner_id')
+                ->join('business_types as bt','bt.id','b.business_type_id')
+                ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+            
+                ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
+                ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
+                ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
+                ->where('it.team_leader_id','=',$person->person_id)
+                ->where('b.brgy_id','=',$this->search['brgy_id'] )
+                ->where($this->search['type'],'like',$this->search['search'] .'%')
+                ->orderBy('id','desc')
+                ->paginate($this->table_filter['table_rows']);
+        }else{
+            $table_data = DB::table('businesses as b')
+                ->select(
+                    'b.id',
+                    'b.img_url',
+                    'b.name',
+                    'p.first_name',
+                    'p.middle_name',
+                    'p.last_name',
+                    'p.suffix',
+                    'brg.brgyDesc as barangay',
+                    'bt.name as business_type_name',
+                    'oc.character_of_occupancy as occupancy_classification_name',
+                    'b.contact_number',
+                    'b.email',
+                    'b.floor_area',
+                    'b.signage_area',
+                    'b.is_active'
+                )
+                ->join('persons as p','p.id','b.owner_id')
+                ->join('business_types as bt','bt.id','b.business_type_id')
+                ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+            
+                ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
+                ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
+                ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
+                ->where('it.team_leader_id','=',$person->person_id)
+                ->where($this->search['type'],'like',$this->search['search'] .'%')
+                ->orderBy('id','desc')
+                ->paginate($this->table_filter['table_rows']);
+        }
         return view('livewire.admin.inspector-team-leader.establishments.businesses.businesses',[
            'table_data'=>$table_data 
         ])

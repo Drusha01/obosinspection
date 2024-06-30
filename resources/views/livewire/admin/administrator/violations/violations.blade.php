@@ -1,7 +1,7 @@
 <div>
     <div class="content">
         <div class="container-fluid">
-        <div class="row d-flex mt-4 mb-4">
+            <div class="row d-flex mt-4 mb-4">
                 <div class="col">
                     <h1 class="h3 mb-0 text-gray-800">{{$title}}</h1>
                 </div>
@@ -139,8 +139,8 @@
                         <h5 class="modal-title" id="addModalLabel">Add</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <form wire:submit.prevent="save_add('addModaltoggler')">
+                    <form wire:submit.prevent="save_add('addModaltoggler')">
+                        <div class="modal-body">
                             <div class="mb-3">
                                 <label for="description" class="form-label">Description</label>
                                 <input type="text" class="form-control" required wire:model="violation.description">
@@ -154,9 +154,12 @@
                                     @endforeach
                                 </select>
                             </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
                             <button type="submit" class="btn btn-primary">Add</button>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -169,8 +172,8 @@
                         <h5 class="modal-title" id="editModalLabel">Edit</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <form wire:submit.prevent="save_edit({{$violation['id']}},'editModaltoggler')">
+                    <form wire:submit.prevent="save_edit({{$violation['id']}},'editModaltoggler')">
+                        <div class="modal-body">
                             <div class="mb-3">
                                 <label for="description" class="form-label">Description</label>
                                 <input type="text" class="form-control" required wire:model="violation.description">
@@ -183,9 +186,12 @@
                                     @endforeach
                                 </select>
                             </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
                             <button type="submit" class="btn btn-success">Save</button>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -198,12 +204,15 @@
                         <h5 class="modal-title" id="deactivateModalLabel">Deactivate</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <form wire:submit.prevent="save_deactivate({{$violation['id']}},'deactivateModaltoggler')">
+                    <form wire:submit.prevent="save_deactivate({{$violation['id']}},'deactivateModaltoggler')">
+                        <div class="modal-body">
                             <div>Are you sure you want to deactivate this?</div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
                             <button type="submit" class="btn btn-danger">Deactivate</button>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -216,12 +225,15 @@
                         <h5 class="modal-title" id="activateModalLabel">Activate</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <form wire:submit.prevent="save_activate({{$violation['id']}},'activateModaltoggler')">
+                    <form wire:submit.prevent="save_activate({{$violation['id']}},'activateModaltoggler')">
+                        <div class="modal-body">
                             <div>Are you sure you want to activate this?</div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
                             <button type="submit" class="btn btn-warning">Activate</button>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

@@ -139,15 +139,18 @@
                         <h5 class="modal-title" id="addModalLabel">Add</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <form wire:submit.prevent="save_add('addModaltoggler')">
+                    <form wire:submit.prevent="save_add('addModaltoggler')">
+                        <div class="modal-body">
                             <div class="mb-3">
                                 <label for="brgyDesc" class="form-label">Barangay <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" required wire:model="barangay.brgyDesc" placeholder="Enter barangay">
                             </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
                             <button type="submit" class="btn btn-primary">Add</button>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -160,15 +163,18 @@
                         <h5 class="modal-title" id="editModalLabel">Edit</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <form wire:submit.prevent="save_edit({{$barangay['id']}},'editModaltoggler')">
+                    <form wire:submit.prevent="save_edit({{$barangay['id']}},'editModaltoggler')">
+                        <div class="modal-body">
                             <div class="mb-3">
                                 <label for="brgyDesc" class="form-label">Barangay <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" required wire:model="barangay.brgyDesc" placeholder="Enter barangay">
                             </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
                             <button type="submit" class="btn btn-success">Save</button>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -181,12 +187,15 @@
                         <h5 class="modal-title" id="deactivateModalLabel">Deactivate</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <form wire:submit.prevent="save_deactivate({{$barangay['id']}},'deactivateModaltoggler')">
+                    <form wire:submit.prevent="save_deactivate({{$barangay['id']}},'deactivateModaltoggler')">
+                        <div class="modal-body">
                             <div>Are you sure you want to deactivate this barangay?</div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
                             <button type="submit" class="btn btn-danger">Deactivate</button>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -199,12 +208,15 @@
                         <h5 class="modal-title" id="activateModalLabel">Activate</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <form wire:submit.prevent="save_activate({{$barangay['id']}},'activateModaltoggler')">
+                    <form wire:submit.prevent="save_activate({{$barangay['id']}},'activateModaltoggler')">
+                        <div class="modal-body">
                             <div>Are you sure you want to activate this barangay?</div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
                             <button type="submit" class="btn btn-warning">Activate</button>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

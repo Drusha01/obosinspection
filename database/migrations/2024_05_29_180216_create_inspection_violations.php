@@ -17,6 +17,7 @@ return new class extends Migration
             violation_id INT NOT NULL,
             added_by INT NOT NULL,
             remarks VARCHAR(4024),
+            added_by INT NOT NULL,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
             date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             FOREIGN KEY (inspection_id) REFERENCES inspections(id),

@@ -30,12 +30,7 @@ class Items extends Component
         'is_active' => NULL,
     ];
     public $categories;
-    public function mount(){
-        $this->categories = DB::table('categories')
-            ->where('is_active','=',1)
-            ->get()
-            ->toArray();
-    }
+    
     public $activity_logs = [
         'created_by' => NULL,
         'inspector_team_id' => NULL,
@@ -66,8 +61,113 @@ class Items extends Component
         }
     }
 
+    public $search = [
+        'search'=> NULL,
+        'search_prev'=> NULL,
+    ];
+
+    public $table_filter;
+    public function save_filter(Request $request){
+        $session = $request->session()->all();
+        $table_filter = DB::table('table_filters')
+        ->where('id',$this->table_filter['id'])
+        ->first();
+        if($table_filter){
+            DB::table('table_filters')
+            ->where('id',$this->table_filter['id'])
+            ->update([
+                'table_rows'=>$this->table_filter['table_rows'],
+                'filter'=>json_encode($this->table_filter['filter']),
+            ]);
+            $table_filter = DB::table('table_filters')
+                ->where('id',$this->table_filter['id'])
+                ->first();
+            $temp_filter = [];
+            foreach (json_decode($table_filter->filter) as $key => $value) {
+                array_push($temp_filter,[
+                    'column_name'=>$value->column_name,
+                    'active'=>$value->active,
+                    'name'=>$value->name,
+                ]);
+            }
+            $this->table_filter = [
+                'id'=>$table_filter->id,
+                'path'=>$table_filter->path,
+                'table_rows'=>$table_filter->table_rows,
+                'filter'=>$temp_filter,
+            ];
+        }
+        $this->dispatch('swal:redirect',
+            position         									: 'center',
+            icon              									: 'success',
+            title             									: 'Successfully updated!',
+            showConfirmButton 									: 'true',
+            timer             									: '1000',
+            link              									: '#'
+        );
+    }
+    public function mount(Request $request){
+        $session = $request->session()->all();
+        
+        $this->categories = DB::table('categories')
+            ->where('is_active','=',1)
+            ->get()
+            ->toArray();
+        $this->url_path = url()->current();
+        
+        $table_filter = DB::table('table_filters')
+        ->where('user_id',$session['id'])
+        ->where('path','=',$request->path())
+        ->first();
+        if($table_filter){
+            $temp_filter = [];
+            foreach (json_decode($table_filter->filter) as $key => $value) {
+                array_push($temp_filter,[
+                    'column_name'=>$value->column_name,
+                    'active'=>$value->active,
+                    'name'=>$value->name,
+                ]);
+            }
+            $this->table_filter = [
+                'id'=>$table_filter->id,
+                'path'=>$table_filter->path,
+                'table_rows'=>$table_filter->table_rows,
+                'filter'=>$temp_filter,
+            ];
+        }else{
+            DB::table('table_filters')
+            ->insert([
+                'user_id' =>$session['id'],
+                'path' =>$request->path(),
+                'table_rows' =>10,
+                'filter'=> json_encode($this->filter)
+            ]);
+            $table_filter = DB::table('table_filters')
+            ->where('user_id',$session['id'])
+            ->where('path','=',$request->path())
+            ->first();
+            $temp_filter = [];
+            foreach (json_decode($table_filter->filter) as $key => $value) {
+                array_push($temp_filter,[
+                    'column_name'=>$value->column_name,
+                    'active'=>$value->active,
+                    'name'=>$value->name,
+                ]);
+            }
+            $this->table_filter = [
+                'id'=>$table_filter->id,
+                'path'=>$table_filter->path,
+                'table_rows'=>$table_filter->table_rows,
+                'filter'=>$temp_filter,
+            ];
+        }
+    }
     public function render()
     {
+        if($this->search['search'] != $this->search['search_prev']){
+            $this->search['search_prev'] = $this->search['search'];
+            $this->resetPage();
+        }
         $table_data = DB::table('items as i')
             ->select(
                 'i.id',
@@ -79,8 +179,9 @@ class Items extends Component
             )
             ->join('categories as c','c.id','i.category_id')
             ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
-            ->orderBy('id','desc')
-            ->paginate(10);
+            ->where('i.name','like',$this->search['search'] .'%')
+            ->orderBy('i.id','desc')
+            ->paginate($this->table_filter['table_rows']);
         return view('livewire.admin.inspector.equipments.items.items',[
             'table_data'=>$table_data
         ])

@@ -14,10 +14,7 @@ class Owners extends Component
     use WithPagination;
     use WithFileUploads;
     public $title = "Owners";
-    public $search = [
-        'owner_name'=> NULL,
-        'owner_name_prev'=> NULL,
-    ];
+   
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
         ['column_name'=> 'img_url','active'=> true,'name'=>'Image'],
@@ -69,10 +66,111 @@ class Owners extends Component
             $this->activity_logs['inspector_team_id'] = 0;
         }
     }
+    public $search = [
+        'search'=> NULL,
+        'search_prev'=> NULL,
+        'type' => NULL,
+        'type_prev' => NULL,
+    ];
+    public $search_by = [
+        ['name'=>'Name','column_name'=>'b.name'],
+        // ['name'=>'Contact','column_name'=>'b.contact_number'],
+        ['name'=>'Email','column_name'=>'b.email'],
+    ];
+    
+    public $table_filter;
+    public function save_filter(Request $request){
+        $session = $request->session()->all();
+        $table_filter = DB::table('table_filters')
+        ->where('id',$this->table_filter['id'])
+        ->first();
+        if($table_filter){
+            DB::table('table_filters')
+            ->where('id',$this->table_filter['id'])
+            ->update([
+                'table_rows'=>$this->table_filter['table_rows'],
+                'filter'=>json_encode($this->table_filter['filter']),
+            ]);
+            $table_filter = DB::table('table_filters')
+                ->where('id',$this->table_filter['id'])
+                ->first();
+            $temp_filter = [];
+            foreach (json_decode($table_filter->filter) as $key => $value) {
+                array_push($temp_filter,[
+                    'column_name'=>$value->column_name,
+                    'active'=>$value->active,
+                    'name'=>$value->name,
+                ]);
+            }
+            $this->table_filter = [
+                'id'=>$table_filter->id,
+                'path'=>$table_filter->path,
+                'table_rows'=>$table_filter->table_rows,
+                'filter'=>$temp_filter,
+            ];
+        }
+        $this->dispatch('swal:redirect',
+            position         									: 'center',
+            icon              									: 'success',
+            title             									: 'Successfully updated!',
+            showConfirmButton 									: 'true',
+            timer             									: '1000',
+            link              									: '#'
+        );
+    }
+    public function mount(Request $request){
+        $session = $request->session()->all();
+        $table_filter = DB::table('table_filters')
+        ->where('user_id',$session['id'])
+        ->where('path','=',$request->path())
+        ->first();
+        if($table_filter){
+            $temp_filter = [];
+            foreach (json_decode($table_filter->filter) as $key => $value) {
+                array_push($temp_filter,[
+                    'column_name'=>$value->column_name,
+                    'active'=>$value->active,
+                    'name'=>$value->name,
+                ]);
+            }
+            $this->table_filter = [
+                'id'=>$table_filter->id,
+                'path'=>$table_filter->path,
+                'table_rows'=>$table_filter->table_rows,
+                'filter'=>$temp_filter,
+            ];
+        }else{
+            DB::table('table_filters')
+            ->insert([
+                'user_id' =>$session['id'],
+                'path' =>$request->path(),
+                'table_rows' =>10,
+                'filter'=> json_encode($this->filter)
+            ]);
+            $table_filter = DB::table('table_filters')
+            ->where('user_id',$session['id'])
+            ->where('path','=',$request->path())
+            ->first();
+            $temp_filter = [];
+            foreach (json_decode($table_filter->filter) as $key => $value) {
+                array_push($temp_filter,[
+                    'column_name'=>$value->column_name,
+                    'active'=>$value->active,
+                    'name'=>$value->name,
+                ]);
+            }
+            $this->table_filter = [
+                'id'=>$table_filter->id,
+                'path'=>$table_filter->path,
+                'table_rows'=>$table_filter->table_rows,
+                'filter'=>$temp_filter,
+            ];
+        }
+    }
     public function render()
     {
-        if($this->search['owner_name'] != $this->search['owner_name_prev']){
-            $this->search['owner_name_prev'] = $this->search['owner_name'];
+        if($this->search['search'] != $this->search['search_prev']){
+            $this->search['search_prev'] = $this->search['search'];
             $this->resetPage();
         }
         $table_data = DB::table('persons as p')
@@ -91,9 +189,9 @@ class Owners extends Component
         )
         ->join('person_types as pt','pt.id','p.person_type_id')
         ->where('pt.name','=','Owner')
-        ->where(DB::raw("CONCAT(p.first_name,' ',p.middle_name,' ',p.last_name)"),'like',$this->search['owner_name'] .'%')
+        ->where(DB::raw("CONCAT(p.first_name,' ',p.last_name)"),'like',$this->search['search'] .'%')
         ->orderBy('id','desc')
-        ->paginate(10);
+        ->paginate($this->table_filter['table_rows']);
         return view('livewire.admin.inspector-team-leader.establishments.owners.owners',[
             'table_data'=>$table_data
         ])

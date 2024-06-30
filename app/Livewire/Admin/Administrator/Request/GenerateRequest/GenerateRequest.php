@@ -20,6 +20,7 @@ class GenerateRequest extends Component
     public $title = "Generate Requests";
     public $establishment;
     public $subject ;
+    public $owner;
     public $business = [];
 
     public $filter = [
@@ -356,11 +357,36 @@ class GenerateRequest extends Component
             }
        
         }
-        $business = DB::table('businesses')
-            ->where('id','=',$this->request['business_id'])
+        $business = DB::table('businesses as b')
+            ->select(
+                'b.id',
+                'b.img_url',
+                'b.name',
+                'p.first_name',
+                'p.middle_name',
+                'p.last_name',
+                'p.suffix',
+                'brg.brgyDesc as barangay',
+                'bc.name as business_category_name',
+                'bt.name as business_type_name',
+                'oc.character_of_occupancy as occupancy_classification_name',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'b.is_active'
+
+            )
+            ->join('persons as p','p.id','b.owner_id')
+            ->join('brgy as brg','brg.id','b.brgy_id')
+            ->join('business_category as bc','bc.id','b.business_category_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+            ->where('b.id','=',$this->request['business_id'])
             ->first();
         $this->email = $business->email;
         $this->establishment = $business->name;
+        $this->owner = $business->last_name.' ,'.$business->first_name.' '.$business->middle_name;
         $this->start_date = date_format(date_create($this->request['request_date']),"M d, Y");
         $this->end_date =  date_format(date_create($this->request['expiration_date']),"M d, Y");
         
@@ -374,27 +400,28 @@ class GenerateRequest extends Component
         $this->host_name = $_SERVER['SERVER_NAME'];
         $this->subject = 'OBOS Inspection would like to request to inspect your establishment from '.date_format(date_create($this->start_date),"M d, Y ").' to '.date_format(date_create($this->end_date),"M d, Y ").', to accept please click the accept button, to 
             decline please click the decline button and provide a reason after the redirection. Thank you.'; 
-        $this->content = 'OBOS Inspection would like to request to inspect your establishment from <strong>'.date_format(date_create($this->start_date),"M d, Y ").' to '.date_format(date_create($this->end_date),"M d, Y ").'</strong>, to accept please click the accept button, to 
-            decline please click the decline button and provide a reason after the redirection. Thank you.'; 
+        
+        $this->content = 'Sir/Madam:
+        <br>
+        <br>
+        Pursuant to PD 1096, otherwise known as the National Building Code of the Philippines and its IRR, the Building Official shall undertake annual inspection of all buildings/structures and keep an updated record of their status. Also in the performance of his duties, a Building Official may enter any building or its premises at all reasonable times to inspect and determine compliance with the requirements of the NBPC.
+        <br>
+        <br>
+        You are hereby inform that the OBO Inspectorate team will conduct an Annual Inspection of your establishment on  <strong>'.date_format(date_create($this->start_date),"M d, Y ").' to '.date_format(date_create($this->end_date),"M d, Y ").' </strong> , to ensure safety of your building and update the fees and status of your equipment.
+        <br>
+        <br>
+        Please prepare the approve plans (Structural, Electrical, Mechanical, Plumbing & Electronics), Occupancy Permit, Update site Development Plan, and a consolidated list of equipment during the scheduled inspection
+        <br>
+        <br>
+        A certificate of Annual Inspection will be issued to you after we found your building to be safe for use and/or after the compliance of deficiencies and payment of necessary fees have been made.';
+        
         $code =1;
-        Mail::send('mail.requestToInspect', [
-            'code'=>$code,
-            'email'=>$this->email,
-            'establishment'=>$this->establishment,
-            'content'=>$this->content,
-            'hash'=>$this->hash,
-            'port'=>$this->port,
-            'host_name'=>$this->host_name
-            ], 
-                function($message) {
-            $message->to($this->email, $this->email)->subject
-            ($this->subject);
-            $message->from('obosinspection@gmail.com','OBOS INSPECTION');
-        });
+
         if(Mail::send('mail.requestToInspect', [
                 'code'=>$code,
                 'email'=>$this->email,
                 'establishment'=>$this->establishment,
+                'owner'=>$this->owner,
                 'content'=>$this->content,
                 'hash'=>$this->hash,
                 'port'=>$this->port,

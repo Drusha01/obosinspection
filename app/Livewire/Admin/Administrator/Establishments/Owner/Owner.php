@@ -14,17 +14,7 @@ class Owner extends Component
     use WithPagination;
     use WithFileUploads;
     public $title = "Owners";
-    public $search = [
-        'search'=> NULL,
-        'search_prev'=> NULL,
-        'type' => NULL,
-        'type_prev' => NULL,
-    ];
-    public $search_by = [
-        ['name'=>'Name','column_name'=>'b.name'],
-        // ['name'=>'Contact','column_name'=>'b.contact_number'],
-        ['name'=>'Email','column_name'=>'b.email'],
-    ];
+    
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
         ['column_name'=> 'img_url','active'=> true,'name'=>'Image'],
@@ -54,6 +44,18 @@ class Owner extends Component
         'inspector_team_id' => NULL,
         'log_details' => NULL,
     ];
+    public $search = [
+        'search'=> NULL,
+        'search_prev'=> NULL,
+        'type' => NULL,
+        'type_prev' => NULL,
+    ];
+    public $search_by = [
+        ['name'=>'Name','column_name'=>'b.name'],
+        // ['name'=>'Contact','column_name'=>'b.contact_number'],
+        ['name'=>'Email','column_name'=>'b.email'],
+    ];
+    
     public $table_filter;
     public function save_filter(Request $request){
         $session = $request->session()->all();

@@ -35,6 +35,12 @@
             font-size: 24px;
             margin-bottom: 10px;
         }
+        h3 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
 
         p {
             font-size: 16px;
@@ -100,9 +106,11 @@
             <div class="logo">
             </div>
             <h1>OBOS INSPECTION TEAM</h1>
+            <br>
+            <h3>{{$establishment}}</h3>
         </div>
 
-        <p>Dear {{$establishment}} </p>
+        <p>Dear ({{$owner}})  </p>
 
         <p>.</p>
 
@@ -119,6 +127,7 @@
 
         <div class="footer">
             <p>Best Regards,</p>
+            <p>OBO Office : 554-1570 / 0933 5436 999</p>
             <p>OBOS INSPECTION TEAM</p>
         </div>
     </div>
