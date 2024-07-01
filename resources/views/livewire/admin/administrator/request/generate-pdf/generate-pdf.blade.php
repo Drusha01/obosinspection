@@ -13,11 +13,11 @@
                                 <div class="d-flex justify-content-end w-100">
                                     {{date("M d ,Y");}}
                                 </div>
-                                <div class="d-flex justify-content-start w-100 h5 bold my-2 mt-5">
+                                <div class="d-flex justify-content-start w-100 h5 bold my-2 mt-5" style="font-size:22px;font-weight:bold">
                                     {{$establishment}}
                                 </div>
                                 <div class=" justify-content-start w-100">
-                                    <span class="d-inline bold">
+                                    <span class="d-inline bold" style="font-size:16px;font-weight:bold">
                                         Sir/Madam {{$owner_f1}},
                                     </span>
                                 </div>
@@ -38,7 +38,7 @@
                                 Very truly yours,
                                 <br>
                                 <br>
-                                <span class="bold h6">
+                                <span class="bold h6" style="font-size:16px;font-weight:bold">
                                 ENGR.AUREA M. PASCUAL, DM, MBA, CE, GE, ENP, REB
                                 </span>
                                 <br>
@@ -68,8 +68,11 @@
                             <div class="d-flex justify-content-center">
                                 <p class="p-0 m-0">OBO Office : 554-1570 / 0933 5436 999</p>
                             </div>
-                            <div class="d-flex justify-content-center">
-                                <p class="p-0 m-0">OBOS INSPECTION TEAM</p>
+                            <div class="d-flex inline justify-content-center" >
+                                <p class="p-0 m-0">OBO Office 2/F GSC Investment Action Center, Cityhall Compound</p>
+                            </div>
+                            <div class="d-flex inline justify-content-center">
+                                <p class="p-0 m-0">General Santos City</p>
                             </div>
                         </section>
                         <section class="position-absolute left bottom-0 start-50 translate-middle d-print-none">

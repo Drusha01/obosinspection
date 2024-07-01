@@ -77,6 +77,7 @@ use App\Livewire\Admin\Administrator\Establishments\Owner\Owner as Administrator
 use App\Livewire\Admin\Administrator\Inspections\CompletedInspections\CompletedInspections as AdministratorCompletedInspections;
 use App\Livewire\Admin\Administrator\Inspections\DeletedInspections\DeletedInspections as AdministratorDeletedInspections;
 use App\Livewire\Admin\Administrator\Inspections\Generate\Generate as AdministratorGenerate;
+use App\Livewire\Admin\Administrator\Inspections\GenerateReport\GenerateReport as AdministratorGenerateReport;
 use App\Livewire\Admin\Administrator\Inspections\InspectionSchedules\InspectionSchedules as AdministratorInspectionSchedules;
 use App\Livewire\Admin\Administrator\Inspections\OngoingInspections\OngoingInspections as AdministratorOngoingInspections;
 use App\Livewire\Admin\Administrator\Profile\Profile as AdministratorProfile;
@@ -190,6 +191,7 @@ Route::middleware([Authenticated::class,IsValid::class,IsAdministrator::class])-
             Route::get('/ongoing-inspections', AdministratorOngoingInspections::class)->name('administrator-inspections-ongoing-inspections');
             Route::get('/deleted-inspections', AdministratorDeletedInspections::class)->name('administrator-inspections-deleted-inspections');
             Route::get('/generate/{id}', AdministratorGenerate::class)->name('administrator-inspections-generate');
+            Route::get('/generate-report/{id}', AdministratorGenerateReport::class)->name('administrator-inspections-generate-report');
             Route::get('/completed-inspections', AdministratorCompletedInspections::class)->name('administrator-inspections-completed-inspections');
         });
         Route::prefix('request')->group(function () {

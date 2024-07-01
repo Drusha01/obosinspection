@@ -11,6 +11,11 @@ class Generate extends Component
 {
     public $title = "Generate PDF"; 
     public $issue_inspection;
+    public $activity_logs = [
+        'created_by' => NULL,
+        'inspector_team_id' => NULL,
+        'log_details' => NULL,
+    ];
     public function mount($id){
         self::update_inspection_data($id);
         if($this->issue_inspection){
@@ -18,11 +23,6 @@ class Generate extends Component
             return redirect()->route('administrator-inspections-inspection-schedules');
         }
     }
-    public $activity_logs = [
-        'created_by' => NULL,
-        'inspector_team_id' => NULL,
-        'log_details' => NULL,
-    ];
     public function boot(Request $request){
         $session = $request->session()->all();
         $this->activity_logs['created_by'] = $session['id'];

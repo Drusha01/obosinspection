@@ -42,10 +42,13 @@
                                     @elseif($filter_value['name'] == 'Generate' && $filter_value['active'])
                                         <td class="text-center align-middle">
                                             <a class="btn btn-outline-primary my-1" target="_blank" href="/administrator/inspections/generate/{{$value->id}}">
-                                                Generate Equipment PDF
+                                                 Equipment PDF
+                                            </a>
+                                            <a class="btn btn-outline-primary my-1" target="_blank" href="/administrator/inspections/generate-report/{{$value->id}}">
+                                                 Report
                                             </a>
                                             <button class="btn btn-outline-primary" wire:click="generate_cert({{$value->id}},'certModaltoggler')" >
-                                                Generate Certificate
+                                                 Certificate
                                             </button>
                                         </td> 
                                     @elseif($filter_value['name'] == 'Violation' && $filter_value['active'])

@@ -76,6 +76,17 @@
                                 </div>
                             </div>
                         @endif
+                        <div class="row my-5">
+                            <div class="d-flex justify-content-center">
+                                <p class="p-0 m-0">OBO Office : 554-1570 / 0933 5436 999</p>
+                            </div>
+                            <div class="d-flex inline justify-content-center">
+                                <p class="p-0 m-0">OBO Office 2/F GSC Investment Action Center, Cityhall Compound</p>
+                            </div>
+                            <div class="d-flex inline justify-content-center">
+                                <p class="p-0 m-0">General Santos City</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
