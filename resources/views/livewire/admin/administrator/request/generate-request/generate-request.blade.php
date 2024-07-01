@@ -31,7 +31,7 @@
                     </div>
                 </div>
                 <div class="col-4 d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary mx-3"  wire:click="add('requestPDFModaltoggler')">
+                    <button type="button" class="btn btn-primary mx-3"  wire:click="generate_request('requestPDFModaltoggler')">
                         Request PDF
                     </button>
                     <button type="button" class="btn btn-primary"  wire:click="generate_request('requestModaltoggler')">
@@ -108,7 +108,7 @@
                                             <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
                                                 Delete
                                             </button>
-                                            <a class="btn btn-outline-primary" target="_blank" href="/request/generate-request-pdf/{{$value->id}}">
+                                            <a class="btn btn-outline-primary" target="_blank" href="/administrator/request/generate-request-pdf/{{$value->business_id}}/{{$value->request_date}}/{{$value->expiration_date}}">
                                                 Generate Letter
                                             </a>
                                         </td>
@@ -132,6 +132,7 @@
             </div>
 
             <button type="button" data-bs-toggle="modal" data-bs-target="#requestModal" id="requestModaltoggler" style="display:none;"></button>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#requestPDFModal" id="requestPDFModaltoggler" style="display:none;"></button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="deleteModaltoggler" style="display:none;"></button>
             
             <div wire:ignore.self class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -162,6 +163,77 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form wire:submit.prevent="send_request('requestModaltoggler')">
+                            <div class="modal-body">
+                                <div class="row mb-3">
+                                    <div class="col-lg-8">
+                                        <label for="business_search">Search Business</label>
+                                        <input type="text" name="" id="business_search" class="form-control" wire:model.live.debounce.500ms="modal.search" placeholder="Search business ... ">
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div>
+                                            <label for="business_search">Filter Barangay</label>
+                                            <select name="" id=""  class="form-select" wire:model.live.debounce="modal.brgy_id">
+                                                <option value="">Select Barangay</option>
+                                                @foreach($brgy as $key => $value)
+                                                    <option value="{{$value->id}}">{{$value->brgyDesc}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label for="select_business">Select Business <span class="text-danger">*</span></label>
+                                        <div class="mb-3">
+                                            <select class="form-select" id="select_business" aria-label="Select Member" required wire:model="request.business_id">
+                                                    <option value="">Select Business</option>
+                                                @foreach($business as $key => $value)
+                                                    <option value="{{$value->id}}">{{$value->name.' ('.$value->business_type_name.') brgy: '.$value->barangay}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row d-flex justify-content-center">
+                                    <div class="col-12">
+                                        <label for="duratiion">Duration <span class="text-danger">*</span></label>
+                                        <input type="number" min="1" max="30" class="form-select" required value="1" wire:model="request.duration" wire:change="update_expiration_date()" >
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label for="start_date">Start Date <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" id="start_date" required disabled wire:model.live="request.request_date" required min="" wire:change="update_duration()">
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label for="end_date">End Date <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" id="end_date" required wire:model.live="request.expiration_date" required wire:change="update_duration()">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                                @if(isset($request['id']))
+                                    @if($request['id'] != -1)
+                                        <button type="submit" class="btn btn-warning">Proceed</button>
+                                    @else 
+                                        <button type="submit" disabled class="btn btn-warning">Proceed</button>
+                                    @endif
+                                @else 
+                                    <button type="submit" class="btn btn-primary">Request</button>
+                                @endif
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div wire:ignore.self class="modal fade" id="requestPDFModal" tabindex="-1" aria-labelledby="requestPDFModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="requestPDFModalLabel">Request PDF Inspection </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form wire:submit.prevent="generate_request_pdf('requestPDFModaltoggler')">
                             <div class="modal-body">
                                 <div class="row mb-3">
                                     <div class="col-lg-8">

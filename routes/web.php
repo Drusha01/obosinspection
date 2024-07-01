@@ -83,6 +83,7 @@ use App\Livewire\Admin\Administrator\Profile\Profile as AdministratorProfile;
 use App\Livewire\Admin\Administrator\Request\AcceptedRequest\AcceptedRequest as AdministratorAcceptedRequest;
 use App\Livewire\Admin\Administrator\Request\DeletedRequest\DeletedRequest as AdministratorDeletedRequest;
 use App\Livewire\Admin\Administrator\Request\GenerateRequest\GenerateRequest as AdministratorGenerateRequest;
+use App\Livewire\Admin\Administrator\Request\GeneratePdf\GeneratePdf as AdministratorGeneratePdf;
 use App\Livewire\Admin\Administrator\Request\NoresponseRequest\NoresponseRequest as AdministratorNoresponseRequest;
 use App\Livewire\Admin\Administrator\Request\DeclinedRequest\DeclinedRequest as AdministratorDeclinedRequest;
 use App\Livewire\Admin\Administrator\Users\Administrator\Administrator as AdministratorAdministrator;
@@ -197,6 +198,8 @@ Route::middleware([Authenticated::class,IsValid::class,IsAdministrator::class])-
             Route::get('/no-response-request', AdministratorNoresponseRequest::class)->name('administrator-request-no-response-request');
             Route::get('/declined-request', AdministratorDeclinedRequest::class)->name('administrator-request-declined-request');
             Route::get('/deleted-request', AdministratorDeletedRequest::class)->name('administrator-request-deleted-request');
+            Route::get('/generate-request-pdf/{id}/{start_date}/{end_date}', AdministratorGeneratePdf::class)->name('administrator-request-generate-pdf-request');
+            
             
         });
         Route::prefix('users')->group(function () {

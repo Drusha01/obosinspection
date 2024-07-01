@@ -16,8 +16,8 @@ class GenerateRequest extends Component
     use WithPagination;
     use WithFileUploads;
 
-    public $email;
     public $title = "Generate Requests";
+    public $email;
     public $establishment;
     public $subject ;
     public $owner;
@@ -263,6 +263,7 @@ class GenerateRequest extends Component
             ->select(
                 'ri.id',
                 'b.img_url',
+                'b.id as business_id',
                 'b.name as business_name',
                 'b.business_category_id',
                 'p.first_name',
@@ -577,6 +578,18 @@ class GenerateRequest extends Component
             $this->dispatch('openModal',$modal_id);
             return;
         }
+    }
+    public function generate_request_pdf($modal_id){
+     
+        $this->dispatch('swal:new_page',
+            position         									: 'center',
+            icon              									: 'success',
+            title             									: 'Successfully generated!',
+            showConfirmButton 									: 'true',
+            timer             									: '1500',
+            link              									: ($_SERVER['REMOTE_PORT'] == 80? 'https://': 'http://' ).$_SERVER['SERVER_NAME'].'/administrator/request/generate-request-pdf/'.$this->request['business_id'].'/'.$this->request['request_date'].'/'.$this->request['expiration_date'],
+        );
+        $this->dispatch('openModal',$modal_id);
     }
 
 }
