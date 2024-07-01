@@ -7,7 +7,7 @@
             <form >
                 <section class="sheet-container">
                     <section class="sheet d-flex position-relative">
-                        <img src="./../../../../../assets/img/list-of-equipments.jpg" alt="list-of-equipment" class="sheet-image">
+                        <img src="./../../../../../assets/img/header.jpg" alt="list-of-equipment" class="sheet-image">
                         <section class="section d-flex flex-column">
                             <div class="section-header">
                                 <div class="d-flex justify-content-end w-100">
