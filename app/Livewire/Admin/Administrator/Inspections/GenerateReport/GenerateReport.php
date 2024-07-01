@@ -710,6 +710,7 @@ class GenerateReport extends Component
                     'c.name as category_name',
                     'v.is_active',
                     'iv.remarks',
+                    'added_by',
                 )
                 ->join('violations as v','v.id','iv.violation_id')
                 ->join('categories as c','v.category_id','c.id')
