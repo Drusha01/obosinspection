@@ -23,7 +23,7 @@ class Businesses extends Component
     ];
     public $search_by = [
         ['name'=>'Name','column_name'=>'b.name'],
-        // ['name'=>'Contact','column_name'=>'b.contact_number'],
+        ['name'=>'Owner','column_name'=>"CONCAT(p.first_name,' ',p.last_name)"],
         ['name'=>'Email','column_name'=>'b.email'],
     ];
     public $histfilter = [
@@ -273,7 +273,7 @@ class Businesses extends Component
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
             ->where('b.brgy_id','=',$this->search['brgy_id'] )
-            ->where($this->search['type'],'like',$this->search['search'] .'%')
+            ->where(DB::raw($this->search['type']),'like',$this->search['search'] .'%')
             ->orderBy('id','desc')
             ->paginate($this->table_filter['table_rows']);
         }else{
@@ -302,7 +302,7 @@ class Businesses extends Component
             ->join('business_category as bc','bc.id','b.business_category_id')
             ->join('business_types as bt','bt.id','b.business_type_id')
             ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-            ->where($this->search['type'],'like',$this->search['search'] .'%')
+            ->where(DB::raw($this->search['type']),'like',$this->search['search'] .'%')
             ->orderBy('id','desc')
             ->paginate($this->table_filter['table_rows']);
         }
