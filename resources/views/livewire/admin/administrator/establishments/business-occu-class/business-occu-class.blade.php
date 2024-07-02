@@ -97,9 +97,9 @@
                                                     Activate
                                                 </button>
                                             @endif
-                                            <button class="btn btn-secondary" wire:click="edit({{$value->id}},'editModaltoggler')">
-                                                Edit
-                                            </button>
+                                                <button class="btn btn-secondary" wire:click="edit({{$value->id}},'editModaltoggler')">
+                                                    Edit
+                                                </button>
                                         </td>
                                     @else
                                         @if($filter_value['active'])

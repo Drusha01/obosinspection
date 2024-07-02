@@ -17,7 +17,8 @@ class BusinessOccuClass extends Component
 
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
-        ['column_name'=> 'name','active'=> true,'name'=>'Description'],
+        ['column_name'=> 'character_of_occupancy','active'=> true,'name'=>'Character of occupancy'],
+        ['column_name'=> 'character_of_occupancy_group','active'=> true,'name'=>'Group'],
         ['column_name'=> 'id','active'=> true,'name'=>'Action'],
     ];
     public $business_type = [
@@ -156,8 +157,8 @@ class BusinessOccuClass extends Component
             $this->search['search_prev'] = $this->search['search'];
             $this->resetPage();
         }
-        $table_data = DB::table('business_types as bt')
-            ->where('bt.name','like',$this->search['search'] .'%')
+        $table_data = DB::table('occupancy_classifications as oc')
+            ->where('character_of_occupancy','like',$this->search['search'] .'%')
             ->orderBy('id','desc')
             ->paginate($this->table_filter['table_rows']);
         return view('livewire.admin.administrator.establishments.business-occu-class.business-occu-class',[
