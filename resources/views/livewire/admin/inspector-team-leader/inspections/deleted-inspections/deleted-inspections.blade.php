@@ -424,11 +424,6 @@
                                                                 View
                                                             </button>
                                                         </td>
-                                                        <td class="align-middle text-center">
-                                                           
-                                                            @if($value['added_by'] == $this->activity_logs['inspector_team_id'])
-                                                            @endif
-                                                        </td>
                                                     </tr>
                                                 @empty
                                                     <tr>

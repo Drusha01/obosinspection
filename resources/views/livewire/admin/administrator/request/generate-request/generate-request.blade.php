@@ -31,7 +31,12 @@
                     </div>
                 </div>
                 <div class="col-4 d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary mx-3"  wire:click="generate_request('requestPDFModaltoggler')">
+                    @if(Request()->route()->getPrefix() == 'administrator/request')
+                        <button class="btn btn-primary mr-2" wire:click="request_list_modal('requestCategoryListModaltoggler')">
+                            Request Category Lists
+                        </button>
+                    @endif
+                    <button type="button" class="btn btn-primary mr-2"  wire:click="generate_request('requestPDFModaltoggler')">
                         Request PDF
                     </button>
                     <button type="button" class="btn btn-primary"  wire:click="generate_request('requestModaltoggler')">
@@ -108,9 +113,15 @@
                                             <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
                                                 Delete
                                             </button>
-                                            <a class="btn btn-outline-primary" target="_blank" href="/administrator/request/generate-request-pdf/{{$value->business_id}}/{{$value->request_date}}/{{$value->expiration_date}}">
-                                                Generate Letter
-                                            </a>
+                                            @if(Request()->route()->getPrefix() == 'administrator/request')
+                                                <a class="btn btn-outline-primary" target="_blank" href="/administrator/request/generate-request-pdf/{{$value->business_id}}/{{$value->request_date}}/{{$value->expiration_date}}">
+                                                    Generate Letter
+                                                </a>
+                                            @elseif(Request()->route()->getPrefix() == 'inspector-team-leader/request')
+                                                <a class="btn btn-outline-primary" target="_blank" href="/inspector-team-leader/request/generate-request-pdf/{{$value->business_id}}/{{$value->request_date}}/{{$value->expiration_date}}">
+                                                    Generate Letter
+                                                </a>
+                                            @endif
                                         </td>
                                     @else
                                         @if($filter_value['active'])
@@ -134,6 +145,8 @@
             <button type="button" data-bs-toggle="modal" data-bs-target="#requestModal" id="requestModaltoggler" style="display:none;"></button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#requestPDFModal" id="requestPDFModaltoggler" style="display:none;"></button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" id="deleteModaltoggler" style="display:none;"></button>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#requestCategoryListModal" id="requestCategoryListModaltoggler" style="display:none;"></button>
+
             
             <div wire:ignore.self class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -293,6 +306,62 @@
                                 @endif
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+
+            <div wire:ignore.self class="modal fade" id="requestCategoryListModal" tabindex="-1" aria-labelledby="requestCategoryListModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="requestCategoryListModalLabel">Request Category Lists </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-8">
+                                <form wire:submit.prevent="add_category_to_request_list()">
+                                        <div class="mb-3">
+                                            <select class="form-select" aria-label="Select Member" required wire:model="business_category.id">
+                                                <option value="">Select Business Category</option>
+                                                @foreach($business_category_list as $key => $value)
+                                                    <option value="{{$value->id}}">{{$value->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 mx-3" >
+                                        <button class="btn btn-primary" type="submit">Add</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
+                                    <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                                        <tr>
+                                            <th class="align-middle text-center"></th>
+                                            <th class="align-middle"> Category</th>
+                                            <th class="align-middle text-center">Action </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($request_lists as $key => $value)
+                                            <tr>
+                                                <td class="align-middle text-center">{{$key+1}}</td>
+                                                <td class="mx-2 align-middle">
+                                                    {{$value->name}}
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <button class="btn btn-danger" type="button" wire:click="delete_request_category({{$value->id}})">
+                                                        Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

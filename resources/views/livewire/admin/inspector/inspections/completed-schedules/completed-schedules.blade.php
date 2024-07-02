@@ -119,6 +119,9 @@
                                             <a class="btn btn-outline-primary my-1" target="_blank" href="/inspector/inspections/generate/{{$value->id}}">
                                                 Generate Equipment PDF
                                             </a>
+                                            <a class="btn btn-outline-primary my-1" target="_blank" href="/inspector/inspections/generate-report/{{$value->id}}">
+                                                 Report
+                                            </a>
                                         </td>  
                                     @elseif($filter_value['name'] == 'Inspection Details' && $filter_value['active'])
                                         <td class="text-center align-middle">

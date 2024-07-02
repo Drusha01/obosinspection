@@ -117,10 +117,13 @@
                                     @elseif($filter_value['name'] == 'Generate' && $filter_value['active'])
                                         <td class="text-center align-middle">
                                             <a class="btn btn-outline-primary my-1" target="_blank" href="/inspector-team-leader/inspections/generate/{{$value->id}}">
-                                                Generate Equipment PDF
+                                                 Equipment PDF
+                                            </a>
+                                            <a class="btn btn-outline-primary my-1" target="_blank" href="/inspector-team-leader/inspections/generate-report/{{$value->id}}">
+                                                 Report
                                             </a>
                                             <button class="btn btn-outline-primary" wire:click="generate_cert({{$value->id}},'certModaltoggler')" >
-                                                Generate Certificate
+                                                 Certificate
                                             </button>
                                         </td> 
                                     @elseif($filter_value['name'] == 'Inspection Details' && $filter_value['active'])
@@ -434,11 +437,6 @@
                                                             <button class="btn btn-primary "wire:click="view_violation_proof({{$value['id']}},'ProofModaltoggler')"> 
                                                                 View
                                                             </button>
-                                                        </td>
-                                                        <td class="align-middle text-center">
-                                                           
-                                                            @if($value['added_by'] == $this->activity_logs['inspector_team_id'])
-                                                            @endif
                                                         </td>
                                                     </tr>
                                                 @empty

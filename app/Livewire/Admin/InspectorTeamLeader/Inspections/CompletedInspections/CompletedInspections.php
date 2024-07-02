@@ -672,6 +672,7 @@ class CompletedInspections extends Component
                     'c.name as category_name',
                     'v.is_active',
                     'iv.added_by',
+                    'remarks'
                 )
                 ->join('violations as v','v.id','iv.violation_id')
                 ->join('categories as c','v.category_id','c.id')
@@ -698,6 +699,7 @@ class CompletedInspections extends Component
                     'category_name'=> $value->category_name,
                     "id" => $value->id,
                     "added_by" => $value->added_by,
+                    "remarks" => $value->remarks,
                 ]);
             }
             $inspection_violations = $temp;
@@ -881,7 +883,7 @@ class CompletedInspections extends Component
                     'v.id',
                     'description',
                     'c.name as category_name',
-                    'v.is_active'
+                    'v.is_active',
                 )
                 ->join('categories as c','v.category_id','c.id')
                 ->where('v.is_active','=',1)
@@ -1016,7 +1018,9 @@ class CompletedInspections extends Component
                     'v.id as violation_id',
                     'description',
                     'c.name as category_name',
-                    'v.is_active'
+                    'v.is_active',
+                    'iv.remarks',
+                    'iv.added_by',
                 )
                 ->join('violations as v','v.id','iv.violation_id')
                 ->join('categories as c','v.category_id','c.id')
@@ -1042,6 +1046,8 @@ class CompletedInspections extends Component
                     'description'=> $value->description,
                     'category_name'=> $value->category_name,
                     "id" => $value->id,
+                    "remarks" => $value->remarks,
+                    "added_by" => $value->added_by,
                 ]);
             }
             $inspection_violations = $temp;

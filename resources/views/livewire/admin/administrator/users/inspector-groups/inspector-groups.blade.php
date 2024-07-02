@@ -108,9 +108,6 @@
                                     @elseif($filter_value['name'] == 'Designated Barangays' && $filter_value['active'])
                                         <td class="text-center align-middle">
                                             <button class="btn btn-outline-primary" wire:click="add_designation({{$value->id}},'addDesignationModaltoggler')">
-                                                Add Designation
-                                            </button>
-                                            <button class="btn btn-outline-primary" wire:click="add_designation({{$value->id}},'viewDesignationModaltoggler')">
                                                 View
                                             </button>
                                         </td>

@@ -128,6 +128,7 @@ Route::middleware([Authenticated::class,IsValid::class,IsInspector::class])->gro
             Route::get('/ongoing-inspections', InspectorOngoingInspections::class)->name('inspector-inspections-ongoing-inspections');
             Route::get('/generate/{id}', InspectorGenerate::class)->name('inspector-inspections-generate');
             Route::get('/deleted-inspections', InspectorDeletedInspections::class)->name('inspector-inspections-deleted-inspections');
+            Route::get('/generate-report/{id}', AdministratorGenerateReport::class)->name('inspector-inspections-generate-report');
             Route::get('/completed-inspections', InspectorCompletedSchedules::class)->name('inspector-inspections-completed-inspections');
         });
         Route::get('/certifications', InspectorCertification::class)->name('inspector-certifications');
@@ -155,7 +156,16 @@ Route::middleware([Authenticated::class,IsValid::class,IsInspectorTeamLeader::cl
             Route::get('/ongoing-inspections', InspectorTeamLeaderOngoingInspections::class)->name('inspector-team-leader-inspections-ongoing-inspections');
             Route::get('/generate/{id}', InspectorTeamLeaderGenerate::class)->name('inspector-team-leader-inspections-generate');
             Route::get('/deleted-inspections', InspectorTeamLeaderDeletedInspections::class)->name('inspector-team-leader-inspections-deleted-inspections');
+            Route::get('/generate-report/{id}', AdministratorGenerateReport::class)->name('inspector-team-leader-inspections-generate-report');
             Route::get('/completed-inspections', InspectorTeamLeaderCompletedInspections::class)->name('inspector-team-leader-inspections-completed-inspections');
+        });
+        Route::prefix('request')->group(function () {
+            Route::get('/accepted-request', AdministratorAcceptedRequest::class)->name('inspector-team-leader-request-accepted-request');
+            Route::get('/generate-request', AdministratorGenerateRequest::class)->name('inspector-team-leader-request-generate-request');
+            Route::get('/no-response-request', AdministratorNoresponseRequest::class)->name('inspector-team-leader-request-no-response-request');
+            Route::get('/declined-request', AdministratorDeclinedRequest::class)->name('inspector-team-leader-request-declined-request');
+            Route::get('/deleted-request', AdministratorDeletedRequest::class)->name('inspector-team-leader-request-deleted-request');
+            Route::get('/generate-request-pdf/{id}/{start_date}/{end_date}', AdministratorGeneratePdf::class)->name('inspector-team-leader-request-generate-pdf-request');
         });
         Route::get('/certifications', InspectorTeamLeaderCertification::class)->name('inspector-team-leader-certifications');
         Route::get('/certifications/generate/{id}', InspectorTeamLeaderCertificateGenerate::class)->name('inspector-team-leader-generate-certifications');
@@ -201,8 +211,6 @@ Route::middleware([Authenticated::class,IsValid::class,IsAdministrator::class])-
             Route::get('/declined-request', AdministratorDeclinedRequest::class)->name('administrator-request-declined-request');
             Route::get('/deleted-request', AdministratorDeletedRequest::class)->name('administrator-request-deleted-request');
             Route::get('/generate-request-pdf/{id}/{start_date}/{end_date}', AdministratorGeneratePdf::class)->name('administrator-request-generate-pdf-request');
-            
-            
         });
         Route::prefix('users')->group(function () {
             Route::get('/administrators', AdministratorAdministrator::class)->name('administrator-users-administrators');

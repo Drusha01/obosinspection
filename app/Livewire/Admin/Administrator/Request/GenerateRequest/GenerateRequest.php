@@ -592,4 +592,76 @@ class GenerateRequest extends Component
         $this->dispatch('openModal',$modal_id);
     }
 
+    public $business_category_list = [];
+    public $request_lists = [];
+    public $business_category = [
+        'id' => NULL,
+        'name' => NULL,
+        'is_active'=> NULL,
+    ];
+    public function request_list_modal($modal_id){
+
+        $this->business_category_list = DB::table('business_category')
+            ->get()
+            ->toArray();
+        $this->request_lists = DB::table('request_business_categories as rbc')
+            ->join('business_category as bc','rbc.business_category_id','bc.id')
+            ->get()
+            ->toArray();
+        $this->dispatch('openModal',$modal_id);
+    }
+    public function add_category_to_request_list(){
+        $temp = DB::table('request_business_categories')
+        ->where('business_category_id','=',$this->business_category['id'])
+        ->first();
+        if(
+           $temp 
+        ){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'success',
+                title             									: 'Business category has been already added!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+        }else{
+            DB::table('request_business_categories')
+                ->insert([
+                    'business_category_id'=>$this->business_category['id']
+            ]);
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'success',
+                title             									: 'Successfully added!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+        }
+        $this->request_lists = DB::table('request_business_categories as rbc')
+            ->join('business_category as bc','rbc.business_category_id','bc.id')
+            ->get()
+            ->toArray();
+        $this->business_category['id'] = NULL;
+    }
+    public function delete_request_category($id){
+        if( DB::table('request_business_categories')
+            ->where('id','=',$id)
+            ->delete()){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'success',
+                title             									: 'Successfully deleted!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            $this->request_lists = DB::table('request_business_categories as rbc')
+            ->join('business_category as bc','rbc.business_category_id','bc.id')
+            ->get()
+            ->toArray();
+        }
+    }
+
 }

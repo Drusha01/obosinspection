@@ -202,7 +202,6 @@ class CompletedSchedules extends Component
             ->select('u.person_id')
             ->where('u.id','=',$session['id'])
             ->first();
-
         if($this->search['search'] != $this->search['search_prev']){
             $this->search['search_prev'] = $this->search['search'];
             $this->resetPage();
@@ -284,7 +283,6 @@ class CompletedSchedules extends Component
                 ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
                 ->where('iim.person_id','=',$person->person_id)
                 ->where('st.name','=','Completed')
-                ->where('b.brgy_id','=',$this->search['brgy_id'] )
                 ->where($this->search['type'],'like',$this->search['search'] .'%')
                 ->orderBy('i.id','desc')
                 ->paginate($this->table_filter['table_rows']);

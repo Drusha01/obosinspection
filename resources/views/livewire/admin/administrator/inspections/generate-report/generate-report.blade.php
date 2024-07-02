@@ -22,9 +22,9 @@
                                     <p class="m-0 p-0">
                                         Owner of Building:
                                     </p>
-                                    <p class="m-0 p-0">
+                                    <!-- <p class="m-0 p-0">
                                         Name of Lessee:
-                                    </p>
+                                    </p> -->
                                     <p class="m-0 p-0">
                                         Location of Building:
                                     </p>
@@ -39,9 +39,9 @@
                                     <p class="m-0 p-0 underline">
                                         {{$issue_inspection['inspection_business_name']}}
                                     </p>
-                                    <p class="m-0 p-0 underline">
+                                    <!-- <p class="m-0 p-0 underline">
                                         {{$issue_inspection['inspection']->first_name.' '.$issue_inspection['inspection']->middle_name.' '.$issue_inspection['inspection']->last_name.' '.$issue_inspection['inspection']->suffix}}
-                                    </p>
+                                    </p> -->
                                     <p class="m-0 p-0 underline">
                                         @if(isset($issue_inspection['inspection']->street_address)) {{$issue_inspection['inspection']->street_address}}, @endif {{$issue_inspection['inspection']->barangay}} , GENERAL SANTOS CITY
                                     </p>
@@ -146,15 +146,17 @@
                                     <div class="row m-1 " style="border:solid;border-width:thin">
                                         <div class="row m-0 p-0">
                                             <div class="col-1 m-0" >
-                                                <div class="row m-4 p-2 text-end align-middle" style="border:solid;border-width:thin">
-                                                    
+                                                <div class="row m-4 p-2 text-end align-middle" style="border:solid;border-width:thin;max-height:16px;max-width:16px;">
+                                                    @if(count($issue_inspection['inspection_violations'])==0)
+                                                        <i class="fa-solid fa-check" style="position:relative;left:-20px;top:-15px;font-size:25px;"></i>
+                                                    @endif
                                                 </div>
                                             </div>
                                             <div class="col-11">
                                                 <div class="row mx-3">
                                                     <p class="m-0 mt-2 p-0">
                                                         YOU MAY CLAIM YOUR CERTIFICATE OF ANNUAL INSPECTION AT THE
-                                                        OFFICE OF THE BUILDING OFFICIAL ON ____________________
+                                                        OFFICE OF THE BUILDING OFFICIAL ON @if(count($issue_inspection['inspection_violations'])==0) <strong class="underline">{{date_format(date_add(date_create($issue_inspection['inspection']->schedule_date),date_interval_create_from_date_string("3 days")),"M d, Y")}} </strong> @else ______________ @endif
                                                     </p>
                                                     <p class="m-0 p-0" style="font-size:12px;font-weight: bold;">
                                                         Bring photocopy of OBO O.R. of Business Permit & Annual Inspection Report.
@@ -165,8 +167,10 @@
                                         </div>
                                         <div class="row m-0 p-0">
                                             <div class="col-1 m-0" >
-                                                <div class="row m-4 p-2 text-end align-middle" style="border:solid;border-width:thin">
-                                                    
+                                                <div class="row m-4 p-2 text-end align-middle" style="border:solid;border-width:thin;max-height:16px;max-width:16px;">
+                                                    @if(count($issue_inspection['inspection_violations'])>0)
+                                                        <i class="fa-solid fa-check" style="position:relative;left:-20px;top:-15px;font-size:25px;"></i>
+                                                    @endif
                                                 </div>
                                             </div>
                                             <div class="col-11">

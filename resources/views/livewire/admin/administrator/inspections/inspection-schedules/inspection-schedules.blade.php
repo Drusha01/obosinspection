@@ -188,15 +188,17 @@
                                 <h5 class="text-center my-2 text-black">
                                     Inspection Details
                                 </h5>
+                                @if($from_request)
                                 <div class="row d-flex justify-content-end">
                                     <div class="col-2 d-flex">
                                         <span for="business_from" class="align-middle mt-2">From</span>
                                         <select name="" id="business_from" class="form-select" wire:model.live="business_from">
                                             <option value="from-email" selected> Email</option>
-                                            <option value="Bypass"> By-pass</option>
+                                            <option value="Bypass">Actual-request</option>
                                         </select>
                                     </div>
                                 </div>
+                                @endif
                                 <div class="row">
                                     <div class="col-lg-8">
                                         <label for="business_search">Search Business</label>

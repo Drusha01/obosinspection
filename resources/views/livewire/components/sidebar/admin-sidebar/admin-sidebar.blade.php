@@ -145,7 +145,7 @@
                             <i class="bi bi-files"></i>
                             Requests
                         </span>
-                        <i class="fas  @if(Request()->route()->getPrefix() == 'administrator/inspections') fa-chevron-up @else fa-chevron-down @endif"></i> 
+                        <i class="fas  @if(Request()->route()->getPrefix() == 'administrator/request') fa-chevron-up @else fa-chevron-down @endif"></i> 
                     </span>
                 </a>
                 <div id="Requestdropdown" class="collapse @if(Request()->route()->getPrefix() == 'administrator/request') show @endif">
@@ -349,12 +349,52 @@
                     </ul>
                 </div>
             </li>
-            <li class="nav-item @if(Route::is('inspector-team-leader-violations')) active @endif">
-                <a class="nav-link" href="{{ route('inspector-team-leader-violations') }}">
-                    <i class="fa-solid fa-fw fa-triangle-exclamation"></i>
-                    <span>Violation</span>
+            
+            <!-- <li class="nav-item">
+                <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Requestdropdown" aria-expanded="@if(Request()->route()->getPrefix() == 'administrator/request') true @else false @endif" aria-controls="Requestdropdown">
+                    <span class="d-flex justify-content-between align-items-center">
+                        <span>
+                            <i class="bi bi-files"></i>
+                            Requests
+                        </span>
+                        <i class="fas  @if(Request()->route()->getPrefix() == 'inspector-team-leader/request') fa-chevron-up @else fa-chevron-down @endif"></i> 
+                    </span>
                 </a>
-            </li>
+                <div id="Requestdropdown" class="collapse @if(Request()->route()->getPrefix() == 'inspector-team-leader/request') show @endif">
+                    <ul class="nav flex-column sub-menu" style="background-color: #50C878; border-radius: 8px; z-index: 9999;">
+                        <li class="nav-item @if(Route::is('inspector-team-leader-request-generate-request')) active @endif">
+                            <a class="nav-link" href="{{ route('inspector-team-leader-request-generate-request') }}">
+                                <i class="bi bi-file-earmark-plus"></i>
+                                <span>Generate Request</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @if(Route::is('inspector-team-leader-request-accepted-request')) active @endif">
+                            <a class="nav-link" href="{{ route('inspector-team-leader-request-accepted-request') }}">
+                                <i class="bi bi-file-earmark-check"></i>
+                                <span>Accepted Request</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @if(Route::is('inspector-team-leader-request-declined-request')) active @endif">
+                            <a class="nav-link" href="{{ route('inspector-team-leader-request-declined-request') }}">
+                                <i class="bi bi-file-earmark-x"></i>
+                                <span>Declined Request</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @if(Route::is('inspector-team-leader-request-no-response-request')) active @endif" >
+                            <a class="nav-link" href="{{ route('inspector-team-leader-request-no-response-request') }}">
+                                <i class="bi bi-question-square"></i>
+                                <span>No Response Request</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @if(Route::is('inspector-team-leader-request-deleted-request')) active @endif">
+                            <a class="nav-link" href="{{ route('inspector-team-leader-request-deleted-request') }}">
+                                <i class="bi bi-folder-x"></i>
+                                <span>Deleted Request</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li> -->
             <li class="nav-item">
                 <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Inspectionsdropdown" aria-expanded="@if(Request()->route()->getPrefix() == 'inspector-team-leader/inspections') true @else false @endif" aria-controls="Inspectionsdropdown">
                     <span class="d-flex justify-content-between align-items-center">
@@ -400,6 +440,12 @@
                     <span>Certificates</span>
                 </a>
             </li>
+            <li class="nav-item @if(Route::is('inspector-team-leader-violations')) active @endif">
+                <a class="nav-link" href="{{ route('inspector-team-leader-violations') }}">
+                    <i class="fa-solid fa-fw fa-triangle-exclamation"></i>
+                    <span>Violation</span>
+                </a>
+            </li>
             <li class="nav-item @if(Route::is('inspector-team-leader-profile')) active @endif">
                 <a class="nav-link" href="{{ route('inspector-team-leader-profile') }}">
                     <i class="fas fa-fw fa-user"></i>
@@ -441,12 +487,7 @@
                     </ul>
                 </div>
             </li>
-            <li class="nav-item @if(Route::is('inspector-violations')) active @endif">
-                <a class="nav-link" href="{{ route('inspector-violations') }}">
-                    <i class="fa-solid fa-fw fa-triangle-exclamation"></i>
-                    <span>Violation</span>
-                </a>
-            </li>
+            
             <li class="nav-item">
                 <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Inspectionsdropdown" aria-expanded="@if(Request()->route()->getPrefix() == 'inspector/inspections') true @else false @endif" aria-controls="Inspectionsdropdown">
                     <span class="d-flex justify-content-between align-items-center">
@@ -490,6 +531,12 @@
                 <a class="nav-link" href="{{ route('inspector-certifications') }}">
                     <i class="fa-solid fa-fw fa-triangle-exclamation"></i>
                     <span>Certificates</span>
+                </a>
+            </li>
+            <li class="nav-item @if(Route::is('inspector-violations')) active @endif">
+                <a class="nav-link" href="{{ route('inspector-violations') }}">
+                    <i class="fa-solid fa-fw fa-triangle-exclamation"></i>
+                    <span>Violation</span>
                 </a>
             </li>
             <li class="nav-item @if(Route::is('inspector-profile')) active @endif">

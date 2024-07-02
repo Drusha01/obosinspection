@@ -123,9 +123,6 @@
                                             <a class="btn btn-outline-primary my-1" target="_blank" href="/administrator/certifications/generate/{{$value->id}}">
                                                 Generate Certificate
                                             </a>
-                                            <a class="btn btn-outline-primary my-1" target="_blank" href="/administrator/certifications/generate/reportdsavdkafjlsk">
-                                                Generate Report
-                                            </a>
                                         </td>
                                     @elseif($filter_value['name'] == 'Inspection Details' && $filter_value['active'])
                                         <td class="text-center align-middle">
