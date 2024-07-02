@@ -700,6 +700,10 @@
                         </div>
                         <form wire:submit.prevent="save_complete({{$inspection['id']}},'completeModaltoggler')">
                             <div class="modal-body">
+                                <input type="checkbox" name="" id="" wire:model.live="email">
+                                <label class="form-check-label text-primary" for="">
+                                    Email the business?
+                                </label>
                                 <div>Are you sure you want to complete this inspection?</div>
                             </div>
                             <div class="modal-footer">

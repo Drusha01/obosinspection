@@ -22,9 +22,9 @@
                                     <p class="m-0 p-0">
                                         Owner of Building:
                                     </p>
-                                    <!-- <p class="m-0 p-0">
+                                    <p class="m-0 p-0">
                                         Name of Lessee:
-                                    </p> -->
+                                    </p>
                                     <p class="m-0 p-0">
                                         Location of Building:
                                     </p>
@@ -37,11 +37,11 @@
                                         {{date_format(date_create($issue_inspection['inspection']->schedule_date),"M d, Y")}}
                                     </p>
                                     <p class="m-0 p-0 underline">
+                                        {{$issue_inspection['inspection']->first_name.' '.$issue_inspection['inspection']->middle_name.' '.$issue_inspection['inspection']->last_name.' '.$issue_inspection['inspection']->suffix}}
+                                    </p>
+                                    <p class="m-0 p-0 underline">
                                         {{$issue_inspection['inspection_business_name']}}
                                     </p>
-                                    <!-- <p class="m-0 p-0 underline">
-                                        {{$issue_inspection['inspection']->first_name.' '.$issue_inspection['inspection']->middle_name.' '.$issue_inspection['inspection']->last_name.' '.$issue_inspection['inspection']->suffix}}
-                                    </p> -->
                                     <p class="m-0 p-0 underline">
                                         @if(isset($issue_inspection['inspection']->street_address)) {{$issue_inspection['inspection']->street_address}}, @endif {{$issue_inspection['inspection']->barangay}} , GENERAL SANTOS CITY
                                     </p>
