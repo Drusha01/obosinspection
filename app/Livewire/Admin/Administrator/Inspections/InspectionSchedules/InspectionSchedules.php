@@ -773,7 +773,7 @@ class InspectionSchedules extends Component
                 ->first();
 
             //add
-            if($this->from_request){
+            if($this->business_from == 'from-email'){
                 $businesses = DB::table('request_inspections as ri')
                 ->select(
                     'ri.id',
@@ -817,7 +817,7 @@ class InspectionSchedules extends Component
                     'schedule_date' =>$this->inspection['schedule_date'],
             ])){
                 
-                if($this->from_request){
+                if($this->business_from == 'from-email'){
                     $status = DB::table('request_status')
                     ->where('name','=',"Completed")
                     ->first();
