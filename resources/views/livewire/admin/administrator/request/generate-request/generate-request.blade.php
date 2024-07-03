@@ -31,11 +31,9 @@
                     </div>
                 </div>
                 <div class="col-4 d-flex justify-content-end">
-                    @if(Request()->route()->getPrefix() == 'administrator/request')
-                        <button class="btn btn-primary mr-2" wire:click="request_list_modal('requestCategoryListModaltoggler')">
-                            Request Category Lists
-                        </button>
-                    @endif
+                    <button class="btn btn-primary mr-2" wire:click="request_list_modal('requestCategoryListModaltoggler')">
+                        Request Category Lists
+                    </button>
                     <button type="button" class="btn btn-primary mr-2"  wire:click="generate_request('requestPDFModaltoggler')">
                         Request PDF
                     </button>
