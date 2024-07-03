@@ -192,6 +192,8 @@
             <button type="button" data-bs-toggle="modal" data-bs-target="#issueModal" id="issueModaltoggler" style="display:none;"></button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#certModal" id="certModaltoggler" style="display:none;"></button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#ProofModal" id="ProofModaltoggler" style="display:none;"></button>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#ValidatedProofModal" id="ValidatedProofModaltoggler" style="display:none;"></button>
+            
             
             <div wire:ignore.self class="modal fade" id="issueModal" tabindex="-1" aria-labelledby="issueModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -445,6 +447,8 @@
                                                     <th>
                                                         Proof
                                                     </th>
+                                                    <th class="text-center">Validated Proof</th >
+                                                    <th class="text-center">  isValidated</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -467,6 +471,16 @@
                                                             <button class="btn btn-primary "wire:click="view_violation_proof({{$value['id']}},'ProofModaltoggler')"> 
                                                                 View
                                                             </button>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            @if($value['remarks'])
+                                                                <button class="btn btn-primary "wire:click="view_violation_validated_proof({{$value['id']}},'ValidatedProofModaltoggler')"> 
+                                                                    View
+                                                                </button>
+                                                            @endif
+                                                        </td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="checkbox"  disabled value="1" @if($value['remarks'])) checked @endif  wire:change="update_complied_violation({{$value['id']}})">
                                                         </td>
                                                     </tr>
                                                 @empty
@@ -707,6 +721,72 @@
                     </div>
                 </div>
             </div>
+
+            <div wire:ignore.self class="modal fade" id="ValidatedProofModal" tabindex="-1" aria-labelledby="ValidatedProofModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ValidatedProofModalLabel">Inspection Validated Violation Proof</h5>
+                            <button type="button" class="btn-close" wire:click="reopenModal()" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div>Violation: @if(isset($violation_validated_contents['violation'])) {{$violation_validated_contents['violation']->description}} @endif</div>
+                            <form  wire:submit.prevent="upload_photos()">
+                                <div class="row d-flex">
+                                    <label for="formFileSm" class="form-label text-dark mt-2">Upload Proof</label>
+                                    <div class="col-11">
+                                        <div class="mb-3">
+                                            <input class="form-control form-control" id="formFileSm"   accept="image/jpeg, image/png" wire:model="violation_validated_contents.photos" type="file" multiple>
+                                        </div>
+                                    </div>
+                                    <div class="col-1 ">
+                                        <button class="btn btn-primary">
+                                            Upload
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
+                                    <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                                        <tr>
+                                            <th>#</th>
+                                            <th class="align-middle text-center">
+                                                Image
+                                            </th>
+                                            <th class="align-middle text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody  class="overflow-auto" style="max-height500px">
+                                        @forelse($violation_validated_contents['inspection_violation_validated_contents']  as $key => $value)
+                                            <tr>
+                                                <td class="align-middle">
+                                                   {{$key+1}}
+                                                </td>
+                                                <td class="text-center align-middle">
+                                                    <a href="{{asset('storage/content/validatedproof/'.$value->img_url)}}" target="blank">
+                                                        <img class="img-fluid"src="{{asset('storage/content/validatedproof/'.$value->img_url)}}" alt="" style="max-height:200px;max-width:200px; ">
+                                                    </a>
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <button class="btn btn-danger "wire:click="delete_proof_photo({{$value->id}})"> 
+                                                        Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <th colspan="42" class="text-center">NO DATA</th>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
         </div>    
     </div>
