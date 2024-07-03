@@ -23,6 +23,7 @@ class CompletedInspections extends Component
         ['column_name'=> 'business_type_name','active'=> true,'name'=>'Business Type'],
         ['column_name'=> 'schedule_date','active'=> true,'name'=>'Schedule'],
         ['column_name'=> 'id','active'=> true,'name'=>'Generate'],
+        ['column_name'=> 'id','active'=> true,'name'=>'Violation'],
         ['column_name'=> 'id','active'=> true,'name'=>'Inspection Details'],
     ];
 

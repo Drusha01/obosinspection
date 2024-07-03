@@ -136,6 +136,36 @@
                                         <td class="align-middle">
                                             {{date_format(date_create($value->schedule_date),"M d, Y")}}
                                         </td>
+                                    @elseif($filter_value['name'] == 'Violation' && $filter_value['active'])
+                                        <td class="text-center align-middle">
+                                            <?php 
+                                                $violations = DB::table('inspection_violations as iv')
+                                                ->select(
+                                                    'iv.id',
+                                                    'description',
+                                                    'remarks'
+                                                )
+                                                ->join('violations as v','v.id','iv.violation_id')
+                                                ->where('inspection_id','=',$value->id)
+                                                ->get()
+                                                ->toArray();
+                                            if(count($violations)<=0){
+                                                echo '<span class="badge text-light p-2 bg-primary">No Violation</span>';
+                                            }elseif(count($violations)>0){
+                                                $valid = true;
+                                                foreach ($violations as $key => $value_violation) {
+                                                    if(!isset($value_violation->remarks)){
+                                                        $valid = false;
+                                                    }
+                                                }
+                                                if($valid){
+                                                    echo '<span class="badge text-light p-2 bg-primary">Complied</span>';
+                                                }else{
+                                                    echo '<span class="badge text-light p-2 bg-warning">Un-complied</span>';
+                                                }
+                                            }
+                                            ?>
+                                        </td> 
                                     @else
                                         @if($filter_value['active'])
                                             <td class="align-middle">{{ $value->{$filter_value['column_name']} }}</td>
