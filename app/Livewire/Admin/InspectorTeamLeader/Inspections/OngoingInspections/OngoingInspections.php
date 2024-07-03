@@ -795,9 +795,9 @@ class OngoingInspections extends Component
                     "p.img_url",
                     'wr.name as work_role_name',
                     'it_member_team.name as inspector_team',
-                    'ic.id as inspector_category_id',
-                    'c.name as category_name',
-                    'c.id as category_id',
+                    // 'ic.id as inspector_category_id',
+                    // 'c.name as category_name',
+                    // 'c.id as category_id',
                 )
                 ->leftjoin('inspector_members as im','im.member_id','p.id')
                 ->leftjoin('inspector_teams as it_member_team','it_member_team.id','im.inspector_team_id')
@@ -805,9 +805,9 @@ class OngoingInspections extends Component
                 ->leftjoin('inspection_inspector_members as iim','p.id','iim.person_id')
                 ->join('person_types as pt','p.person_type_id','pt.id')
                 ->join('work_roles as wr', 'wr.id','p.work_role_id')
-                ->join('inspector_category as ic','p.id','ic.person_id')
-                ->join('categories as c','c.id','ic.category_id')
-                ->orderBy(DB::raw('LOWER(c.name)'),'asc')
+                // ->join('inspector_category as ic','p.id','ic.person_id')
+                // ->join('categories as c','c.id','ic.category_id')
+                // ->orderBy(DB::raw('LOWER(c.name)'),'asc')
                 ->where('pt.name','Inspector')
                 ->where('iim.inspection_id','=',$id)
                 ->get()
@@ -828,21 +828,21 @@ class OngoingInspections extends Component
                     "p.img_url",
                     'wr.name as work_role_name',
                     'it.name as inspector_team',
-                    'ic.id as inspector_category_id',
-                    'c.name as category_name',
-                    'c.id as category_id',
+                    // 'ic.id as inspector_category_id',
+                    // 'c.name as category_name',
+                    // 'c.id as category_id',
                 )
                 ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
                 ->join('person_types as pt','p.person_type_id','pt.id')
                 ->join('work_roles as wr', 'wr.id','p.work_role_id')
-                ->join('inspector_category as ic','p.id','ic.person_id')
-                ->join('categories as c','c.id','ic.category_id')
-                ->orderBy(DB::raw('LOWER(c.name)'),'asc')
+                // ->leftjoin('inspector_category as ic','p.id','ic.person_id')
+                // ->join('categories as c','c.id','ic.category_id')
+                // ->orderBy(DB::raw('LOWER(c.name)'),'asc')
+                // ->groupBy('it.team_leader_id')
                 ->whereNotNull('it.team_leader_id')
                 ->where('pt.name','Inspector')
                 ->get()
                 ->toArray();
-
             $inspector_team_leaders = DB::table('persons as p')
                 ->select(
                     "iitl.id",
@@ -1158,9 +1158,9 @@ class OngoingInspections extends Component
                     "p.img_url",
                     'wr.name as work_role_name',
                     'it_member_team.name as inspector_team',
-                    'ic.id as inspector_category_id',
-                    'c.name as category_name',
-                    'c.id as category_id',
+                    // 'ic.id as inspector_category_id',
+                    // 'c.name as category_name',
+                    // 'c.id as category_id',
                 )
                 ->leftjoin('inspector_members as im','im.member_id','p.id')
                 ->leftjoin('inspector_teams as it_member_team','it_member_team.id','im.inspector_team_id')
@@ -1168,9 +1168,9 @@ class OngoingInspections extends Component
                 ->leftjoin('inspection_inspector_members as iim','p.id','iim.person_id')
                 ->join('person_types as pt','p.person_type_id','pt.id')
                 ->join('work_roles as wr', 'wr.id','p.work_role_id')
-                ->join('inspector_category as ic','p.id','ic.person_id')
-                ->join('categories as c','c.id','ic.category_id')
-                ->orderBy(DB::raw('LOWER(c.name)'),'asc')
+                // ->join('inspector_category as ic','p.id','ic.person_id')
+                // ->join('categories as c','c.id','ic.category_id')
+                // ->orderBy(DB::raw('LOWER(c.name)'),'asc')
                 ->where('pt.name','Inspector')
                 ->where('iim.inspection_id','=',$id)
                 ->get()
@@ -1191,16 +1191,17 @@ class OngoingInspections extends Component
                     "p.img_url",
                     'wr.name as work_role_name',
                     'it.name as inspector_team',
-                    'ic.id as inspector_category_id',
-                    'c.name as category_name',
-                    'c.id as category_id',
+                    // 'ic.id as inspector_category_id',
+                    // 'c.name as category_name',
+                    // 'c.id as category_id',
                 )
                 ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
                 ->join('person_types as pt','p.person_type_id','pt.id')
                 ->join('work_roles as wr', 'wr.id','p.work_role_id')
-                ->join('inspector_category as ic','p.id','ic.person_id')
-                ->join('categories as c','c.id','ic.category_id')
-                ->orderBy(DB::raw('LOWER(c.name)'),'asc')
+                // ->leftjoin('inspector_category as ic','p.id','ic.person_id')
+                // ->join('categories as c','c.id','ic.category_id')
+                // ->orderBy(DB::raw('LOWER(c.name)'),'asc')
+                // ->groupBy('it.team_leader_id')
                 ->whereNotNull('it.team_leader_id')
                 ->where('pt.name','Inspector')
                 ->get()
