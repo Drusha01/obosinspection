@@ -1536,8 +1536,6 @@ class CompletedInspections extends Component
     }
 
 
-
-
    
     public function update_violation_validated_proof_data($id){
         $inspection_violation_validated_contents = DB::table('inspection_violation_validated_contents as ivc')

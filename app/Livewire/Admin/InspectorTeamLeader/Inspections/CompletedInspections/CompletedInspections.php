@@ -1478,4 +1478,133 @@ class CompletedInspections extends Component
         self::update_violation_proof_data($id);
         $this->dispatch('openModal',$modal_id);
     }
+    
+  
+    
+
+   
+    public function update_violation_validated_proof_data($id){
+        $inspection_violation_validated_contents = DB::table('inspection_violation_validated_contents as ivc')
+            ->where('inspection_violation_id','=',$id)
+            ->get()
+            ->toArray();
+        $violation = DB::table('inspection_violations as iv')
+            ->select(
+                'iv.id',
+                'v.id as violation_id',
+                'v.description',
+                'iv.added_by',
+            )
+            ->join('violations as v','v.id','iv.violation_id')
+            ->where('iv.id','=',$id)
+            ->first();
+        $this->violation_validated_contents = [
+            'inspection_violation_validated_contents'=> $inspection_violation_validated_contents,
+            'violation' =>$violation,
+            'photos'=> NULL,
+            'inspection_violation_id'=>$id,
+        ];
+    }
+    public $violation_validated_contents = [
+        'inspection_violation_validated_contents'=> [],
+        'violation' =>NULL,
+        'photos'=> NULL,
+    ];
+    public function view_violation_validated_proof($id,$modal_id){
+        self::update_violation_validated_proof_data($id);
+        $this->dispatch('openModal',$modal_id);
+    }
+
+    public function upload_photos(){
+        if(isset($this->violation_validated_contents['photos'])){
+            foreach ($this->violation_validated_contents['photos'] as $photo) {
+                if($photo){
+                    $save_photo = self::save_image($photo,'validatedproof','inspection_violation_validated_contents','img_url');
+                    DB::table('inspection_violation_validated_contents')
+                    ->insert([
+                        'inspection_id'=> 0,
+                        'inspection_violation_id'=> $this->violation_validated_contents['violation']->id,
+                        'img_url'=> $save_photo,
+                    ]);
+                } 
+            }
+            self::update_violation_validated_proof_data($this->violation_validated_contents['inspection_violation_id']);
+        }else{
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'Please select an image!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return 0;
+        }
+    }
+    public function delete_proof_photo($id){
+        $temp = DB::table('inspection_violation_validated_contents as ivc')
+            ->where('id','=',$id)
+            ->first();
+        DB::table('inspection_violation_validated_contents as ivc')
+            ->where('id','=',$id)
+            ->delete();
+        if(file_exists(storage_path('app/public/content/validatedproof/'.$temp->img_url))){
+            unlink(storage_path('app/public/content/validatedproof/'.$temp->img_url));
+        }
+        self::update_violation_validated_proof_data($this->violation_validated_contents['inspection_violation_id']);
+    }
+
+    public function save_image($image_file,$folder_name,$table_name,$column_name){
+        if($image_file && file_exists(storage_path().'/app/livewire-tmp/'.$image_file->getfilename())){
+            $file_extension =$image_file->getClientOriginalExtension();
+            $tmp_name = 'livewire-tmp/'.$image_file->getfilename();
+            $size = Storage::size($tmp_name);
+            $mime = Storage::mimeType($tmp_name);
+            $max_image_size = 20 * 1024*1024; // 5 mb
+            $file_extensions = array('image/jpeg','image/png','image/jpg');
+            
+            if($size<= $max_image_size){
+                $valid_extension = false;
+                foreach ($file_extensions as $value) {
+                    if($value == $mime){
+                        $valid_extension = true;
+                        break;
+                    }
+                }
+                if($valid_extension){
+                    // move
+                    $new_file_name = md5($tmp_name).'.'.$file_extension;
+                    while(DB::table($table_name)
+                    ->where([$column_name=> $new_file_name])
+                    ->first()){
+                        $new_file_name = md5($tmp_name.rand(1,10000000)).'.'.$file_extension;
+                    }
+                    if(Storage::move($tmp_name, 'public/content/'.$folder_name.'/'.$new_file_name)){
+                        return $new_file_name;
+                    }
+                }else{
+                    $this->dispatch('swal:redirect',
+                        position         									: 'center',
+                        icon              									: 'warning',
+                        title             									: 'Invalid image type!',
+                        showConfirmButton 									: 'true',
+                        timer             									: '1000',
+                        link              									: '#'
+                    );
+                    return 0;
+                }
+            }else{
+                $this->dispatch('swal:redirect',
+                    position         									: 'center',
+                    icon              									: 'warning',
+                    title             									: 'Image is too large!',
+                    showConfirmButton 									: 'true',
+                    timer             									: '1000',
+                    link              									: '#'
+                );
+                return 0;
+            } 
+        }
+        return 0;
+    }
 }
