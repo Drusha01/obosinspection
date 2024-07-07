@@ -526,7 +526,7 @@
                                         <label for="name" class="form-label">Signage Information</label>
                                         <?php $valid = false;?>
                                         @foreach($issue_inspection['inspector_bss_category'] as $key => $value) 
-                                            @if($value->category_name == 'Sanitary') 
+                                            @if($value->category_name == 'Signage') 
                                                 <?php $valid = true; ?>                                    
                                             @endif  
                                         @endforeach
