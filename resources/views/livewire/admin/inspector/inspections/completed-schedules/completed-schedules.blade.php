@@ -267,7 +267,7 @@
                                                                     ->get()
                                                                     ->toArray();
                                                             ?>
-                                                                <select class="form-select" id="teamLeaderSelect" wire:change="update_equipment_billing({{$value['id']}},{{$key}})" wire:model="issue_inspection.inspection_items.{{$key}}.equipment_billing_id">
+                                                                <select class="form-select" disabled id="teamLeaderSelect" wire:change="update_equipment_billing({{$value['id']}},{{$key}})" wire:model="issue_inspection.inspection_items.{{$key}}.equipment_billing_id">
                                                                     <option value="">Select Capacity</option>
                                                                     @foreach($equipments_billing as $eb_key => $eb_value)
                                                                         <option value="{{$eb_value->id}}">{{$eb_value->capacity}}</option>
