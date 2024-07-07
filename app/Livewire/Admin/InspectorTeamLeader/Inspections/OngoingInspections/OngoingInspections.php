@@ -1360,6 +1360,16 @@ class OngoingInspections extends Component
         ->where('is_active','=',1)
         ->get()
         ->toArray();
+
+        $inspector_bss_category = DB::table('inspector_bss_category as bbs')
+            ->select(
+                'bbs.id',
+                'bc.name as category_name',
+            )
+            ->rightjoin('bss_category as bc','bc.id','bbs.category_id')
+            ->where('bbs.person_id','=',$this->activity_logs['inspector_team_id'])
+            ->get()
+            ->toArray();
         
         $this->issue_inspection = [
             'id' => $inspection->id,
@@ -1374,7 +1384,9 @@ class OngoingInspections extends Component
             'application_type_id' => $inspection->application_type_id,
             'remarks' => $inspection->remarks,
             'date_signed' => $inspection->date_signed,
+            
             'step'=> $this->issue_inspection['step'],
+            'inspector_bss_category'=>$inspector_bss_category,
             'segregated'=>  $segragated,
             'inspection_business_name' => $inspection->business_name. ' ( '.$inspection->business_type_name.' )',
             'inspection_items' =>$inspection_items,
