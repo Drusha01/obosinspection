@@ -1235,7 +1235,7 @@ class Inspectors extends Component
                     'ibc.id',
                     'bc.name',
                 )
-                ->join('bss_category as cc','cc.id','ibc.category_id')
+                ->join('bss_category as bc','bc.id','ibc.category_id')
                 ->where('person_id','=',$this->category_role['person_id'])
                 ->get()
                 ->toArray(); 
