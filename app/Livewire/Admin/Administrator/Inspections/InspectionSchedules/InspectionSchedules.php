@@ -582,6 +582,7 @@ class InspectionSchedules extends Component
     }
     public function add($modal_id){
         $this->from_request = false;
+        $this->business_from = 'asdfasd';
         $this->modal['brgy_id'] = NULL;
         $this->inspector_members = DB::table('persons as p')
             ->select(
