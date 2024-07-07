@@ -856,6 +856,7 @@ class GenerateReport extends Component
                 'vc.id as category_id',
             )
             ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
+            ->leftjoin('inspection_inspector_team_leaders as iitl','p.id','iitl.person_id')
             ->join('person_types as pt','p.person_type_id','pt.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
             ->join('inspector_violation_category as ivc','p.id','ivc.person_id')
@@ -863,6 +864,7 @@ class GenerateReport extends Component
             ->orderBy(DB::raw('LOWER(vc.name)'),'asc')
             ->whereNotNull('it.team_leader_id')
             ->where('pt.name','Inspector')
+            ->where('iitl.inspection_id','=',$id)
             ->get()
             ->toArray();
         $violation_category = DB::table('violation_category')
