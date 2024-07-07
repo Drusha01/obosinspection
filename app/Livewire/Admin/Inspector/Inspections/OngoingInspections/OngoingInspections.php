@@ -874,13 +874,13 @@ class OngoingInspections extends Component
                     'i.img_url',
                     'i.is_active',
                     'ebs.name as section_name',
-                    'ic.person_id',
+                    'iic.person_id',
                     )
                 ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
                 ->join('categories as c','c.id','i.category_id')
-                ->join('inspector_category as ic','i.category_id','ic.category_id')
+                ->join('inspector_item_category as iic','i.category_id','iic.category_id')
                 ->where('i.is_active','=',1)
-                ->where('ic.person_id','=',$this->activity_logs['inspector_team_id'])
+                ->where('iic.person_id','=',$this->activity_logs['inspector_team_id'])
                 ->get()
                 ->toArray();
 
@@ -888,14 +888,15 @@ class OngoingInspections extends Component
                 ->select(
                     'v.id',
                     'description',
-                    'c.name as category_name',
+                    'vc.name as category_name',
+                    'vc.id as category_id',
                     'v.is_active',
-                    'ic.person_id',
                 )
-                ->join('categories as c','v.category_id','c.id')
-                ->join('inspector_category as ic','v.category_id','ic.category_id')
+                ->join('violation_category as vc','v.category_id','vc.id')
+                ->join('inspector_violation_category as ivc','v.category_id','ivc.category_id')
                 ->where('v.is_active','=',1)
-                ->where('ic.person_id','=',$this->activity_logs['inspector_team_id'])
+                ->orderBy(DB::raw('LOWER(vc.name)'),'asc')
+                ->where('ivc.person_id','=',$this->activity_logs['inspector_team_id'])
                 ->get()
                 ->toArray();
 
@@ -1263,6 +1264,15 @@ class OngoingInspections extends Component
         }
         
         
+        $inspector_bss_category = DB::table('inspector_bss_category as bbs')
+            ->select(
+                'bbs.id',
+                'bc.name as category_name',
+            )
+            ->rightjoin('bss_category as bc','bc.id','bbs.category_id')
+            ->where('bbs.person_id','=',$this->activity_logs['inspector_team_id'])
+            ->get()
+            ->toArray();
         $this->issue_inspection = [
             'id' => $inspection->id,
             'status_id' => $inspection->status_id,
@@ -1277,6 +1287,7 @@ class OngoingInspections extends Component
             'date_signed' => $inspection->date_signed,
             'step'=> $step,
 
+            'inspector_bss_category'=>$inspector_bss_category,
             'segregated'=>  $segragated,
             'inspection_business_name' => $inspection->business_name. ' ( '.$inspection->business_type_name.' )',
             'inspection_items' =>$inspection_items,

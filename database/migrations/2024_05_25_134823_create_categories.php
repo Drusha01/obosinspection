@@ -26,10 +26,7 @@ return new class extends Migration
         DB::statement("INSERT INTO `categories` (`id`, `name`, `img_url`) VALUES
         (1, 'Mechanical', 'default.png'),
         (2, 'Electronics', 'default.png'),
-        (3, 'Electrical', 'default.png'),
-        (4, 'Building', 'default.png'),
-        (5, 'Plumbing', 'default.png'),
-        (6, 'Signage', 'default.png');");
+        (3, 'Electrical', 'default.png');");
 
         
     }

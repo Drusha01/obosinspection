@@ -72,6 +72,8 @@
                                 @if($filter_value['active'])
                                     @if($filter_value['name'] == 'Action')
                                         <th scope="col" class="text-center">{{$filter_value['name']}}</th>
+                                    @elseif($filter_value['name'] == 'Category Role')
+                                        <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                     @else 
                                         <th scope="col">{{$filter_value['name']}}</th>
                                     @endif
@@ -111,8 +113,14 @@
                                         </td>
                                     @elseif ($filter_value['name'] == 'Category Role'  && $filter_value['active'])
                                         <td class="text-center align-middle">
-                                            <button class="btn btn-outline-primary" wire:click="view_category_role({{$value->person_id}},'CatRoleModaltoggler')">
-                                                Category Role
+                                            <button class="btn btn-outline-primary" wire:click="view_item_category_role({{$value->person_id}},'ItemCatRoleModaltoggler')">
+                                                Item Role
+                                            </button>
+                                            <button class="btn btn-outline-primary" wire:click="view_bss_category_role({{$value->person_id}},'BSSCatRoleModaltoggler')">
+                                                BSS Role
+                                            </button>
+                                            <button class="btn btn-outline-primary" wire:click="view_violation_category_role({{$value->person_id}},'VioCatRoleModaltoggler')">
+                                                Violation Role
                                             </button>
                                         </td>
                                     @elseif ($filter_value['name'] == 'E-Signature'  && $filter_value['active'])
@@ -152,14 +160,74 @@
         <button type="button" data-bs-toggle="modal" data-bs-target="#deactivateModal" id="deactivateModaltoggler" style="display:none;"></button>
         <button type="button" data-bs-toggle="modal" data-bs-target="#activateModal" id="activateModaltoggler" style="display:none;"></button>
         <button type="button" data-bs-toggle="modal" data-bs-target="#recoverModal" id="recoverModaltoggler" style="display:none;"></button>
-        <button type="button" data-bs-toggle="modal" data-bs-target="#CatRoleModal" id="CatRoleModaltoggler" style="display:none;"></button>
-        
+        <button type="button" data-bs-toggle="modal" data-bs-target="#VioCatRoleModal" id="VioCatRoleModaltoggler" style="display:none;"></button>
+        <button type="button" data-bs-toggle="modal" data-bs-target="#ItemCatRoleModal" id="ItemCatRoleModaltoggler" style="display:none;"></button>
+        <button type="button" data-bs-toggle="modal" data-bs-target="#BSSCatRoleModal" id="BSSCatRoleModaltoggler" style="display:none;"></button>
 
-        <div wire:ignore.self class="modal fade" id="CatRoleModal" tabindex="-1" aria-labelledby="CatRoleModalLabel" aria-hidden="true">
+        <div wire:ignore.self class="modal fade" id="VioCatRoleModal" tabindex="-1" aria-labelledby="VioCatRoleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="CatRoleModalLabel">View Category Role</h5>
+                        <h5 class="modal-title" id="VioCatRoleModalLabel">View Violation Category Role</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <label for="inspectors" class="form-label">Category <span class="text-danger">*</span></label>
+                            <div class="col-8">
+                                <div class="mb-3">
+                                    <select class="form-select" id="inspectors" aria-label="Select Member" required wire:model="category_role.category_id">
+                                        <option value="">Select Category</option>
+                                        @foreach($violation_category as $key => $value)
+                                            <option value="{{$value->id}}">{{$value->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-3 mx-3" >
+                                <button class="btn btn-primary" type="button" wire:click="add_violation_category_role()">Add</button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
+                                <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                                    <tr>
+                                        <th class="align-middle text-center"></th>
+                                        <th class="align-middle"> Category</th>
+                                        <th class="align-middle text-center">Action </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($inspector_violation_category as $key => $value)
+                                        <tr>
+                                            <td class="align-middle text-center">{{$key+1}}</td>
+                                            <td class="mx-2 align-middle">
+                                                {{$value->name}}
+                                            </td>
+                                            <td class="align-middle text-center">
+                                                <button class="btn btn-danger" type="button" wire:click="delete_violation_category_role({{$value->id}})">
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <th colspan="42" class="text-center">NO DATA</th>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div wire:ignore.self class="modal fade" id="ItemCatRoleModal" tabindex="-1" aria-labelledby="ItemCatRoleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ItemCatRoleModalLabel">View Item Category Role</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -176,7 +244,7 @@
                                 </div>
                             </div>
                             <div class="col-3 mx-3" >
-                                <button class="btn btn-primary" type="button" wire:click="add_category_role()">Add</button>
+                                <button class="btn btn-primary" type="button" wire:click="add_item_category_role()">Add</button>
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -189,14 +257,73 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse($inspector_category as $key => $value)
+                                    @forelse($inspector_item_category as $key => $value)
                                         <tr>
                                             <td class="align-middle text-center">{{$key+1}}</td>
                                             <td class="mx-2 align-middle">
                                                 {{$value->name}}
                                             </td>
                                             <td class="align-middle text-center">
-                                                <button class="btn btn-danger" type="button" wire:click="delete_category_role({{$value->id}})">
+                                                <button class="btn btn-danger" type="button" wire:click="delete_item_category_role({{$value->id}})">
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <th colspan="42" class="text-center">NO DATA</th>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div wire:ignore.self class="modal fade" id="BSSCatRoleModal" tabindex="-1" aria-labelledby="BSSCatRoleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ItemCatRoleModalLabel">View BSS Category Role</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <label for="inspectors" class="form-label">Category <span class="text-danger">*</span></label>
+                            <div class="col-8">
+                                <div class="mb-3">
+                                    <select class="form-select" id="inspectors" aria-label="Select Member" required wire:model="category_role.category_id">
+                                        <option value="">Select Category</option>
+                                        @foreach($bss_category as $key => $value)
+                                            <option value="{{$value->id}}">{{$value->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-3 mx-3" >
+                                <button class="btn btn-primary" type="button" wire:click="add_bss_category_role()">Add</button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
+                                <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                                    <tr>
+                                        <th class="align-middle text-center"></th>
+                                        <th class="align-middle"> Category</th>
+                                        <th class="align-middle text-center">Action </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($inspector_bss_category as $key => $value)
+                                        <tr>
+                                            <td class="align-middle text-center">{{$key+1}}</td>
+                                            <td class="mx-2 align-middle">
+                                                {{$value->name}}
+                                            </td>
+                                            <td class="align-middle text-center">
+                                                <button class="btn btn-danger" type="button" wire:click="delete_bss_category_role({{$value->id}})">
                                                     Delete
                                                 </button>
                                             </td>
@@ -311,14 +438,14 @@
                                     <div class="mb-3">
                                         <select class="form-select" id="inspectors" aria-label="Select Member" required wire:model="category_role.category_id">
                                             <option value="">Select Category</option>
-                                            @foreach($categories as $key => $value)
+                                            @foreach($inspector_violation_category as $key => $value)
                                                 <option value="{{$value->id}}">{{$value->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-3 mx-3" >
-                                    <button class="btn btn-primary" type="button" wire:click="add_temp_category()">Add</button>
+                                    <button class="btn btn-primary" type="button" wire:click="add_temp_violation_category()">Add</button>
                                 </div>
                             </div>
                             <div class="table-responsive">

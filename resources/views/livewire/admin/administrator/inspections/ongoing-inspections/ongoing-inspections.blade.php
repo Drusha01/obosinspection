@@ -827,7 +827,7 @@
                                     <label for="category_name" class="form-label">Category</label>
                                     <select class="form-select" id="category_name" required aria-label="Default select example" wire:model="violation.category_id">
                                         <option value="">Select Category</option>
-                                        @foreach($categories as $key => $value)
+                                        @foreach($violation_category as $key => $value)
                                             <option value="{{$value->id}}">{{$value->name}}</option>
                                         @endforeach
                                     </select>

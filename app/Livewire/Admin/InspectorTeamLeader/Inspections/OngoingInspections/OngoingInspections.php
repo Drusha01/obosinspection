@@ -946,13 +946,13 @@ class OngoingInspections extends Component
                     'i.img_url',
                     'i.is_active',
                     'ebs.name as section_name',
-                    'ic.person_id',
+                    'iic.person_id',
                     )
                 ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
                 ->join('categories as c','c.id','i.category_id')
-                ->join('inspector_category as ic','i.category_id','ic.category_id')
+                ->join('inspector_item_category as iic','i.category_id','iic.category_id')
                 ->where('i.is_active','=',1)
-                ->where('ic.person_id','=',$this->activity_logs['inspector_team_id'])
+                ->where('iic.person_id','=',$this->activity_logs['inspector_team_id'])
                 ->get()
                 ->toArray();
 
@@ -960,13 +960,15 @@ class OngoingInspections extends Component
                 ->select(
                     'v.id',
                     'description',
-                    'c.name as category_name',
-                    'c.id as category_id',
+                    'vc.name as category_name',
+                    'vc.id as category_id',
                     'v.is_active',
                 )
-                ->join('categories as c','v.category_id','c.id')
+                ->join('violation_category as vc','v.category_id','vc.id')
+                ->join('inspector_violation_category as ivc','v.category_id','ivc.category_id')
                 ->where('v.is_active','=',1)
-                ->orderBy(DB::raw('LOWER(c.name)'),'asc')
+                ->orderBy(DB::raw('LOWER(vc.name)'),'asc')
+                ->where('ivc.person_id','=',$this->activity_logs['inspector_team_id'])
                 ->get()
                 ->toArray();
                 

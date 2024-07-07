@@ -409,18 +409,40 @@
                                     </h5>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">Building Information</label>
-                                        <div class="mb-3">
-                                            <select class="form-select" aria-label="Select Select Building Billing" wire:change="update_building_billing()" required wire:model="issue_inspection.building_billing_id">
-                                                <option value="">Select Building billing</option>
-                                                @foreach($issue_inspection['building_billings'] as $key => $value)
-                                                    @if( $value['id'] == $issue_inspection['building_billing_id'])
-                                                        <option selected value="{{$value['id']}}">{{$value['section_name'].' ( '.$value['property_attribute'].' )'}}</option>
-                                                    @else
-                                                        <option selected value="{{$value['id']}}">{{$value['section_name'].' ( '.$value['property_attribute'].' )'}}</option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                        <?php $valid = false;?>
+                                        @foreach($issue_inspection['inspector_bss_category'] as $key => $value) 
+                                            @if($value->category_name == 'Building') 
+                                               <?php $valid = true; ?>                                    
+                                            @endif  
+                                        @endforeach
+                                        @if($valid)
+                                            <div class="mb-3">
+                                                <select class="form-select"   aria-label="Select Select Building Billing" wire:change="update_building_billing()" required wire:model="issue_inspection.building_billing_id">
+                                                    <option value="">Select Building billing</option>
+                                                    @foreach($issue_inspection['building_billings'] as $key => $value)
+                                                        @if( $value['id'] == $issue_inspection['building_billing_id'])
+                                                            <option selected value="{{$value['id']}}">{{$value['section_name'].' ( '.$value['property_attribute'].' )'}}</option>
+                                                        @else
+                                                            <option selected value="{{$value['id']}}">{{$value['section_name'].' ( '.$value['property_attribute'].' )'}}</option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        @else
+                                            <div class="mb-3">
+                                                <select class="form-select" disabled aria-label="Select Select Building Billing" wire:change="update_building_billing()" required wire:model="issue_inspection.building_billing_id">
+                                                    <option value="">Select Building billing</option>
+                                                    @foreach($issue_inspection['building_billings'] as $key => $value)
+                                                        @if( $value['id'] == $issue_inspection['building_billing_id'])
+                                                            <option selected value="{{$value['id']}}">{{$value['section_name'].' ( '.$value['property_attribute'].' )'}}</option>
+                                                        @else
+                                                            <option selected value="{{$value['id']}}">{{$value['section_name'].' ( '.$value['property_attribute'].' )'}}</option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        @endif
+                                        
                                     </div>
                                     <div class="mb-3">
                                         <label for="inspection_date" class="form-label">Fee</label>
@@ -432,15 +454,34 @@
                                     <h5 class="text-center my-2 text-black">
                                         Sanitary Details
                                     </h5>
-                                    <div class="input-group mb-3">
-                                        <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.sanitary_billing_id">
-                                            <option value="">Select Sanitary Item</option>
-                                            @foreach($issue_inspection['sanitary_billings'] as $key =>  $value)
-                                                <option selected value="{{$value['id']}}">{{$value['name']}}</option>
-                                            @endforeach
-                                        </select>
-                                        <button class="btn btn-primary" type="button" wire:click="update_inspection_sanitary_billings()" ><i class="bi bi-plus"></i></button>
-                                    </div>
+                                    <?php $valid = false;?>
+                                    @foreach($issue_inspection['inspector_bss_category'] as $key => $value) 
+                                        @if($value->category_name == 'Sanitary') 
+                                            <?php $valid = true; ?>                                    
+                                        @endif  
+                                    @endforeach
+                                    @if($valid)
+                                        <div class="input-group mb-3">
+                                            <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.sanitary_billing_id">
+                                                <option value="">Select Sanitary Item</option>
+                                                @foreach($issue_inspection['sanitary_billings'] as $key =>  $value)
+                                                    <option selected value="{{$value['id']}}">{{$value['name']}}</option>
+                                                @endforeach
+                                            </select>
+                                            <button class="btn btn-primary" type="button" wire:click="update_inspection_sanitary_billings()" ><i class="bi bi-plus"></i></button>
+                                        </div>
+                                    @else
+                                        <div class="input-group mb-3">
+                                            <select class="form-select" disabled id="teamLeaderSelect" wire:model="issue_inspection.sanitary_billing_id">
+                                                <option value="">Select Sanitary Item</option>
+                                                @foreach($issue_inspection['sanitary_billings'] as $key =>  $value)
+                                                    <option selected value="{{$value['id']}}">{{$value['name']}}</option>
+                                                @endforeach
+                                            </select>
+                                            <button class="btn btn-primary" disabled type="button" wire:click="update_inspection_sanitary_billings()" ><i class="bi bi-plus"></i></button>
+                                        </div>
+                                    @endif
+                                    
                                     <div class="table-responsive">
                                         <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
                                             <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
@@ -482,18 +523,40 @@
                                     </h5>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">Signage Information</label>
-                                        <div class="mb-3">
-                                            <select class="form-select" aria-label="Select Select Signage Billing" wire:change="update_signage_billing()" required wire:model="issue_inspection.signage_id">
-                                                <option value="">Select Signage billing</option>
-                                                @foreach($issue_inspection['signage_billings'] as $key => $value)
-                                                    @if( $value['id'] == $issue_inspection['building_billing_id'])
-                                                        <option selected value="{{$value['id']}}">{{$value['display_type_name'].' ( '.$value['sign_type_name'].' )'}}</option>
-                                                    @else
-                                                        <option selected value="{{$value['id']}}">{{$value['display_type_name'].' ( '.$value['sign_type_name'].' )'}}</option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                        <?php $valid = false;?>
+                                        @foreach($issue_inspection['inspector_bss_category'] as $key => $value) 
+                                            @if($value->category_name == 'Sanitary') 
+                                                <?php $valid = true; ?>                                    
+                                            @endif  
+                                        @endforeach
+                                        @if($valid)
+                                            <div class="mb-3">
+                                                <select class="form-select" aria-label="Select Select Signage Billing" wire:change="update_signage_billing()" required wire:model="issue_inspection.signage_id">
+                                                    <option value="">Select Signage billing</option>
+                                                    @foreach($issue_inspection['signage_billings'] as $key => $value)
+                                                        @if( $value['id'] == $issue_inspection['building_billing_id'])
+                                                            <option selected value="{{$value['id']}}">{{$value['display_type_name'].' ( '.$value['sign_type_name'].' )'}}</option>
+                                                        @else
+                                                            <option selected value="{{$value['id']}}">{{$value['display_type_name'].' ( '.$value['sign_type_name'].' )'}}</option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        @else
+                                            <div class="mb-3">
+                                                <select class="form-select" disabled aria-label="Select Select Signage Billing" wire:change="update_signage_billing()" required wire:model="issue_inspection.signage_id">
+                                                    <option value="">Select Signage billing</option>
+                                                    @foreach($issue_inspection['signage_billings'] as $key => $value)
+                                                        @if( $value['id'] == $issue_inspection['building_billing_id'])
+                                                            <option selected value="{{$value['id']}}">{{$value['display_type_name'].' ( '.$value['sign_type_name'].' )'}}</option>
+                                                        @else
+                                                            <option selected value="{{$value['id']}}">{{$value['display_type_name'].' ( '.$value['sign_type_name'].' )'}}</option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        @endif
+                                       
                                     </div>
                                     <div class="mb-3">
                                         <label for="inspection_date" class="form-label">Fee</label>

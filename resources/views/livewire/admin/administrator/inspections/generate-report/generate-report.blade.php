@@ -69,20 +69,20 @@
                                 $current_category = null;
                                
                             ?>
-                            @foreach($issue_inspection['categories'] as $key => $value )
+                            @foreach($issue_inspection['violation_category'] as $key => $value )
                                 <div class="row" wire:key="row-{{$key}}">
                                     <div class="col-3">
                                         <div class="d-flex justify-content-start w-100 m-0 p-0 ">
                                             {{$value->name}} :
                                         </div>
-                                        @foreach($issue_inspection['inspection_inspector_team_leaders'] as $v_key => $v_value )
+                                        @foreach($issue_inspection['email_inspection_inspector_team_leaders'] as $v_key => $v_value )
                                             @if($v_value->category_id == $value->id)
                                                 <div class="d-flex justify-content-center w-100 mx-0 my-2 p-0 text-uppercase h-5 underline">
                                                     {{$v_value->first_name.' '.$v_value->middle_name.' '.$v_value->last_name.' '.$v_value->suffix}}
                                                 </div>
                                             @endif
                                         @endforeach
-                                        @foreach($issue_inspection['inspection_inspector_members'] as $v_key => $v_value )
+                                        @foreach($issue_inspection['email_inspection_inspector_members'] as $v_key => $v_value )
                                             @if($v_value->category_id == $value->id)
                                                 <div class="d-flex justify-content-center w-100 mx-0 my-2 p-0 text-uppercase h-5 underline">
                                                     {{$v_value->first_name.' '.$v_value->middle_name.' '.$v_value->last_name.' '.$v_value->suffix}}

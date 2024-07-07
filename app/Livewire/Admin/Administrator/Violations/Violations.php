@@ -104,7 +104,7 @@ class Violations extends Component
         );
     }
     public function mount(Request $request){
-        $this->categories = DB::table('categories')
+        $this->categories = DB::table('violation_category')
         ->where('is_active','=',1)
         ->get()
         ->toArray();
@@ -167,12 +167,12 @@ class Violations extends Component
             ->select(
                 'v.id',
                 'description',
-                'c.name as category_name',
+                'vc.name as category_name',
                 'v.is_active'
             )
-            ->join('categories as c','v.category_id','c.id')
+            ->join('violation_category as vc','v.category_id','vc.id')
             ->where('description','like',$this->search['search'] .'%')
-            ->orderBy('id','desc')
+            ->orderBy('v.id','desc')
             ->paginate($this->table_filter['table_rows']);
 
         return view('livewire.admin.administrator.violations.violations',[

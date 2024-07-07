@@ -24,17 +24,17 @@
         <br>
         INSPECTORS
         <br>
-        @foreach($issue_inspection['categories'] as $key => $value )
+        @foreach($issue_inspection['violation_category'] as $key => $value )
             <br>
             Category :{{$value->name}} 
             <br>
-            @foreach($issue_inspection['inspection_inspector_team_leaders'] as $v_key => $v_value )
+            @foreach($issue_inspection['email_inspection_inspector_team_leaders'] as $v_key => $v_value )
                 @if($v_value->category_id == $value->id)
                     {{$v_value->first_name.' '.$v_value->middle_name.' '.$v_value->last_name.' '.$v_value->suffix}}
                     <br>
                 @endif
             @endforeach
-            @foreach($issue_inspection['inspection_inspector_members'] as $v_key => $v_value )
+            @foreach($issue_inspection['email_inspection_inspector_members'] as $v_key => $v_value )
                 @if($v_value->category_id == $value->id)
                     {{$v_value->first_name.' '.$v_value->middle_name.' '.$v_value->last_name.' '.$v_value->suffix}}
                     <br>    
