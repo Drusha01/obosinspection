@@ -51,6 +51,9 @@
                     </div>
                 </div>
                 <div class="col-4 d-flex justify-content-end ">
+                    <button type="button" class="btn btn-outline-primary mx-2" wire:click="add_from_request('addModaltoggler')">
+                        Add From Request
+                    </button>
                     <button type="button" class="btn btn-primary" wire:click="add('addModaltoggler')"  >
                         Add Inspection Schedule
                     </button>
@@ -138,7 +141,7 @@
                                         </td>
                                     @elseif($filter_value['name'] == 'Inspection Details' && $filter_value['active'])
                                         <td class="text-center align-middle">
-                                            <button class="btn btn-primary" @if($value->status_name == 'Pending') disabled @else @endif  wire:click="issue({{$value->id}},'issueModaltoggler')">
+                                            <button class="btn btn-primary"   wire:click="issue({{$value->id}},'issueModaltoggler')">
                                                 Inspection Details
                                             </button>
                                         </td>   
@@ -174,7 +177,7 @@
             
 
             <div wire:ignore.self class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="addModalLabel">Add Inspection Schedule</h5>
@@ -186,8 +189,39 @@
                             </div>
                             @if($inspection['step'] == 1)
                             <div >
+                                <h5 class="text-center my-2 text-black">
+                                    Inspection Details
+                                </h5>
+                                @if($from_request)
+                                <div class="row d-flex justify-content-end">
+                                    <div class="col-2 d-flex">
+                                        <span for="business_from" class="align-middle mt-2">From</span>
+                                        <select name="" id="business_from" class="form-select" wire:model.live="business_from">
+                                            <option value="from-email" selected> Email</option>
+                                            <option value="Bypass">Over the counter</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                @endif
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <label for="business_search">Search Business</label>
+                                        <input type="text" name="" id="business_search" class="form-control" wire:model.live.debounce.500ms="modal.search" placeholder="Search business ... ">
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div>
+                                            <label for="business_search">Filter Barangay</label>
+                                            <select name="" id=""  class="form-select" wire:model.live.debounce="modal.brgy_id">
+                                                <option value="">Select Barangay</option>
+                                                @foreach($brgy as $key => $value)
+                                                    <option value="{{$value->id}}">{{$value->brgyDesc}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">Business Name</label>
+                                    <label for="name" class="form-label">Business Name  <span class="text-danger">*</span></label>
                                     <div class="mb-3">
                                         <select class="form-select" aria-label="Select Barangay" required wire:model.live="inspection.business_id">
                                             <option value="">Select Business</option>
@@ -198,29 +232,26 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="inspection_date" class="form-label">Inspection Date</label>
+                                    <label for="inspection_date" class="form-label">Inspection Date  <span class="text-danger">*</span></label>
                                     <input type="date" class="form-control" id="inspection_date" wire:model.live="inspection.schedule_date" required min="{{$inspection['schedule_date']}}">
                                 </div>
                             </div>
                             @elseif($inspection['step'] == 2)
                             <div>
+                                <h5 class="text-center my-2 text-black">
+                                    Team Leaders  <span class="text-danger">*</span> 
+                                </h5>
                                 <div class="table-responsive">
                                     <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
                                         <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                                             <tr>
-                                                <th>Name</th>
-                                                <th class="align-middle text-center">Action</th>
+                                                <th class="align-middle">Name</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach($inspection['inspector_leaders']  as $key =>$value)
                                                 <tr>
-                                                    <td>{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
-                                                    <td class="align-middle text-center">
-                                                        <button class="btn btn-danger ">
-                                                            Delete
-                                                        </button>
-                                                    </td>
+                                                    <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                 </tr>
                                             @endforeach
 
@@ -230,6 +261,10 @@
                             </div>
                             @elseif($inspection['step'] == 3)
                             <div>
+                                <h5 class="text-center my-2 text-black">
+                                    Team Members
+                                </h5>
+                            
                                 <div class="input-group mb-3">
                                     <select class="form-select" id="teamLeaderSelect" wire:model.live="inspection.inspector_member_id">
                                         <option value="">Select Team Member</option>
@@ -243,14 +278,14 @@
                                     <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
                                         <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                                             <tr>
-                                                <th>Name</th>
+                                                <th class="align-middle">Name</th>
                                                 <th class="align-middle text-center">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach($inspection['inspector_members']  as $key =>$value)
                                                 <tr>
-                                                    <td>{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
+                                                    <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                     <td class="align-middle text-center">
                                                         <button class="btn btn-danger ">
                                                             Delete
@@ -292,6 +327,9 @@
                             </div>
                             @if($issue_inspection['step'] == 1)
                                 <div wire:key="{{$issue_inspection['step']}}">
+                                    <h5 class="text-center my-2 text-black">
+                                        Inspection Details
+                                    </h5>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">Application type</label>
                                         <div class="mb-3">
@@ -314,172 +352,9 @@
                                 </div>
                             @elseif($issue_inspection['step'] == 2)
                                 <div wire:key="{{$issue_inspection['step']}}">
-                                    <div class="input-group mb-3">
-                                        <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.item_id">
-                                            <option value="">Select Item</option>
-                                            @foreach($issue_inspection['items'] as $key =>  $value)
-                                                <option selected value="{{$value->id}}">{{$value->name.' ( '.$value->category_name.' )'.'( '.$value->section_name.' )'}}</option>
-                                            @endforeach
-                                        </select>
-                                        <button class="btn btn-primary" type="button" wire:click="update_inspection_items()" ><i class="bi bi-plus"></i></button>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
-                                            <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
-                                                <tr>
-                                                    <th class="align-middle">Item name</th>
-                                                    <th class="align-middle">Category</th>
-                                                    <th class="align-middle">Section</th>
-                                                    <th class="align-middle" colspan="3" >Capacity</th>
-                                                    <th class="align-middle" colspan="1">Quantity</th>
-                                                    <th class="align-middle"> Power Rating</th>
-                                                    <th class="align-middle">Fee</th>
-                                                    <th class="align-middle text-center">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($issue_inspection['inspection_items']  as $key => $value)
-                                                    <tr>
-                                                        <td class="align-middle">{{$value['name']}}</td>
-                                                        <td class="align-middle">{{$value['category_name']}}</td>
-                                                        <td class="align-middle">{{$value['section_name']}}</td>
-                                                        <td class="align-middle" colspan="3">
-
-                                                            <?php 
-                                                                $equipments_billing = DB::table('equipment_billings as eb')
-                                                                    ->select(
-                                                                        'eb.id',
-                                                                        'eb.capacity'
-                                                                        )
-                                                                    ->join('equipment_billing_sections as ebs','ebs.id','eb.section_id')
-                                                                    // ->orderBy('eb.id','desc')
-                                                                    ->where('ebs.category_id','=',$value['category_id'])
-                                                                    ->where('ebs.id','=',$value['section_id'])
-                                                                    ->get()
-                                                                    ->toArray();
-                                                            ?>
-                                                                <select class="form-select" id="teamLeaderSelect" wire:change="update_equipment_billing({{$value['id']}},{{$key}})" wire:model="issue_inspection.inspection_items.{{$key}}.equipment_billing_id">
-                                                                    <option value="">Select Capacity</option>
-                                                                    @foreach($equipments_billing as $eb_key => $eb_value)
-                                                                        <option value="{{$eb_value->id}}">{{$eb_value->capacity}}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                        </td>
-                                                        <td class="align-middle"  colspan="1">
-                                                            <input type="number" class="form-control" wire:change="update_item_quantity({{$value['id']}},{{$key}})" min="1" wire:model="issue_inspection.inspection_items.{{$key}}.quantity">
-                                                        </td>
-                                                        <td class="align-middle">
-                                                            <input type="number" step="0.01" class="form-control" wire:change="update_item_power_rating({{$value['id']}},{{$key}})" min="0.01" wire:model="issue_inspection.inspection_items.{{$key}}.power_rating">
-                                                        </td>
-                                                        <td class="align-middle">{{$value['fee']*$value['quantity']}}</td>
-                                                        <td class="align-middle text-center">
-                                                            <button class="btn btn-danger " wire:click="update_delete_item({{$value['id']}})">
-                                                                Delete
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            @elseif($issue_inspection['step'] == 3)
-                                <div wire:key="{{$issue_inspection['step']}}">
-                                    <div class="mb-3">
-                                        <label for="name" class="form-label">Building Information</label>
-                                        <div class="mb-3">
-                                            <select class="form-select" aria-label="Select Select Building Billing" wire:change="update_building_billing()" required wire:model="issue_inspection.building_billing_id">
-                                                <option value="">Select Building billing</option>
-                                                @foreach($issue_inspection['building_billings'] as $key => $value)
-                                                    @if( $value['id'] == $issue_inspection['building_billing_id'])
-                                                        <option selected value="{{$value['id']}}">{{$value['section_name'].' ( '.$value['property_attribute'].' )'}}</option>
-                                                    @else
-                                                        <option selected value="{{$value['id']}}">{{$value['section_name'].' ( '.$value['property_attribute'].' )'}}</option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="inspection_date" class="form-label">Fee</label>
-                                        <input type="text" class="form-control" disabled wire:model="issue_inspection.building_billing_fee"  >
-                                    </div>
-                                </div>
-                            @elseif($issue_inspection['step'] == 4)
-                                <div wire:key="{{$issue_inspection['step']}}">
-                                    <div class="input-group mb-3">
-                                        <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.sanitary_billing_id">
-                                            <option value="">Select Sanitary Item</option>
-                                            @foreach($issue_inspection['sanitary_billings'] as $key =>  $value)
-                                                <option selected value="{{$value['id']}}">{{$value['name']}}</option>
-                                            @endforeach
-                                        </select>
-                                        <button class="btn btn-primary" type="button" wire:click="update_inspection_sanitary_billings()" ><i class="bi bi-plus"></i></button>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
-                                            <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Quantity</th>
-                                                    <th>Fee</th>
-                                                    <th class="align-middle text-center">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($issue_inspection['inspection_sanitary_billings']  as $key => $value)
-                                                    <tr>
-                                                        <td class="align-middle">{{$value['sanitary_name']}}</td>
-                                                        <td class="align-middle">
-                                                            <input type="number" class="form-control" wire:change="update_sanitary_quantity({{$value['id']}},{{$key}})" min="1" wire:model="issue_inspection.inspection_sanitary_billings.{{$key}}.sanitary_quantity">
-                                                        </td>
-                                                        <td class="align-middle">{{$value['fee']*$value['sanitary_quantity']}}</td>
-                                                        <td class="align-middle text-center">
-                                                            <button class="btn btn-danger " wire:click="update_delete_sanitary({{$value['id']}})">
-                                                                Delete
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            @elseif($issue_inspection['step'] == 5)
-                                <div wire:key="{{$issue_inspection['step']}}">
-                                    <div class="mb-3">
-                                        <label for="name" class="form-label">Signage Information</label>
-                                        <div class="mb-3">
-                                            <select class="form-select" aria-label="Select Select Signage Billing" wire:change="update_signage_billing()" required wire:model="issue_inspection.signage_id">
-                                                <option value="">Select Signage billing</option>
-                                                @foreach($issue_inspection['signage_billings'] as $key => $value)
-                                                    @if( $value['id'] == $issue_inspection['building_billing_id'])
-                                                        <option selected value="{{$value['id']}}">{{$value['display_type_name'].' ( '.$value['sign_type_name'].' )'}}</option>
-                                                    @else
-                                                        <option selected value="{{$value['id']}}">{{$value['display_type_name'].' ( '.$value['sign_type_name'].' )'}}</option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="inspection_date" class="form-label">Fee</label>
-                                        <input type="text" class="form-control" disabled wire:model="issue_inspection.signage_billing_fee">
-                                    </div>
-                                </div>
-                            @elseif($issue_inspection['step'] == 6)
-                                <div wire:key="{{$issue_inspection['step']}}">
-                                    <div class="input-group mb-3">
-                                        <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.inspector_leader_id">
-                                            <option value="">Select Team Leader</option>
-                                            @foreach($issue_inspection['inspection_inspector_team_leaders'] as $key =>  $value)
-                                                <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</option>
-                                            @endforeach
-                                        </select>
-                                        <button class="btn btn-primary" type="button" wire:click="update_inspection_team_leader()"><i class="bi bi-plus"></i></button>
-                                    </div>
+                                    <h5 class="text-center my-2 text-black">
+                                        Team Leader Details
+                                    </h5>
                                     <div class="table-responsive">
                                         <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
                                             <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
@@ -497,8 +372,11 @@
                                         </table>
                                     </div>
                                 </div>
-                            @elseif($issue_inspection['step'] == 7)
+                            @elseif($issue_inspection['step'] == 3)
                                 <div wire:key="{{$issue_inspection['step']}}">
+                                    <h5 class="text-center my-2 text-black">
+                                        Team Member Details
+                                    </h5>
                                     <div class="input-group mb-3">
                                         <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.inspector_member_id">
                                             <option value="">Select Team Member</option>
@@ -519,44 +397,9 @@
                                             <tbody>
                                                 @foreach($issue_inspection['inspection_inspector_members']  as $key =>$value)
                                                     <tr>
-                                                        <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
+                                                        <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '}}</td>
                                                         <td class="align-middle text-center">
                                                             <button class="btn btn-danger " wire:click="update_delete_members({{$value->id}})"> 
-                                                                Delete
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            @elseif($issue_inspection['step'] == 8)
-                                <div wire:key="{{$issue_inspection['step']}}">
-                                    <div class="input-group mb-3">
-                                        <select class="form-select" id="teamLeaderSelect" wire:model="issue_inspection.violation_id">
-                                            <option value="">Select Violation</option>
-                                            @foreach($issue_inspection['violations'] as $key =>  $value)
-                                                <option selected value="{{$value->id}}">{{$value->description}}</option>
-                                            @endforeach
-                                        </select>
-                                        <button class="btn btn-primary" type="button" wire:click="update_inspection_violation()" ><i class="bi bi-plus"></i></button>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
-                                            <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
-                                                <tr>
-                                                    <th>Description</th>
-                                                    <th class="align-middle text-center">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($issue_inspection['inspection_violations']  as $key => $value)
-                                                    <tr>
-                                                        <td class="align-middle">{{$value['description']}}</td>
-                                                        <td class="align-middle text-center">
-                                                            <button class="btn btn-danger "wire:click="update_delete_violation({{$value['id']}})"> 
                                                                 Delete
                                                             </button>
                                                         </td>
@@ -571,7 +414,7 @@
                             <hr>
                             <div class="row ">
                                 <div class="col d-flex justify-content-center">
-                                @for($i=0; $i < 8; $i++)
+                                @for($i=0; $i < 3; $i++)
                                     @if(($issue_inspection['step']-1) == $i)
                                         <button type="button" id="prevButton" class="btn btn-secondary mx-2" wire:click="go_issue({{$i+1}})" >{{$i+1}}</button>                                      
                                     @else
@@ -587,10 +430,10 @@
                                 @else
                                     <button type="button" disabled id="prevButton" class="btn btn-secondary" wire:click="prev_issue()" >Previous</button>
                                 @endif
-                                @if($issue_inspection['step'] != 8)
+                                @if($issue_inspection['step'] != 3)
                                     <button type="button" id="nextButton" class="btn btn-primary" wire:click="next_issue()">Next</button>
                                 @else
-                                    <button type="button" disabled id="nextButton" class="btn btn-primary opacity-0" wire:click="next_issue()">Next</button>
+                                    <button type="button" id="nextButton" class="btn btn-outline-primary" wire:click="update_status({{$issue_inspection['id']}},'On-going')">Ongoing</button>
                                 @endif
                             </div>
                         </div>

@@ -350,8 +350,9 @@
                 </div>
             </li>
             
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Requestdropdown" aria-expanded="@if(Request()->route()->getPrefix() == 'administrator/request') true @else false @endif" aria-controls="Requestdropdown">
+          
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Requestdropdown" aria-expanded="@if(Request()->route()->getPrefix() == 'inspector-team-leader/request') true @else false @endif" aria-controls="Requestdropdown">
                     <span class="d-flex justify-content-between align-items-center">
                         <span>
                             <i class="bi bi-files"></i>
@@ -394,7 +395,7 @@
                         </li>
                     </ul>
                 </div>
-            </li> -->
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Inspectionsdropdown" aria-expanded="@if(Request()->route()->getPrefix() == 'inspector-team-leader/inspections') true @else false @endif" aria-controls="Inspectionsdropdown">
                     <span class="d-flex justify-content-between align-items-center">

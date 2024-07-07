@@ -353,6 +353,10 @@ class BusinessCategory extends Component
             ->get()
             ->toArray();
         $this->request_lists = DB::table('request_business_categories as rbc')
+            ->select(
+                'rbc.id',
+                'bc.name',
+            )
             ->join('business_category as bc','rbc.business_category_id','bc.id')
             ->get()
             ->toArray();

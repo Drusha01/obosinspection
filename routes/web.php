@@ -54,6 +54,15 @@ use App\Livewire\Admin\InspectorTeamLeader\Inspections\OngoingInspections\Ongoin
 use App\Livewire\Admin\InspectorTeamLeader\Profile\Profile as InspectorTeamLeaderProfile;
 use App\Livewire\Admin\InspectorTeamLeader\Violations\Violations as InspectorTeamLeaderViolations;
 
+use App\Livewire\Admin\InspectorTeamLeader\Request\AcceptedRequest\AcceptedRequest as InspectorTeamLeaderAcceptedRequest;
+use App\Livewire\Admin\InspectorTeamLeader\Request\CompletedRequest\CompletedRequest as InspectorTeamLeaderCompletedRequest;
+use App\Livewire\Admin\InspectorTeamLeader\Request\DeclinedRequest\DeclinedRequest as InspectorTeamLeaderDeclinedRequest;
+use App\Livewire\Admin\InspectorTeamLeader\Request\DeletedRequest\DeletedRequest as InspectorTeamLeaderDeletedRequest;
+use App\Livewire\Admin\InspectorTeamLeader\Request\GeneratePdf\GeneratePdf as InspectorTeamLeaderGeneratePdf;
+use App\Livewire\Admin\InspectorTeamLeader\Request\GenerateRequest\GenerateRequest as InspectorTeamLeaderGenerateRequest;
+use App\Livewire\Admin\InspectorTeamLeader\Request\NoresponseRequest\NoresponseRequest as InspectorTeamLeaderNoresponseRequest;
+use App\Livewire\Admin\InspectorTeamLeader\Request\RejectedRequest\RejectedRequest as InspectorTeamLeaderRejectedRequest;
+
 
 // administrator
 use App\Livewire\Admin\Administrator\ActivityLogs\ActivityLogs as AdministratorActivityLogs;
@@ -160,12 +169,12 @@ Route::middleware([Authenticated::class,IsValid::class,IsInspectorTeamLeader::cl
             Route::get('/completed-inspections', InspectorTeamLeaderCompletedInspections::class)->name('inspector-team-leader-inspections-completed-inspections');
         });
         Route::prefix('request')->group(function () {
-            Route::get('/accepted-request', AdministratorAcceptedRequest::class)->name('inspector-team-leader-request-accepted-request');
-            Route::get('/generate-request', AdministratorGenerateRequest::class)->name('inspector-team-leader-request-generate-request');
-            Route::get('/no-response-request', AdministratorNoresponseRequest::class)->name('inspector-team-leader-request-no-response-request');
-            Route::get('/declined-request', AdministratorDeclinedRequest::class)->name('inspector-team-leader-request-declined-request');
-            Route::get('/deleted-request', AdministratorDeletedRequest::class)->name('inspector-team-leader-request-deleted-request');
-            Route::get('/generate-request-pdf/{id}/{start_date}/{end_date}', AdministratorGeneratePdf::class)->name('inspector-team-leader-request-generate-pdf-request');
+            Route::get('/accepted-request', InspectorTeamLeaderAcceptedRequest::class)->name('inspector-team-leader-request-accepted-request');
+            Route::get('/generate-request', InspectorTeamLeaderGenerateRequest::class)->name('inspector-team-leader-request-generate-request');
+            Route::get('/no-response-request', InspectorTeamLeaderNoresponseRequest::class)->name('inspector-team-leader-request-no-response-request');
+            Route::get('/declined-request', InspectorTeamLeaderDeclinedRequest::class)->name('inspector-team-leader-request-declined-request');
+            Route::get('/deleted-request', InspectorTeamLeaderDeletedRequest::class)->name('inspector-team-leader-request-deleted-request');
+            Route::get('/generate-request-pdf/{id}/{start_date}/{end_date}', InspectorTeamLeaderGeneratePdf::class)->name('inspector-team-leader-request-generate-pdf-request');
         });
         Route::get('/certifications', InspectorTeamLeaderCertification::class)->name('inspector-team-leader-certifications');
         Route::get('/certifications/generate/{id}', InspectorTeamLeaderCertificateGenerate::class)->name('inspector-team-leader-generate-certifications');
