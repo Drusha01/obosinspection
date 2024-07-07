@@ -194,7 +194,7 @@
                                         <span for="business_from" class="align-middle mt-2">From</span>
                                         <select name="" id="business_from" class="form-select" wire:model.live="business_from">
                                             <option value="from-email" selected> Email</option>
-                                            <option value="Bypass">Actual-request</option>
+                                            <option value="Bypass">Over the counter</option>
                                         </select>
                                     </div>
                                 </div>
