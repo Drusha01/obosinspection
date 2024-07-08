@@ -1388,6 +1388,7 @@ class OngoingInspections extends Component
             ->where('iitl.inspection_id','=',$id)
             ->get()
             ->toArray();
+            
         $violation_category = DB::table('violation_category')
             ->get()
             ->toArray();

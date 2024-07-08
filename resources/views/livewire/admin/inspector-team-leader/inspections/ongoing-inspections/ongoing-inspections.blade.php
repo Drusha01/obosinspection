@@ -137,7 +137,16 @@
                                             <button class="btn btn-primary" @if($value->status_name == 'Pending') disabled @else @endif  wire:click="issue({{$value->id}},'issueModaltoggler')">
                                                 Inspection Details
                                             </button>
-                                        </td>   
+                                        </td>  
+                                    @elseif($filter_value['name'] == 'Violation' && $filter_value['active'])
+                                        <td class="text-center align-middle">
+                                            @if($value->{$filter_value['column_name']} == 'With Violation/s')
+                                                <span class="badge text-light p-2 bg-warning">With Violation</span>
+                                            @else
+                                                <span class="badge text-light p-2 bg-primary">No Violation</span>
+                                            @endif
+                                           
+                                        </td>    
                                     @elseif($filter_value['name'] == 'Schedule' && $filter_value['active'])
                                         <td class="align-middle">
                                             {{date_format(date_create($value->schedule_date),"M d, Y")}}

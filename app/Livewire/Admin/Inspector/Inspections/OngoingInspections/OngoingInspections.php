@@ -35,6 +35,7 @@ class OngoingInspections extends Component
         ['column_name'=> 'business_type_name','active'=> true,'name'=>'Business Type'],
         ['column_name'=> 'schedule_date','active'=> true,'name'=>'Schedule'],
         ['column_name'=> 'status_name','active'=> true,'name'=>'Status'],
+        ['column_name'=> 'remarks','active'=> true,'name'=>'Violation'],
         ['column_name'=> 'id','active'=> true,'name'=>'Inspection Details'],
     ];
     public $issue_inspection = [
@@ -325,6 +326,7 @@ class OngoingInspections extends Component
                     'b.is_active',
                     'st.name as status_name',
                     'i.schedule_date',
+                    "i.remarks",
 
                 )
                 ->join('inspection_inspector_members as iim','iim.inspection_id','i.id')
@@ -360,7 +362,7 @@ class OngoingInspections extends Component
                     'b.is_active',
                     'st.name as status_name',
                     'i.schedule_date',
-
+                    "i.remarks",
                 )
                 ->join('inspection_inspector_members as iim','iim.inspection_id','i.id')
                 ->join('inspection_status as st','st.id','i.status_id')
@@ -1263,6 +1265,70 @@ class OngoingInspections extends Component
             }
         }
         
+        $email_inspection_inspector_members = DB::table('persons as p')
+            ->select(
+                "iim.id",
+                "p.person_type_id",
+                "p.brgy_id",
+                "p.work_role_id",
+                "p.first_name",
+                "p.middle_name",
+                "p.last_name",
+                "p.suffix",
+                "p.contact_number",
+                "p.email",
+                "p.img_url",
+                'wr.name as work_role_name',
+                'it_member_team.name as inspector_team',
+                'ivc.id as inspector_category_id',
+                'vc.name as category_name',
+                'vc.id as category_id',
+            )
+            ->leftjoin('inspector_members as im','im.member_id','p.id')
+            ->leftjoin('inspector_teams as it_member_team','it_member_team.id','im.inspector_team_id')
+            ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
+            ->leftjoin('inspection_inspector_members as iim','p.id','iim.person_id')
+            ->join('person_types as pt','p.person_type_id','pt.id')
+            ->join('work_roles as wr', 'wr.id','p.work_role_id')
+            ->join('inspector_violation_category as ivc','p.id','ivc.person_id')
+            ->join('violation_category as vc','vc.id','ivc.category_id')   
+            ->orderBy(DB::raw('LOWER(vc.name)'),'asc')
+            ->where('pt.name','Inspector')
+            ->where('iim.inspection_id','=',$id)
+            ->get()
+            ->toArray();
+
+        $email_inspection_inspector_team_leaders = DB::table('persons as p')
+            ->select(
+                "p.id",
+                "p.person_type_id",
+                "p.brgy_id",
+                "p.work_role_id",
+                "p.first_name",
+                "p.middle_name",
+                "p.last_name",
+                "p.suffix",
+                "p.contact_number",
+                "p.email",
+                "p.img_url",
+                'wr.name as work_role_name',
+                'it.name as inspector_team',
+                'ivc.id as inspector_category_id',
+                'vc.name as category_name',
+                'vc.id as category_id',
+            )
+            ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
+            ->leftjoin('inspection_inspector_team_leaders as iitl','p.id','iitl.person_id')
+            ->join('person_types as pt','p.person_type_id','pt.id')
+            ->join('work_roles as wr', 'wr.id','p.work_role_id')
+            ->join('inspector_violation_category as ivc','p.id','ivc.person_id')
+            ->join('violation_category as vc','vc.id','ivc.category_id')   
+            ->orderBy(DB::raw('LOWER(vc.name)'),'asc')
+            ->whereNotNull('it.team_leader_id')
+            ->where('pt.name','Inspector')
+            ->where('iitl.inspection_id','=',$id)
+            ->get()
+            ->toArray();
         
         $inspector_bss_category = DB::table('inspector_bss_category as bbs')
             ->select(
@@ -1273,6 +1339,11 @@ class OngoingInspections extends Component
             ->where('bbs.person_id','=',$this->activity_logs['inspector_team_id'])
             ->get()
             ->toArray();
+
+        $violation_category = DB::table('violation_category')
+            ->get()
+            ->toArray();
+
         $this->issue_inspection = [
             'id' => $inspection->id,
             'status_id' => $inspection->status_id,
@@ -1287,7 +1358,10 @@ class OngoingInspections extends Component
             'date_signed' => $inspection->date_signed,
             'step'=> $step,
 
+            'violation_category'=>$violation_category,
             'inspector_bss_category'=>$inspector_bss_category,
+            'email_inspection_inspector_team_leaders'=>$email_inspection_inspector_team_leaders,
+            'email_inspection_inspector_members'=>$email_inspection_inspector_members,
             'segregated'=>  $segragated,
             'inspection_business_name' => $inspection->business_name. ' ( '.$inspection->business_type_name.' )',
             'inspection_items' =>$inspection_items,
