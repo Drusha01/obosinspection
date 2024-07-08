@@ -125,12 +125,20 @@ class GenerateRequest extends Component
     }
 
     public function mount(Request $request){
-
+        $session = $request->session()->all();
+        
         $city_mun = DB::table('citymun')
         ->where('citymunDesc','=','GENERAL SANTOS CITY (DADIANGAS)')
         ->first();
-        $this->brgy = DB::table('brgy')
-            ->where('citymunCode','=',$city_mun->citymunCode)
+        $this->brgy = DB::table('team_target_barangays as ttb')
+            ->select(
+                'ttb.id',
+                'b.brgyDesc',
+                'ttb.brgy_id'
+                )
+            ->join('brgy as b','b.id','ttb.brgy_id')
+            ->join('inspector_teams as it','ttb.inspector_team_id','it.id')
+            ->where('it.team_leader_id','=',$session['id'])
             ->get()
             ->toArray();
 

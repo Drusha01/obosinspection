@@ -111,15 +111,10 @@
                                             <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
                                                 Delete
                                             </button>
-                                            @if(Request()->route()->getPrefix() == 'administrator/request')
-                                                <a class="btn btn-outline-primary" target="_blank" href="/administrator/request/generate-request-pdf/{{$value->business_id}}/{{$value->request_date}}/{{$value->expiration_date}}">
-                                                    Generate Letter
-                                                </a>
-                                            @elseif(Request()->route()->getPrefix() == 'inspector-team-leader/request')
-                                                <a class="btn btn-outline-primary" target="_blank" href="/inspector-team-leader/request/generate-request-pdf/{{$value->business_id}}/{{$value->request_date}}/{{$value->expiration_date}}">
-                                                    Generate Letter
-                                                </a>
-                                            @endif
+                                            <a class="btn btn-outline-primary" target="_blank" href="/administrator/request/generate-request-pdf/{{$value->business_id}}/{{$value->request_date}}/{{$value->expiration_date}}">
+                                                Generate Letter
+                                            </a>
+                                      
                                         </td>
                                     @else
                                         @if($filter_value['active'])

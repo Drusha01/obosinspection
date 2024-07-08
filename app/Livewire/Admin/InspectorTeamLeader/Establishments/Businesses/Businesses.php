@@ -30,6 +30,7 @@ class Businesses extends Component
         ['column_name'=> 'name','active'=> true,'name'=>'Business name'],
         ['column_name'=> 'first_name','active'=> true,'name'=>'Owner'],
         ['column_name'=> 'barangay','active'=> true,'name'=>'Brgy'],
+        ['column_name'=> 'business_category_name','active'=> true,'name'=>'Business Category'],
         ['column_name'=> 'business_type_name','active'=> true,'name'=>'Business Type'],
         ['column_name'=> 'occupancy_classification_name','active'=> true,'name'=>'Char of Occu'],
         ['column_name'=> 'contact_number','active'=> true,'name'=>'Contact #'],
@@ -262,6 +263,7 @@ class Businesses extends Component
                     'p.last_name',
                     'p.suffix',
                     'brg.brgyDesc as barangay',
+                    'bc.name as business_category_name',
                     'bt.name as business_type_name',
                     'oc.character_of_occupancy as occupancy_classification_name',
                     'b.contact_number',
@@ -272,6 +274,7 @@ class Businesses extends Component
                 )
                 ->join('persons as p','p.id','b.owner_id')
                 ->join('business_types as bt','bt.id','b.business_type_id')
+                ->join('business_category as bc','bc.id','b.business_category_id')
                 ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
             
                 ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
@@ -293,6 +296,7 @@ class Businesses extends Component
                     'p.last_name',
                     'p.suffix',
                     'brg.brgyDesc as barangay',
+                    'bc.name as business_category_name',
                     'bt.name as business_type_name',
                     'oc.character_of_occupancy as occupancy_classification_name',
                     'b.contact_number',
@@ -303,6 +307,7 @@ class Businesses extends Component
                 )
                 ->join('persons as p','p.id','b.owner_id')
                 ->join('business_types as bt','bt.id','b.business_type_id')
+                ->join('business_category as bc','bc.id','b.business_category_id')
                 ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
             
                 ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
