@@ -832,12 +832,13 @@ class OngoingInspections extends Component
                     'iv.id',
                     'v.id as violation_id',
                     'description',
-                    'c.name as category_name',
+                    'ivc.name as category_name',
                     'v.is_active',
                     'iv.added_by',
+                    'remarks'
                 )
                 ->join('violations as v','v.id','iv.violation_id')
-                ->join('categories as c','v.category_id','c.id')
+                ->join('violation_category as ivc','v.category_id','ivc.id')
                 ->where('iv.inspection_id','=',$id)
                 ->get()
                 ->toArray();
@@ -1179,11 +1180,13 @@ class OngoingInspections extends Component
                     'iv.id',
                     'v.id as violation_id',
                     'description',
-                    'c.name as category_name',
-                    'v.is_active'
+                    'ivc.name as category_name',
+                    'v.is_active',
+                    'iv.added_by',
+                    'remarks'
                 )
                 ->join('violations as v','v.id','iv.violation_id')
-                ->join('categories as c','v.category_id','c.id')
+                ->join('violation_category as ivc','v.category_id','ivc.id')
                 ->where('iv.inspection_id','=',$id)
                 ->get()
                 ->toArray();
