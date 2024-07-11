@@ -207,6 +207,10 @@
                             <div class="progress mb-4">
                                 <div id="progressBar" class="progress-bar" role="progressbar" style="width:{{($issue_inspection['step']/8)*100}}%" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
+                            <div class="row">
+                                <p>ID: {{$issue_inspection['id']}}</p><br>
+                                <p>Business name : {{$issue_inspection['inspection_business_name']}}</p>
+                            </div>
                             @if($issue_inspection['step'] == 1)
                                 <div wire:key="{{$issue_inspection['step']}}">
                                     <h5 class="text-center my-2 text-black">
@@ -472,11 +476,9 @@
                                                             </button>
                                                         </td>
                                                         <td class="text-center">
-                                                            @if($value['remarks'])
-                                                                <button class="btn btn-primary "wire:click="view_violation_validated_proof({{$value['id']}},'ValidatedProofModaltoggler')"> 
-                                                                    View
-                                                                </button>
-                                                            @endif
+                                                            <button class="btn btn-primary "wire:click="view_violation_validated_proof({{$value['id']}},'ValidatedProofModaltoggler')"> 
+                                                                View
+                                                            </button>
                                                         </td>
                                                         
                                                         <td class="text-center align-middle">

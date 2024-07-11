@@ -31,6 +31,7 @@ class InspectionSchedules extends Component
         'business_id' =>NULL,
         'schedule_date'=>NULL,
         'step'=> 1,
+        'last_inspection'=> NULL,
     ];
 
     public $filter = [
@@ -659,6 +660,16 @@ class InspectionSchedules extends Component
         ->layout('components.layouts.admin',[
             'title'=>$this->title]);
     }
+    public function last_inspection(){
+        if(intval($this->inspection['business_id'])){
+            $this->inspection['last_inspection'] = DB::table('inspections as i')
+                ->join('inspection_status as is','is.id','i.status_id')
+                ->where('business_id','=',$this->inspection['business_id'])
+                ->where('is.name','=','Completed')
+                ->orderBy('i.id','desc')
+                ->first();
+        }
+    }
     public function add($modal_id){
         $this->from_request = false;
         $this->business_from = 'asdfasd';
@@ -672,6 +683,7 @@ class InspectionSchedules extends Component
             'business_id' =>NULL,
             'schedule_date'=>date_format(date_create(now()),"Y-m-d"),
             'step'=> 1,
+            'last_inspection'=> NULL,
         ];
         $this->dispatch('openModal',$modal_id);
     }
@@ -690,6 +702,7 @@ class InspectionSchedules extends Component
             'business_id' =>NULL,
             'schedule_date'=>date_format(date_create(now()),"Y-m-d"),
             'step'=> 1,
+            'last_inspection'=> NULL,
         ];
         $this->dispatch('openModal',$modal_id);
     }

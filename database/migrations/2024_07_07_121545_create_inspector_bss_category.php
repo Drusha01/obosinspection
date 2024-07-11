@@ -13,6 +13,7 @@ return new class extends Migration
     {
         DB::statement('CREATE TABLE inspector_bss_category(
             id INT PRIMARY KEY AUTO_INCREMENT,
+            type_id INT NOT NULL,
             person_id INT NOT NULL,
             category_id INT NOT NULL,
             is_active BOOL DEFAULT 1 NOT NULL,

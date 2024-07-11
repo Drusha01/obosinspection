@@ -15,7 +15,6 @@ return new class extends Migration
             id INT PRIMARY KEY AUTO_INCREMENT,
             inspection_id INT NOT NULL,
             violation_id INT NOT NULL,
-            added_by INT NOT NULL,
             remarks VARCHAR(4024),
             added_by INT NOT NULL,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,

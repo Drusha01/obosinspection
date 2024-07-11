@@ -183,6 +183,11 @@
                             <div class="progress mb-4">
                                 <div id="progressBar" class="progress-bar" role="progressbar" style="width:{{($inspection['step']/3)*100}}%" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
+                            @if(isset($inspection['last_inspection']))
+                                <div class="row my-2 text-primary">
+                                    <p>Last inspected date: {{date_format(date_create($inspection['last_inspection']->schedule_date),"M d, Y")}}</p>
+                                </div>
+                            @endif
                             @if($inspection['step'] == 1)
                             <div >
                                 <h5 class="text-center my-2 text-black">
@@ -219,7 +224,7 @@
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Business Name  <span class="text-danger">*</span></label>
                                     <div class="mb-3">
-                                        <select class="form-select" aria-label="Select Barangay" required wire:model.live="inspection.business_id">
+                                        <select class="form-select" aria-label="Select Barangay" wire:change="last_inspection()" required wire:model.live="inspection.business_id">
                                             <option value="">Select Business</option>
                                             @foreach($businesses as $key => $value)
                                                 <option value="{{$value->id}}">{{$value->name.' ('.$value->business_type_name.') brgy: '.$value->barangay}}</option>
