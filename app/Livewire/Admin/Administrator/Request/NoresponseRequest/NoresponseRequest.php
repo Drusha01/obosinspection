@@ -176,6 +176,7 @@ class NoresponseRequest extends Component
             ->select(
                 'ri.id',
                 'b.img_url',
+                'b.id as business_id',
                 'b.name as business_name',
                 'b.business_category_id',
                 'p.first_name',
