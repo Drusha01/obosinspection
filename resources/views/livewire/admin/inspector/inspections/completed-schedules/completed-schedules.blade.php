@@ -470,11 +470,9 @@
                                                             </button>
                                                         </td>
                                                         <td class="text-center">
-                                                            @if($value['remarks'])
-                                                                <button class="btn btn-primary "wire:click="view_violation_validated_proof({{$value['id']}},'ValidatedProofModaltoggler')"> 
-                                                                    View
-                                                                </button>
-                                                            @endif
+                                                            <button class="btn btn-primary "wire:click="view_violation_validated_proof({{$value['id']}},'ValidatedProofModaltoggler')"> 
+                                                                View
+                                                            </button>
                                                         </td>
                                                         <td class="text-center align-middle">
                                                             <input type="checkbox"  disabled value="1" @if($value['remarks'])) checked @endif  wire:change="update_complied_violation({{$value['id']}})">

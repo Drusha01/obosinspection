@@ -27,6 +27,7 @@ class Inspectors extends Component
         'id' => NULL,
         'person_id' => NULL,
         'category_id' => NULL,
+        'type_id'=>NULL,
     ];
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
@@ -37,7 +38,8 @@ class Inspectors extends Component
         ['column_name'=> 'middle_name','active'=> true,'name'=>'Middlename'],
         ['column_name'=> 'last_name','active'=> true,'name'=>'Lastname'],
         ['column_name'=> 'work_role_name','active'=> true,'name'=>'Work Role'],
-        ['column_name'=> 'category_role','active'=> true,'name'=>'Category Role'],
+        ['column_name'=> 'category_role','active'=> true,'name'=>'ORL Category Role'],
+        ['column_name'=> 'category_role','active'=> true,'name'=>'NORL Category Role'],
         ['column_name'=> 'id','active'=> true,'name'=>'Action'],
     ];
     public $person = [
@@ -1006,11 +1008,12 @@ class Inspectors extends Component
             $this->dispatch('openModal',$modal_id);
         }
     }
-    public function view_violation_category_role($id,$modal_id){
+    public function view_violation_category_role($type_id,$id,$modal_id){
         $this->category_role = [
             'id' => NULL,
             'person_id' => $id,
             'category_id' => NULL,
+            'type_id'=>$type_id,
         ];
         $this->inspector_violation_category = DB::table('inspector_violation_category as ivc')
             ->select(
@@ -1019,6 +1022,7 @@ class Inspectors extends Component
             )
             ->join('violation_category as vc','vc.id','ivc.category_id')
             ->where('person_id','=',$id)
+            ->where('type_id','=',$type_id)
             ->get()
             ->toArray(); 
         $this->violation_category = DB::table('violation_category')
@@ -1027,11 +1031,12 @@ class Inspectors extends Component
             ->toArray();
         $this->dispatch('openModal',$modal_id);
     }
-    public function add_violation_category_role(){
+    public function add_violation_category_role($type_id){
         if(intval($this->category_role['category_id'])){
             $category_role = DB::table('inspector_violation_category')
                 ->where('category_id','=',$this->category_role['category_id'])
                 ->where('person_id','=',$this->category_role['person_id'])
+                ->where('type_id','=',$type_id)
                 ->first();
             if($category_role){
 
@@ -1040,6 +1045,7 @@ class Inspectors extends Component
                 ->insert([
                     'person_id' => $this->category_role['person_id'],
                     'category_id' => $this->category_role['category_id'],
+                    'type_od'=>$type_id,
                 ]);
                 $this->inspector_violation_category = DB::table('inspector_violation_category as ivc')
                     ->select(
@@ -1048,6 +1054,7 @@ class Inspectors extends Component
                     )
                     ->join('violation_category as vc','vc.id','ivc.category_id')
                     ->where('person_id','=',$this->category_role['person_id'])
+                    ->where('type_id','=',$type_id)
                     ->get()
                     ->toArray(); 
                 $this->violation_category = DB::table('violation_category')
@@ -1077,6 +1084,7 @@ class Inspectors extends Component
                 ->toArray();
         }
     }
+
     public function add_temp_violation_category(){
         $valid = true;
         foreach ($this->temp_inspector_category as $key => $value) {
@@ -1104,11 +1112,12 @@ class Inspectors extends Component
 
     
 
-    public function view_item_category_role($id,$modal_id){
+    public function view_item_category_role($type_id,$id,$modal_id){
         $this->category_role = [
             'id' => NULL,
             'person_id' => $id,
             'category_id' => NULL,
+            'type_id'=>$type_id,
         ];
         $this->inspector_item_category = DB::table('inspector_item_category as ic')
             ->select(
@@ -1117,6 +1126,7 @@ class Inspectors extends Component
             )
             ->join('categories as c','c.id','ic.category_id')
             ->where('person_id','=',$id)
+            ->where('type_id','=',$type_id)
             ->get()
             ->toArray(); 
         $this->categories = DB::table('categories')
@@ -1125,11 +1135,12 @@ class Inspectors extends Component
             ->toArray();
         $this->dispatch('openModal',$modal_id);
     }
-    public function add_item_category_role(){
+    public function add_item_category_role($type_id){
         if(intval($this->category_role['category_id'])){
             $category_role = DB::table('inspector_item_category')
                 ->where('category_id','=',$this->category_role['category_id'])
                 ->where('person_id','=',$this->category_role['person_id'])
+                ->where('type_id','=',$type_id)
                 ->first();
             if($category_role){
 
@@ -1138,6 +1149,7 @@ class Inspectors extends Component
                 ->insert([
                     'person_id' => $this->category_role['person_id'],
                     'category_id' => $this->category_role['category_id'],
+                    'type_id'=>$type_id,
                 ]);
                 $this->inspector_item_category = DB::table('inspector_item_category as iic')
                     ->select(
@@ -1146,6 +1158,7 @@ class Inspectors extends Component
                     )
                     ->join('categories as c','c.id','iic.category_id')
                     ->where('person_id','=',$this->category_role['person_id'])
+                    ->where('type_id','=',$type_id)
                     ->get()
                     ->toArray(); 
                 $this->categories = DB::table('categories')
@@ -1176,11 +1189,12 @@ class Inspectors extends Component
         }
     }
 
-    public function view_bss_category_role($id,$modal_id){
+    public function view_bss_category_role($type_id,$id,$modal_id){
         $this->category_role = [
             'id' => NULL,
             'person_id' => $id,
             'category_id' => NULL,
+            'type_id'=>$type_id,
         ];
         $this->inspector_bss_category = DB::table('inspector_bss_category as ibc')
             ->select(
@@ -1189,6 +1203,7 @@ class Inspectors extends Component
             )
             ->join('bss_category as c','c.id','ibc.category_id')
             ->where('person_id','=',$this->category_role['person_id'])
+            ->where('type_id','=',$type_id)
             ->get()
             ->toArray(); 
         $this->bss_category = DB::table('bss_category')
@@ -1196,11 +1211,12 @@ class Inspectors extends Component
             ->toArray();
         $this->dispatch('openModal',$modal_id);
     }
-    public function add_bss_category_role(){
+    public function add_bss_category_role($type_id){
         if(intval($this->category_role['category_id'])){
             $category_role = DB::table('inspector_bss_category')
                 ->where('category_id','=',$this->category_role['category_id'])
                 ->where('person_id','=',$this->category_role['person_id'])
+                ->where('type_id','=',$type_id)
                 ->first();
             if($category_role){
 
@@ -1209,6 +1225,7 @@ class Inspectors extends Component
                 ->insert([
                     'person_id' => $this->category_role['person_id'],
                     'category_id' => $this->category_role['category_id'],
+                    'type_id'=>$type_id,
                 ]);
                 $this->inspector_bss_category = DB::table('inspector_bss_category as ibc')
                     ->select(
@@ -1217,6 +1234,7 @@ class Inspectors extends Component
                     )
                     ->join('bss_category as c','c.id','ibc.category_id')
                     ->where('person_id','=',$this->category_role['person_id'])
+                    ->where('type_id','=',$type_id)
                     ->get()
                     ->toArray(); 
                 $this->bss_category = DB::table('bss_category')

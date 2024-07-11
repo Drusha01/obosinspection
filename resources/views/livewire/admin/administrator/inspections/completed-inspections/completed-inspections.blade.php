@@ -472,11 +472,9 @@
                                                             </button>
                                                         </td>
                                                         <td class="text-center">
-                                                            @if($value['remarks'])
-                                                                <button class="btn btn-primary "wire:click="view_violation_validated_proof({{$value['id']}},'ValidatedProofModaltoggler')"> 
-                                                                    View
-                                                                </button>
-                                                            @endif
+                                                            <button class="btn btn-primary "wire:click="view_violation_validated_proof({{$value['id']}},'ValidatedProofModaltoggler')"> 
+                                                                View
+                                                            </button>
                                                         </td>
                                                         
                                                         <td class="text-center align-middle">

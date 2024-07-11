@@ -92,6 +92,9 @@
                                     </div>
                                     <div class="col-9">
                                         <div class="row m-0 mt-4 p-0" style="font-size:12px;">
+                                            <?php 
+                                                $valid = true;
+                                            ?>
                                             @foreach($issue_inspection['violations'] as $v_key => $v_value )
                                                 @if($v_value->category_id == $value->id)
                                                 <div class="col-6 d-flex text-break" >
@@ -99,7 +102,14 @@
                                                         </div>
                                                         @foreach($issue_inspection['inspection_violations'] as $iv_key => $iv_value )
                                                             @if($iv_value['violation_id'] == $v_value->id)
-                                                                <i class="fa-solid fa-check" style="position:relative;left:-15px;top:-2px;font-size:16px;"></i>
+                                                                @if(isset($iv_value['remarks']) )
+                                                                    <i class="text-primary fa-solid fa-check" style="position:relative;left:-15px;top:-2px;font-size:16px;"></i>
+                                                                @else 
+                                                                    <?php 
+                                                                        $valid = false
+                                                                    ?>
+                                                                    <i class="text-danger fa-solid fa-check" style="position:relative;left:-15px;top:-2px;font-size:16px;"></i>
+                                                                @endif
                                                             @endif
                                                         @endforeach
                                                     {{$v_value->description}}
@@ -147,8 +157,16 @@
                                         <div class="row m-0 p-0">
                                             <div class="col-1 m-0" >
                                                 <div class="row m-4 p-2 text-end align-middle" style="border:solid;border-width:thin;max-height:16px;max-width:16px;">
-                                                    @if(count($issue_inspection['inspection_violations'])==0)
-                                                        <i class="fa-solid fa-check" style="position:relative;left:-20px;top:-15px;font-size:25px;"></i>
+                                                    <?php $checked = true; ?>
+                                                    @forelse($issue_inspection['inspection_violations'] as $iv_key => $iv_value )
+                                                        @if($iv_value['remarks'] != 1 )   
+                                                            <?php $checked = false ; ?>
+                                                        @endif
+                                                    @empty
+                                                        <i class="text-primary fa-solid fa-check" style="position:relative;left:-20px;top:-15px;font-size:25px;"></i>
+                                                    @endforelse
+                                                    @if($checked)
+                                                        <i class="text-primary fa-solid fa-check" style="position:relative;left:-20px;top:-15px;font-size:25px;"></i>
                                                     @endif
                                                 </div>
                                             </div>
@@ -168,8 +186,8 @@
                                         <div class="row m-0 p-0">
                                             <div class="col-1 m-0" >
                                                 <div class="row m-4 p-2 text-end align-middle" style="border:solid;border-width:thin;max-height:16px;max-width:16px;">
-                                                    @if(count($issue_inspection['inspection_violations'])>0)
-                                                        <i class="fa-solid fa-check" style="position:relative;left:-20px;top:-15px;font-size:25px;"></i>
+                                                    @if(!$checked)
+                                                        <i class="text-danger fa-solid fa-check" style="position:relative;left:-20px;top:-15px;font-size:25px;"></i>
                                                     @endif
                                                 </div>
                                             </div>
