@@ -163,7 +163,6 @@
                                                             <?php $checked = false ; ?>
                                                         @endif
                                                     @empty
-                                                        <i class="text-primary fa-solid fa-check" style="position:relative;left:-20px;top:-15px;font-size:25px;"></i>
                                                     @endforelse
                                                     @if($checked)
                                                         <i class="text-primary fa-solid fa-check" style="position:relative;left:-20px;top:-15px;font-size:25px;"></i>
