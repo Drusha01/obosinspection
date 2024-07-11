@@ -170,6 +170,7 @@ class Businesses extends Component
             ->first();
         $this->brgy = DB::table('brgy')
             ->where('citymunCode','=',$city_mun->citymunCode)
+            ->orderBy('brgyDesc','asc')
             ->get()
             ->toArray();
         $this->owners = DB::table('persons as p')

@@ -1146,6 +1146,7 @@ class OngoingInspections extends Component
                     "ii.quantity",
                     "eb.fee",
                     'ebs.name as section_name',
+                    'ii.added_by',
                     )
                 ->join('items as i','i.id','ii.item_id')
                 ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
@@ -1170,7 +1171,8 @@ class OngoingInspections extends Component
                     "power_rating" => $value->power_rating,
                     "quantity" => $value->quantity,
                     "fee" => $value->fee,
-                    'section_name'=>$value->section_name
+                    'section_name'=>$value->section_name,
+                    'added_by'=>$value->added_by,
                 ]);
             }
             $inspection_items = $temp;

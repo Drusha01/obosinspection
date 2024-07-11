@@ -600,7 +600,7 @@ class OngoingInspections extends Component
             ->get()
             ->toArray()){
             $segragated = true;
-
+            $type_id = 1; 
             // segregated // segregated// segregated// segregated// segregated// segregated// segregated// segregated// segregated
 
             $application_types = DB::table('application_types')
@@ -884,9 +884,10 @@ class OngoingInspections extends Component
                 ->join('inspector_item_category as iic','i.category_id','iic.category_id')
                 ->where('i.is_active','=',1)
                 ->where('iic.person_id','=',$this->activity_logs['inspector_team_id'])
+                ->where('iic.type_id','=',$type_id)
                 ->get()
                 ->toArray();
-
+                
             $violations = DB::table('violations as v')
                 ->select(
                     'v.id',
@@ -900,6 +901,7 @@ class OngoingInspections extends Component
                 ->where('v.is_active','=',1)
                 ->orderBy(DB::raw('LOWER(vc.name)'),'asc')
                 ->where('ivc.person_id','=',$this->activity_logs['inspector_team_id'])
+                ->where('ivc.type_id','=',$type_id)
                 ->get()
                 ->toArray();
 
@@ -944,6 +946,7 @@ class OngoingInspections extends Component
             // segregated // segregated// segregated// segregated// segregated// segregated// segregated// segregated// segregated
         }else{
             $segragated = false;
+            $type_id = 2; 
             $application_types = DB::table('application_types')
                 ->where('is_active','=',1)
                 ->get()
@@ -1041,60 +1044,88 @@ class OngoingInspections extends Component
                 ->get()
                 ->toArray();
         
-            $violations = DB::table('violations as v')
-                ->select(
-                    'v.id',
-                    'description',
-                    'c.name as category_name',
-                    'v.is_active'
-                )
-                ->join('categories as c','v.category_id','c.id')
-                ->where('v.is_active','=',1)
-                ->get()
-                ->toArray();
-            $inspection_items = DB::table('inspection_items as ii')
-                ->select(
-                    'c.name as category_name',
-                    'c.id as category_id',
-                    'i.name',
-                    'i.section_id',
-                    'i.img_url',
-                    'i.is_active',
-                    "ii.id",
-                    "ii.inspection_id",
-                    "ii.item_id",
-                    "ii.equipment_billing_id",
-                    "ii.power_rating",
-                    "ii.quantity",
-                    "eb.fee",
-                    'ebs.name as section_name',
+                $items = DB::table('items as i')
+                    ->select(
+                        'i.id',
+                        'c.name as category_name',
+                        'i.name',
+                        'i.section_id',
+                        'i.img_url',
+                        'i.is_active',
+                        'ebs.name as section_name',
+                        'iic.person_id',
+                        )
+                    ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
+                    ->join('categories as c','c.id','i.category_id')
+                    ->join('inspector_item_category as iic','i.category_id','iic.category_id')
+                    ->where('i.is_active','=',1)
+                    ->where('iic.person_id','=',$this->activity_logs['inspector_team_id'])
+                    ->where('iic.type_id','=',$type_id)
+                    ->get()
+                    ->toArray();
+                    
+                $violations = DB::table('violations as v')
+                    ->select(
+                        'v.id',
+                        'description',
+                        'vc.name as category_name',
+                        'vc.id as category_id',
+                        'v.is_active',
                     )
-                ->join('items as i','i.id','ii.item_id')
-                ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
-                ->join('categories as c','c.id','i.category_id')
-                ->leftjoin('equipment_billings as eb','eb.id','ii.equipment_billing_id')
-                ->where('ii.inspection_id','=',$id)
-                ->get()
-                ->toArray();
-            $temp = [];
-            foreach ($inspection_items as $key => $value) {
-                array_push($temp,[
-                    'category_name' => $value->category_name,
-                    'category_id' => $value->category_id,
-                    'name'=> $value->name,
-                    'section_id' => $value->section_id,
-                    'img_url' => $value->img_url,
-                    'is_active' => $value->is_active,
-                    "id" => $value->id,
-                    "inspection_id" => $value->inspection_id,
-                    "item_id" => $value->item_id,
-                    "equipment_billing_id" => $value->equipment_billing_id,
-                    "power_rating" => $value->power_rating,
-                    "quantity" => $value->quantity,
-                    "fee" => $value->fee,
-                    'section_name'=>$value->section_name
-                ]);
-            }
+                    ->join('violation_category as vc','v.category_id','vc.id')
+                    ->join('inspector_violation_category as ivc','v.category_id','ivc.category_id')
+                    ->where('v.is_active','=',1)
+                    ->orderBy(DB::raw('LOWER(vc.name)'),'asc')
+                    ->where('ivc.person_id','=',$this->activity_logs['inspector_team_id'])
+                    ->where('ivc.type_id','=',$type_id)
+                    ->get()
+                    ->toArray();
+
+                $inspection_items = DB::table('inspection_items as ii')
+                    ->select(
+                        'c.name as category_name',
+                        'c.id as category_id',
+                        'i.name',
+                        'i.section_id',
+                        'i.img_url',
+                        'i.is_active',
+                        "ii.id",
+                        "ii.inspection_id",
+                        "ii.item_id",
+                        "ii.equipment_billing_id",
+                        "ii.power_rating",
+                        "ii.quantity",
+                        "eb.fee",
+                        'ebs.name as section_name',
+                        'ii.added_by',
+                        )
+                    ->join('items as i','i.id','ii.item_id')
+                    ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
+                    ->join('categories as c','c.id','i.category_id')
+                    ->leftjoin('equipment_billings as eb','eb.id','ii.equipment_billing_id')
+                    ->where('ii.inspection_id','=',$id)
+                    ->get()
+                    ->toArray();
+                $temp = [];
+                foreach ($inspection_items as $key => $value) {
+                    array_push($temp,[
+                        'category_name' => $value->category_name,
+                        'category_id' => $value->category_id,
+                        'name'=> $value->name,
+                        'section_id' => $value->section_id,
+                        'img_url' => $value->img_url,
+                        'is_active' => $value->is_active,
+                        "id" => $value->id,
+                        "inspection_id" => $value->inspection_id,
+                        "item_id" => $value->item_id,
+                        "equipment_billing_id" => $value->equipment_billing_id,
+                        "power_rating" => $value->power_rating,
+                        "quantity" => $value->quantity,
+                        "fee" => $value->fee,
+                        'section_name'=>$value->section_name,
+                        'added_by'=>$value->added_by,
+                    ]);
+                }
             $inspection_items = $temp;
             $inspection_inspector_members = DB::table('persons as p')
                 ->select(
@@ -1209,24 +1240,13 @@ class OngoingInspections extends Component
                     'description'=> $value->description,
                     'category_name'=> $value->category_name,
                     "id" => $value->id,
+                    "added_by" => $value->added_by,
+                    "remarks" => $value->remarks,
+                    "violation_id" => $value->violation_id,
                 ]);
             }
             $inspection_violations = $temp;
-            $items = DB::table('items as i')
-                ->select(
-                    'i.id',
-                    'c.name as category_name',
-                    'i.name',
-                    'i.section_id',
-                    'i.img_url',
-                    'i.is_active',
-                    'ebs.name as section_name',
-                    )
-                ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
-                ->join('categories as c','c.id','i.category_id')
-                ->where('i.is_active','=',1)
-                ->get()
-                ->toArray();
+          
 
             $building_billings = DB::table('building_billings as bb')
                 ->select(
@@ -1333,15 +1353,16 @@ class OngoingInspections extends Component
             ->get()
             ->toArray();
         
-        $inspector_bss_category = DB::table('inspector_bss_category as bbs')
-            ->select(
-                'bbs.id',
-                'bc.name as category_name',
-            )
-            ->rightjoin('bss_category as bc','bc.id','bbs.category_id')
-            ->where('bbs.person_id','=',$this->activity_logs['inspector_team_id'])
-            ->get()
-            ->toArray();
+            $inspector_bss_category = DB::table('inspector_bss_category as bbs')
+                ->select(
+                    'bbs.id',
+                    'bc.name as category_name',
+                )
+                ->rightjoin('bss_category as bc','bc.id','bbs.category_id')
+                ->where('bbs.person_id','=',$this->activity_logs['inspector_team_id'])
+                ->where('bbs.type_id','=',$type_id)
+                ->get()
+                ->toArray();
 
         $violation_category = DB::table('violation_category')
             ->get()
