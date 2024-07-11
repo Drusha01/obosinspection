@@ -1045,7 +1045,7 @@ class Inspectors extends Component
                 ->insert([
                     'person_id' => $this->category_role['person_id'],
                     'category_id' => $this->category_role['category_id'],
-                    'type_od'=>$type_id,
+                    'type_id'=>$type_id,
                 ]);
                 $this->inspector_violation_category = DB::table('inspector_violation_category as ivc')
                     ->select(
