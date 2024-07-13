@@ -24,6 +24,9 @@ class InspectionSchedules extends Component
         'brgy_id'=> NULL,
         'prev_brgy_id'=> NULL,
     ];
+
+    public $business_categories = [];
+
     public $inspection = [
         'id'=>NULL,
         'inspector_leaders' =>[],
@@ -671,6 +674,9 @@ class InspectionSchedules extends Component
         }
     }
     public function add($modal_id){
+        $this->business_categories = DB::table('business_category')
+        ->get()
+        ->toArray();
         $this->from_request = false;
         $this->business_from = 'asdfasd';
         $this->modal['brgy_id'] = NULL;
@@ -688,24 +694,6 @@ class InspectionSchedules extends Component
         $this->dispatch('openModal',$modal_id);
     }
 
-
-    public function add_from_request($modal_id){
-        $this->from_request = true;
-        $this->modal['brgy_id'] = NULL;
-        $this->business_from = 'from-email';
-        $this->inspection = [
-            'id'=>NULL,
-            'inspector_leaders' =>[],
-            'inspector_leader_id'=>NULL,
-            'inspector_members' => [],
-            'inspector_member_id'=>NULL,
-            'business_id' =>NULL,
-            'schedule_date'=>date_format(date_create(now()),"Y-m-d"),
-            'step'=> 1,
-            'last_inspection'=> NULL,
-        ];
-        $this->dispatch('openModal',$modal_id);
-    }
 
     public function next(Request $request, $modal_id){
         $session = $request->session()->all();

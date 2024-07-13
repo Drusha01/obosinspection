@@ -108,12 +108,12 @@
                                         </td>
                                     @elseif($filter_value['name'] == 'Action' && $filter_value['active'])
                                         <td class="text-center align-middle">
-                                            <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
-                                                Delete
-                                            </button>
                                             <a class="btn btn-outline-primary" target="_blank" href="/administrator/request/generate-request-pdf/{{$value->business_id}}/{{$value->request_date}}/{{$value->expiration_date}}">
                                                 Generate Letter
                                             </a>
+                                            <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
+                                                Delete
+                                            </button>
                                       
                                         </td>
                                     @else
@@ -188,14 +188,25 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-8">
                                         <label for="select_business">Select Business <span class="text-danger">*</span></label>
                                         <div class="mb-3">
-                                            <select class="form-select" id="select_business" aria-label="Select Member" required wire:model="request.business_id">
+                                            <select class="form-select" id="select_business" aria-label="Select Member" required wire:model.live="request.business_id">
                                                     <option value="">Select Business</option>
                                                 @foreach($business as $key => $value)
                                                     <option value="{{$value->id}}">{{$value->name.' ('.$value->business_type_name.') brgy: '.$value->barangay}}</option>
                                                 @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="select_business">Filter Business Category</label>
+                                        <div class="mb-3">
+                                            <select class="form-select" id="select_business" aria-label="Select Business Category" wire:change="update_business_id()" wire:model.live="modal.business_category_id">
+                                                    <option value="">Select Business Category</option>
+                                                    @foreach($business_categories as $key => $value)
+                                                        <option value="{{$value->id}}">{{$value->name}}</option>
+                                                    @endforeach
                                             </select>
                                         </div>
                                     </div>
@@ -259,14 +270,25 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-8">
                                         <label for="select_business">Select Business <span class="text-danger">*</span></label>
                                         <div class="mb-3">
-                                            <select class="form-select" id="select_business" aria-label="Select Member" required wire:model="request.business_id">
+                                            <select class="form-select" id="select_business" aria-label="Select Member" required wire:model.live="request.business_id">
                                                     <option value="">Select Business</option>
                                                 @foreach($business as $key => $value)
                                                     <option value="{{$value->id}}">{{$value->name.' ('.$value->business_type_name.') brgy: '.$value->barangay}}</option>
                                                 @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="select_business">Filter Business Category</label>
+                                        <div class="mb-3">
+                                            <select class="form-select" id="select_business" aria-label="Select Member" wire:change="update_business_id()" wire:model="modal.business_category_id">
+                                                    <option value="">Select Business Category</option>
+                                                    @foreach($business_categories as $key => $value)
+                                                        <option value="{{$value->id}}">{{$value->name}}</option>
+                                                    @endforeach
                                             </select>
                                         </div>
                                     </div>

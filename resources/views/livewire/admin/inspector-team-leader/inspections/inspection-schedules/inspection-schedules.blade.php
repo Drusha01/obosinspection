@@ -51,9 +51,6 @@
                     </div>
                 </div>
                 <div class="col-4 d-flex justify-content-end ">
-                    <button type="button" class="btn btn-outline-primary mx-2" wire:click="add_from_request('addModaltoggler')">
-                        Add From Request
-                    </button>
                     <button type="button" class="btn btn-primary" wire:click="add('addModaltoggler')"  >
                         Add Inspection Schedule
                     </button>
@@ -197,17 +194,15 @@
                                 <h5 class="text-center my-2 text-black">
                                     Inspection Details
                                 </h5>
-                                @if($from_request)
                                 <div class="row d-flex justify-content-end">
-                                    <div class="col-2 d-flex">
+                                    <div class="col-3 d-flex">
                                         <span for="business_from" class="align-middle mt-2">From</span>
                                         <select name="" id="business_from" class="form-select" wire:model.live="business_from">
-                                            <option value="from-email" selected> Email</option>
-                                            <option value="Bypass">Over the counter</option>
+                                            <option value="from-email" >Request Email</option>
+                                            <option value="Bypass" selected>Over the counter</option>
                                         </select>
                                     </div>
                                 </div>
-                                @endif
                                 <div class="row">
                                     <div class="col-lg-8">
                                         <label for="business_search">Search Business</label>
@@ -225,15 +220,28 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">Business Name  <span class="text-danger">*</span></label>
-                                    <div class="mb-3">
-                                        <select class="form-select" aria-label="Select Barangay" wire:change="last_inspection()" required wire:model.live="inspection.business_id">
-                                            <option value="">Select Business</option>
-                                            @foreach($businesses as $key => $value)
-                                                <option value="{{$value->id}}">{{$value->name.' ('.$value->business_type_name.') brgy: '.$value->barangay}}</option>
-                                            @endforeach
-                                        </select>
+                                <div class="row">
+                                    <div class="col-8">
+                                        <label for="select_business">Select Business <span class="text-danger">*</span></label>
+                                        <div class="mb-3">
+                                            <select class="form-select" id="select_business" aria-label="Select Member" required wire:model.live="request.business_id">
+                                                    <option value="">Select Business</option>
+                                                @foreach($businesses as $key => $value)
+                                                    <option value="{{$value->id}}">{{$value->name.' ('.$value->business_type_name.') brgy: '.$value->barangay}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="select_business">Filter Business Category</label>
+                                        <div class="mb-3">
+                                            <select class="form-select" id="select_business" aria-label="Select Member" wire:change="update_business_id()" wire:model.live="modal.business_category_id">
+                                                    <option value="">Select Business Category</option>
+                                                    @foreach($business_categories as $key => $value)
+                                                        <option value="{{$value->id}}">{{$value->name}}</option>
+                                                    @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="mb-3">
