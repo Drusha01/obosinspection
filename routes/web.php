@@ -51,6 +51,7 @@ use App\Livewire\Admin\InspectorTeamLeader\Inspections\DeletedInspections\Delete
 use App\Livewire\Admin\InspectorTeamLeader\Inspections\Generate\Generate  as InspectorTeamLeaderGenerate;
 use App\Livewire\Admin\InspectorTeamLeader\Inspections\InspectionSchedules\InspectionSchedules as InspectorTeamLeaderInspectionSchedules;
 use App\Livewire\Admin\InspectorTeamLeader\Inspections\OngoingInspections\OngoingInspections as InspectorTeamLeaderOngoingInspections; 
+use App\Livewire\Admin\InspectorTeamLeader\Inspections\UpcomingInspections\UpcomingInspections as InspectorTeamLeaderUpcomingInspections;
 use App\Livewire\Admin\InspectorTeamLeader\Profile\Profile as InspectorTeamLeaderProfile;
 use App\Livewire\Admin\InspectorTeamLeader\Violations\Violations as InspectorTeamLeaderViolations;
 
@@ -89,6 +90,7 @@ use App\Livewire\Admin\Administrator\Inspections\Generate\Generate as Administra
 use App\Livewire\Admin\Administrator\Inspections\GenerateReport\GenerateReport as AdministratorGenerateReport;
 use App\Livewire\Admin\Administrator\Inspections\InspectionSchedules\InspectionSchedules as AdministratorInspectionSchedules;
 use App\Livewire\Admin\Administrator\Inspections\OngoingInspections\OngoingInspections as AdministratorOngoingInspections;
+use App\Livewire\Admin\Administrator\Inspections\UpcomingInspections\UpcomingInspections as AdministratorUpcomingInspections;
 use App\Livewire\Admin\Administrator\Profile\Profile as AdministratorProfile;
 use App\Livewire\Admin\Administrator\Request\AcceptedRequest\AcceptedRequest as AdministratorAcceptedRequest;
 use App\Livewire\Admin\Administrator\Request\DeletedRequest\DeletedRequest as AdministratorDeletedRequest;
@@ -167,6 +169,7 @@ Route::middleware([Authenticated::class,IsValid::class,IsInspectorTeamLeader::cl
             Route::get('/deleted-inspections', InspectorTeamLeaderDeletedInspections::class)->name('inspector-team-leader-inspections-deleted-inspections');
             Route::get('/generate-report/{id}', AdministratorGenerateReport::class)->name('inspector-team-leader-inspections-generate-report');
             Route::get('/completed-inspections', InspectorTeamLeaderCompletedInspections::class)->name('inspector-team-leader-inspections-completed-inspections');
+            Route::get('/upcoming-inspections', InspectorTeamLeaderUpcomingInspections::class)->name('inspector-team-leader-inspections-upcoming-inspections');
         });
         Route::prefix('request')->group(function () {
             Route::get('/accepted-request', InspectorTeamLeaderAcceptedRequest::class)->name('inspector-team-leader-request-accepted-request');
@@ -212,6 +215,7 @@ Route::middleware([Authenticated::class,IsValid::class,IsAdministrator::class])-
             Route::get('/generate/{id}', AdministratorGenerate::class)->name('administrator-inspections-generate');
             Route::get('/generate-report/{id}', AdministratorGenerateReport::class)->name('administrator-inspections-generate-report');
             Route::get('/completed-inspections', AdministratorCompletedInspections::class)->name('administrator-inspections-completed-inspections');
+            Route::get('/upcoming-inspections', AdministratorUpcomingInspections::class)->name('administrator-inspections-upcoming-inspections');
         });
         Route::prefix('request')->group(function () {
             Route::get('/accepted-request', AdministratorAcceptedRequest::class)->name('administrator-request-accepted-request');

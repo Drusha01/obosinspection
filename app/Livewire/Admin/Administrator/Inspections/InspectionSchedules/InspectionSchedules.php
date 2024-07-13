@@ -2471,6 +2471,15 @@ class InspectionSchedules extends Component
             return 0;
         }
     }
+    public function delete_team_leader($index){
+        $temp = [];
+        foreach ($this->inspection['inspector_leaders'] as $key => $value) {
+            if($key != $index){
+               array_push($temp,$value);
+            }
+        }
+        $this->inspection['inspector_leaders'] = $temp;
+    }
     public function add_team_member(){
         if(intval($this->inspection['inspector_member_id'])){
             $valid = true;
@@ -2507,6 +2516,15 @@ class InspectionSchedules extends Component
             );
             return 0;
         }
+    }
+    public function delete_team_member($index){
+        $temp = [];
+        foreach ($this->inspection['inspector_members'] as $key => $value) {
+            if($key != $index){
+               array_push($temp,$value);
+            }
+        }
+        $this->inspection['inspector_members'] = $temp;
     }
 
     public function update_delete_item($id){

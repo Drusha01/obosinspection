@@ -220,8 +220,8 @@
                                 <span>Deleted inspections</span>
                             </a>
                         </li>
-                        <li class="nav-item @if(Route::is('administrator-inspections-deleted-inspections')) active @endif" >
-                            <a class="nav-link" href="{{ route('administrator-inspections-deleted-inspections') }}">
+                        <li class="nav-item @if(Route::is('administrator-inspections-upcoming-inspections')) active @endif" >
+                            <a class="nav-link" href="{{ route('administrator-inspections-upcoming-inspections') }}">
                             <i class="fas fa-fw fa-calendar-check"></i>
                                 <span>Upcoming inspections</span>
                             </a>
@@ -436,6 +436,12 @@
                             <a class="nav-link" href="{{ route('inspector-team-leader-inspections-deleted-inspections') }}">
                                 <i class="fas fa-fw fa-times-circle"></i>
                                 <span>Deleted inspections</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @if(Route::is('inspector-team-leader-inspections-upcoming-inspections')) active @endif" >
+                            <a class="nav-link" href="{{ route('inspector-team-leader-inspections-upcoming-inspections') }}">
+                            <i class="fas fa-fw fa-calendar-check"></i>
+                                <span>Upcoming inspections</span>
                             </a>
                         </li>
                     </ul>

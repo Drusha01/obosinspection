@@ -272,7 +272,7 @@
                                                 <tr>
                                                     <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                     <td class="align-middle text-center">
-                                                        <button class="btn btn-danger ">
+                                                        <button class="btn btn-danger " wire:click="delete_team_leader({{$key}})">
                                                             Delete
                                                         </button>
                                                     </td>
@@ -311,7 +311,7 @@
                                                 <tr>
                                                     <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                     <td class="align-middle text-center">
-                                                        <button class="btn btn-danger ">
+                                                        <button class="btn btn-danger " wire:click="delete_team_member({{$key}})">
                                                             Delete
                                                         </button>
                                                     </td>
