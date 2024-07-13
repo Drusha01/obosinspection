@@ -1,6 +1,6 @@
     <ul class="navbar-nav bg-sidebar-primary sidebar sidebar-dark accordion d-print-none" id="accordionSidebar">
         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/inspection/dashboard/">
-            <div class="sidebar-brand-icon rotate-n-15" style="width: 50px; height: 50px">
+            <div class="sidebar-brand-icon" style="width: 50px; height: 50px">
                 <img style="width: 100%; height: 100%" src="/assets/img/lgu_logo.png" alt="Logo">
             </div>
             <div class="sidebar-brand-text mx-3">OBOS</div>
