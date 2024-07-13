@@ -220,6 +220,12 @@
                                 <span>Deleted inspections</span>
                             </a>
                         </li>
+                        <li class="nav-item @if(Route::is('administrator-inspections-deleted-inspections')) active @endif" >
+                            <a class="nav-link" href="{{ route('administrator-inspections-deleted-inspections') }}">
+                            <i class="fas fa-fw fa-calendar-check"></i>
+                                <span>Upcoming inspections</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </li>

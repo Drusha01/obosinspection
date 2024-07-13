@@ -224,7 +224,7 @@
                                     <div class="col-8">
                                         <label for="select_business">Select Business <span class="text-danger">*</span></label>
                                         <div class="mb-3">
-                                            <select class="form-select" id="select_business" aria-label="Select Member" required wire:model.live="request.business_id">
+                                            <select class="form-select" id="select_business" aria-label="Select Member" required wire:change="last_inspection()" wire:model.live="inspection.business_id">
                                                     <option value="">Select Business</option>
                                                 @foreach($businesses as $key => $value)
                                                     <option value="{{$value->id}}">{{$value->name.' ('.$value->business_type_name.') brgy: '.$value->barangay}}</option>
