@@ -13,6 +13,7 @@ class Violations extends Component
 {
     use WithPagination;
     use WithFileUploads;
+    protected $paginationTheme = 'bootstrap';
     public $title = "Violations";
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
