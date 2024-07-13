@@ -50,7 +50,9 @@
                     </div>
                 </div>
                 <div class="col-4 d-flex justify-content-end ">
-                   
+                    <button type="button" class="btn btn-outline-primary mx-2" wire:click="export_file('ExportModaltoggler')">
+                        Export
+                    </button>
                 </div>
 
                 <div wire:ignore.self class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
@@ -195,6 +197,7 @@
             <button type="button" data-bs-toggle="modal" data-bs-target="#certModal" id="certModaltoggler" style="display:none;"></button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#ProofModal" id="ProofModaltoggler" style="display:none;"></button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#ValidatedProofModal" id="ValidatedProofModaltoggler" style="display:none;"></button>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#ExportModal" id="ExportModaltoggler" style="display:none;"></button>
             
             <div wire:ignore.self class="modal fade" id="issueModal" tabindex="-1" aria-labelledby="issueModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -792,7 +795,143 @@
                 </div>
             </div>
 
-         
+            <div wire:ignore.self class="modal fade" id="ExportModal" tabindex="-1" aria-labelledby="ExportModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ExportModalLabel">Export Modal</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            @if($export['step'] == 1)
+                                <div class="row text-center">
+                                    <h5>
+                                        Year Filter
+                                    </h5>
+                                </div>
+                                <div class="row mx-3">
+                                    <div class="mb-3">
+                                        <input type="checkbox" wire:model="export.all_year" wire:change="update_all_year()">
+                                        <label for="">All year</label>
+                                    </div>     
+                                    <div class="mb-3">
+                                    </div>   
+                                    @foreach($export['years'] as $key =>$value)
+                                        <div class="row mb-3">
+                                            <div class="col-1">
+                                            </div>
+                                            <div class="col-11">
+                                                <div class="row">
+                                                    @foreach($value['month'] as $m_key => $m_value)
+                                                        <div class="col-1">
+                                                            <label for="with-violation-input" class="ml-2" >{{$m_value['month_name']}}</label>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>   
+                                        @break
+                                    @endforeach 
+                                    @foreach($export['years'] as $key =>$value)
+                                        <div class="row mb-3">
+                                            <div class="col-1">
+                                                <input type="checkbox" wire:model="export.years.{{$key}}.selected" wire:change="update_export_years({{$value['year']}})">
+                                                <label for="">{{$value['year']}}</label>
+                                            </div>
+                                            <div class="col-11">
+                                                <div class="row">
+                                                    @foreach($value['month'] as $m_key => $m_value)
+                                                        <div class="col-1">
+                                                            @if($m_value['no_value'])
+                                                                <input type="checkbox" class="ml-3" id="with-violation-input" wire:model="export.years.{{$key}}.month.{{$m_key}}.selected" wire:change="update_violation_all_var()">
+                                                            @else
+                                                                <input type="checkbox" disabled class="ml-3" id="with-violation-input" wire:model="export.years.{{$key}}.month.{{$m_key}}.selected" wire:change="update_violation_all_var()">
+                                                            @endif
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>   
+                                    @endforeach
+                                </div>
+                            @elseif($export['step'] == 2)
+                                <div class="row text-center">
+                                    <h5>
+                                        Barangay Filter
+                                    </h5>
+                                </div>
+                                <div class="row mx-3">
+                                    <div class="mb-3">
+                                        <input type="checkbox" wire:model="export.all_brgy" wire:change="update_all_brgy()">
+                                        <label for="">All Barangay</label>
+                                    </div>     
+                                    <div class="mb-3">
+                                        @foreach($export['brgy'] as $key => $value)
+                                        <div class="">
+                                            <input type="checkbox" id="with-violation-input" wire:model="export.brgy.{{$key}}.selected" wire:change="update_violation_all_var()">
+                                            <label for="with-violation-input" >{{$value['brgy_desc']}}</label>
+                                        </div>                 
+                                        @endforeach
+                                    </div>   
+                                </div>  
+                            @elseif($export['step'] == 3)
+                                <div class="row text-center">
+                                    <h5>
+                                        Violation Filter
+                                    </h5>
+                                </div>
+                                <div class="row mx-3">
+                                    <div class="mb-3">
+                                        <input type="checkbox" id="with-and-without-violation" class="" wire:model="export.violation_all" wire:change="update_violation_all()">
+                                        <label for="with-and-without-violation">With and Without Violation</label>
+                                    </div>
+                                    <div class="mb-3">
+                                    </div>
+                                    <div class="">
+                                        <input type="checkbox" id="without-violation-input" wire:model="export.without_violation" wire:change="update_violation_all_var()">
+                                        <label for="without-violation-input">No Violation</label>
+                                    </div>
+                                    <div class="">
+                                        <input type="checkbox" id="with-violation-input" wire:model="export.with_violation" wire:change="update_violation_all_var()">
+                                        <label for="with-violation-input" >With Violation</label>
+                                    </div>
+                                    @if($export['with_violation'])
+                                        <label for="with-violation-select">With Violation option</label>
+                                        <div class=" col-4">
+                                            <select name="" id="with-violation-select" class="form-select" wire:model.live="export.complied">
+                                                <option value="All" selected>All</option>
+                                                <option value="Un-complied">Un-complied</option>
+                                                <option value="Complied">Complied</option>
+                                            </select>
+                                        </div>
+                                    @endif
+                                        <label for="with-violation-select">Export Type</label>
+                                        <div class=" col-4">
+                                            <select name="" id="with-violation-select" class="form-select" wire:model.live="export.export_type">
+                                                <option value="Excel">Excel</option>
+                                                <option value="CSV">CSV</option>
+                                            </select>
+                                        </div>
+                                </div>
+                            @elseif($export['step'] == 4)
+                                dynamic columns here
+                            @endif
+                        </div>
+                        <div class="modal-footer">
+                            @if($export['step'] != 1)
+                                <button type="button" id="prevButton" class="btn btn-secondary" wire:click="prev_export()" >Previous</button>
+                            @else
+                                <button type="button" disabled id="prevButton" class="btn btn-secondary" wire:click="prev_export()" >Previous</button>
+                            @endif
+                            @if($export['step'] != 3)
+                                <button type="button" id="nextButton" class="btn btn-primary" wire:click="next_export()">Next</button>
+                            @else
+                                <button type="button" id="nextButton" class="btn btn-primary " wire:click="next_export()">Export</button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>    
     </div>

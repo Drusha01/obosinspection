@@ -1717,6 +1717,218 @@ class CompletedInspections extends Component
         }
         self::update_violation_validated_proof_data($this->violation_validated_contents['inspection_violation_id']);
     }
+
+
+
+    public $export = [
+        'export_type'=> NULL,
+        'step'=>1,
+        'violation_all'=>true,
+        'with_violation'=>true,
+        'complied'=> 'All',
+        'without_violation'=>true,
+        'all_year'=>true,
+        'years' => [],
+        'all_brgy' => true,
+        'brgy'=> [],
+
+    ];
+    public function update_violation_all(){
+        if($this->export['violation_all']){
+            $this->export['with_violation'] = true;
+            $this->export['without_violation'] = true;
+        }else{
+            $this->export['with_violation'] = false;
+            $this->export['without_violation'] = false;
+        }
+    }
+    public function update_violation_all_var(){
+        if($this->export['with_violation'] &&  $this->export['without_violation']){
+            $this->export['violation_all'] = true;
+        }else{
+            $this->export['violation_all'] = false;
+        }
+    }
+    public function update_all_year(){
+        foreach ($this->export['years'] as $key => $value) {
+            $this->export['years'][$key]['selected'] = $this->export['all_year'];
+            foreach ($value['month'] as $m_key => $m_value) {
+                if(! $m_value['no_value']){
+                    $this->export['years'][$key]['month'][$m_key]['selected'] = false;
+                }else{
+                    $this->export['years'][$key]['month'][$m_key]['selected'] = $this->export['all_year'];
+                }
+            }
+        }
+    }
+
+    public function prev_export(){
+        $this->export['step']--;
+    }
+    public function update_export_years($year){
+        foreach ($this->export['years'] as $key => $value) {
+            if($year == $value['year']){
+                foreach ($value['month'] as $m_key => $m_value) {
+                    if(! $m_value['no_value']){
+                        $this->export['years'][$key]['month'][$m_key]['selected'] = false;
+                    }else{
+                        $this->export['years'][$key]['month'][$m_key]['selected'] = $value['selected'];
+                    }
+                }
+            }
+        }
+    }
+    public function update_all_brgy(){
+        foreach ($this->export['brgy'] as $key => $value) {
+            $this->export['brgy'][$key]['selected'] = $this->export['all_brgy'] ;
+        }
+    }
+    public function next_export(){
+        $this->export['step']++;
+        if($this->export['step'] == 1){
+            $status_id = DB::table('inspection_status')
+                ->where('name','=','Completed')
+                ->first()->id;
+            $month_years = DB::table('inspections as i')
+            ->select(
+                DB::raw('YEAR(i.schedule_date) as year'),
+                DB::raw('MONTH(i.schedule_date) as month_num'),
+            )
+            ->where('status_id','=',$status_id)
+            ->groupby(DB::raw('YEAR(i.schedule_date), MONTH(i.schedule_date)'))
+            ->orderBy(DB::raw('YEAR(i.schedule_date)'),'desc')
+            ->orderBy(DB::raw('MONTH(i.schedule_date)'),'asc')
+            ->get()
+            ->toArray();
+
+            $years = DB::table('inspections as i')
+            ->select(
+                DB::raw('DISTINCT(YEAR(i.schedule_date)) as year'),
+            )
+            ->where('status_id','=',$status_id)
+            ->orderBy(DB::raw('YEAR(i.schedule_date)'),'desc')
+            ->get()
+            ->toArray();
+
+            $temp = [];
+            $month_name = ['Jan','Feb', 'Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];
+            foreach ($years as $key => $value) {
+                $temp_month = [];
+                for ($i=1; $i < 13; $i++) { 
+                    array_push($temp_month,[
+                        'month_name'=>$month_name[$i-1],
+                        'month'=>$i,
+                        'selected'=>false,
+                        'no_value'=>false,
+                        ]);
+                }
+                foreach ($month_years as $my_key => $my_value) {
+                    if($value->year == $my_value->year){
+                        $temp_month[$my_value->month_num-1]['selected'] = true;
+                        $temp_month[$my_value->month_num-1]['no_value'] = true;
+                    }
+                }
+                array_push($temp,[
+                    'year'=>$value->year,
+                    'month'=>$temp_month,
+                    'selected'=>true,
+                ]);
+            }
+            $this->export['all_year'] = true;
+            $this->export['years'] = $temp;
+        }elseif($this->export['step'] == 2){
+            $valid = false;
+            foreach ($this->export['years'] as $key => $value) {
+                if($value['selected']){
+                    $valid = true;
+                    break;
+                }
+            }
+            if(!$valid){
+                $this->export['step']--;
+                $this->dispatch('swal:redirect',
+                    position         									: 'center',
+                    icon              									: 'warning',
+                    title             									: 'Please select at least one year!',
+                    showConfirmButton 									: 'true',
+                    timer             									: '1000',
+                    link              									: '#'
+                );
+                return 0;
+            }
+            $temp_years = [];
+            foreach ($this->export['years'] as $key => $value) {
+                if($value['selected']){
+                    array_push($temp_years,$value['year']);
+                }
+            }
+            $status_id = DB::table('inspection_status')
+                ->where('name','=','Completed')
+                ->first()->id;
+
+            $brgy = DB::table('inspections as i')
+            ->select(
+                DB::raw('DISTINCT(b.brgy_id) as brgy_id'),
+                'brg.brgyDesc as brgy_desc',
+            )
+            ->join('businesses as b','i.business_id','b.id')
+            ->join('brgy as brg','brg.id','b.brgy_id')
+            ->where('status_id','=',$status_id)
+            ->whereIn(DB::raw('YEAR(i.schedule_date)'),  $temp_years)
+            ->orderBy('brg.brgyDesc','asc')
+            ->get()
+            ->toArray();
+            $temp = [];
+            foreach ($brgy as $key => $value) {
+                array_push($temp,[
+                    'brgy_id'=>$value->brgy_id,
+                    'brgy_desc'=>$value->brgy_desc,
+                    'selected'=>true,
+                ]);
+            }
+            $this->export['brgy'] = $temp;
+        }elseif($this->export['step'] == 3){
+            $valid = false;
+            foreach ($this->export['brgy'] as $key => $value) {
+                if($value['selected']){
+                    $valid = true;
+                    break;
+                }
+            }
+            if(!$valid){
+                $this->export['step']--;
+                $this->dispatch('swal:redirect',
+                    position         									: 'center',
+                    icon              									: 'warning',
+                    title             									: 'Please select at least one barangay!',
+                    showConfirmButton 									: 'true',
+                    timer             									: '1000',
+                    link              									: '#'
+                );
+                return 0;
+            }
+        }elseif($this->export['step'] == 4){
+            // dd($this->export);
+        }
+    }
+    public function export_file($modal_id){
+        $this->export = [
+            'export_type'=> NULL,
+            'step'=>1,
+            'violation_all'=>true,
+            'with_violation'=>true,
+            'complied'=> 'All',
+            'without_violation'=>true,
+            'all_year'=>true,
+            'years' => [],
+            'all_brgy' => true,
+            'brgy'=> [],
+    
+        ];
+        $this->export['step'] = 0;
+        $this->dispatch('openModal',$modal_id);
+        self::next_export();
+    }
     
 
     
