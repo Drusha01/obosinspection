@@ -239,7 +239,7 @@ class GenerateReport extends Component
                     "p.img_url",
                     'wr.name as work_role_name',
                     'it_member_team.name as inspector_team',
-                    // 'ic.id as inspector_category_id',
+                    // 'ic.id as inspector_item_category_id',
                     // 'c.name as category_name',
                     // 'c.id as category_id',
                 )
@@ -249,7 +249,7 @@ class GenerateReport extends Component
                 ->leftjoin('inspection_inspector_members as iim','p.id','iim.person_id')
                 ->join('person_types as pt','p.person_type_id','pt.id')
                 ->join('work_roles as wr', 'wr.id','p.work_role_id')
-                // ->join('inspector_category as ic','p.id','ic.person_id')
+                // ->join('inspector_item_category as ic','p.id','ic.person_id')
                 // ->join('categories as c','c.id','ic.category_id')
                 // ->orderBy(DB::raw('LOWER(c.name)'),'asc')
                 ->where('pt.name','Inspector')
@@ -272,14 +272,14 @@ class GenerateReport extends Component
                     "p.img_url",
                     'wr.name as work_role_name',
                     'it.name as inspector_team',
-                    // 'ic.id as inspector_category_id',
+                    // 'ic.id as inspector_item_category_id',
                     // 'c.name as category_name',
                     // 'c.id as category_id',
                 )
                 ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
                 ->join('person_types as pt','p.person_type_id','pt.id')
                 ->join('work_roles as wr', 'wr.id','p.work_role_id')
-                // ->leftjoin('inspector_category as ic','p.id','ic.person_id')
+                // ->leftjoin('inspector_item_category as ic','p.id','ic.person_id')
                 // ->join('categories as c','c.id','ic.category_id')
                 // ->orderBy(DB::raw('LOWER(c.name)'),'asc')
                 // ->groupBy('it.team_leader_id')
@@ -395,7 +395,7 @@ class GenerateReport extends Component
                     )
                 ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
                 ->join('categories as c','c.id','i.category_id')
-                ->join('inspector_category as ic','i.category_id','ic.category_id')
+                ->join('inspector_item_category as ic','i.category_id','ic.category_id')
                 ->where('i.is_active','=',1)
                 // ->where('ic.person_id','=',$this->activity_logs['inspector_team_id'])
                 ->get()
@@ -603,7 +603,7 @@ class GenerateReport extends Component
                     "p.img_url",
                     'wr.name as work_role_name',
                     'it_member_team.name as inspector_team',
-                    // 'ic.id as inspector_category_id',
+                    // 'ic.id as inspector_item_category_id',
                     // 'c.name as category_name',
                     // 'c.id as category_id',
                 )
@@ -613,7 +613,7 @@ class GenerateReport extends Component
                 ->leftjoin('inspection_inspector_members as iim','p.id','iim.person_id')
                 ->join('person_types as pt','p.person_type_id','pt.id')
                 ->join('work_roles as wr', 'wr.id','p.work_role_id')
-                // ->join('inspector_category as ic','p.id','ic.person_id')
+                // ->join('inspector_item_category as ic','p.id','ic.person_id')
                 // ->join('categories as c','c.id','ic.category_id')
                 // ->orderBy(DB::raw('LOWER(c.name)'),'asc')
                 ->where('pt.name','Inspector')
@@ -636,14 +636,14 @@ class GenerateReport extends Component
                     "p.img_url",
                     'wr.name as work_role_name',
                     'it.name as inspector_team',
-                    // 'ic.id as inspector_category_id',
+                    // 'ic.id as inspector_item_category_id',
                     // 'c.name as category_name',
                     // 'c.id as category_id',
                 )
                 ->leftjoin('inspector_teams as it','p.id','it.team_leader_id')
                 ->join('person_types as pt','p.person_type_id','pt.id')
                 ->join('work_roles as wr', 'wr.id','p.work_role_id')
-                // ->leftjoin('inspector_category as ic','p.id','ic.person_id')
+                // ->leftjoin('inspector_item_category as ic','p.id','ic.person_id')
                 // ->join('categories as c','c.id','ic.category_id')
                 // ->orderBy(DB::raw('LOWER(c.name)'),'asc')
                 // ->groupBy('it.team_leader_id')
@@ -818,7 +818,7 @@ class GenerateReport extends Component
                 "p.img_url",
                 'wr.name as work_role_name',
                 'it_member_team.name as inspector_team',
-                'ivc.id as inspector_category_id',
+                'ivc.id as inspector_item_category_id',
                 'vc.name as category_name',
                 'vc.id as category_id',
             )
@@ -851,7 +851,7 @@ class GenerateReport extends Component
                 "p.img_url",
                 'wr.name as work_role_name',
                 'it.name as inspector_team',
-                'ivc.id as inspector_category_id',
+                'ivc.id as inspector_item_category_id',
                 'vc.name as category_name',
                 'vc.id as category_id',
             )
