@@ -641,7 +641,7 @@ class DeletedInspections extends Component
                     )
                 ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
                 ->join('categories as c','c.id','i.category_id')
-                ->join('inspector_category as ic','i.category_id','ic.category_id')
+                ->join('inspector_item_category as ic','i.category_id','ic.category_id')
                 ->where('i.is_active','=',1)
                 ->where('ic.person_id','=',$this->activity_logs['inspector_team_id'])
                 ->get()
@@ -656,7 +656,7 @@ class DeletedInspections extends Component
                     'ic.person_id',
                 )
                 ->join('categories as c','v.category_id','c.id')
-                ->join('inspector_category as ic','v.category_id','ic.category_id')
+                ->join('inspector_item_category as ic','v.category_id','ic.category_id')
                 ->where('v.is_active','=',1)
                 ->where('ic.person_id','=',$this->activity_logs['inspector_team_id'])
                 ->get()

@@ -306,6 +306,7 @@ class Inspectors extends Component
             'id' => NULL,
             'person_id' => NULL,
             'category_id' => NULL,
+            'type_id'=>1,
         ];
         $this->violation_category = DB::table('violation_category')
             ->where('is_active','=',1)

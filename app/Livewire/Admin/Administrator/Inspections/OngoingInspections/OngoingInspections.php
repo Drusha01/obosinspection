@@ -912,11 +912,11 @@ class OngoingInspections extends Component
                     'i.img_url',
                     'i.is_active',
                     'ebs.name as section_name',
-                    'ic.person_id',
+                    'iic.person_id',
                     )
                 ->join('equipment_billing_sections as ebs','ebs.id','i.category_id')
                 ->join('categories as c','c.id','i.category_id')
-                ->join('inspector_category as ic','i.category_id','ic.category_id')
+                ->join('inspector_item_category as iic','i.category_id','iic.category_id')
                 ->where('i.is_active','=',1)
                 // ->where('ic.person_id','=',$this->activity_logs['inspector_team_id'])
                 ->get()
