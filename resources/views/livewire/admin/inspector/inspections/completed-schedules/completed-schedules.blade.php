@@ -575,8 +575,8 @@
                         </div>
                         <div class="modal-body">
                             <div>Violation: @if(isset($violation_validated_contents['violation'])) {{$violation_validated_contents['violation']->description}} @endif</div>
-                                @if(isset($violation_contents['violation']))
-                                    @if($violation_contents['violation']->added_by == $this->activity_logs['inspector_team_id'])
+                                @if(isset($violation_validated_contents['violation']))
+                                    @if($violation_validated_contents['violation']->added_by == $this->activity_logs['inspector_team_id'])
                                         <form  wire:submit.prevent="upload_photos()">
                                             <div class="row d-flex">
                                                 <label for="formFileSm" class="form-label text-dark mt-2">Upload Proof</label>

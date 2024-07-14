@@ -481,6 +481,5 @@ class Generate extends Component
             'inspector_team_leaders'  => $inspector_team_leaders,
             'violations'  =>$violations,
         ];
-        // dd($this->issue_inspection);
     }
 }
