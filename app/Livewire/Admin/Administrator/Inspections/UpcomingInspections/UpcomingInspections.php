@@ -84,6 +84,7 @@ class UpcomingInspections extends Component
         'type' => NULL,
         'type_prev' => NULL,
         'brgy_id'=>NULL,
+        'business_category_id'=>NULL,
     ];
     public $search_by = [
         ['name'=>'Name','column_name'=>'b.name'],
@@ -256,7 +257,7 @@ class UpcomingInspections extends Component
                     ->join('business_types as bt','bt.id','b.business_type_id')
                     ->join('business_category as bc','bc.id','b.business_category_id')
                     ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-                    ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
+                    ->leftjoin('brgy as brg','brg.id','b.brgy_id')
                     ->groupby('b.id')
                     ->where('i.status_id','=',$status_id)
                     ->where('b.business_category_id','=',$this->search['brgy_id'])
@@ -296,7 +297,7 @@ class UpcomingInspections extends Component
                     ->join('business_types as bt','bt.id','b.business_type_id')
                     ->join('business_category as bc','bc.id','b.business_category_id')
                     ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-                    ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
+                    ->leftjoin('brgy as brg','brg.id','b.brgy_id')
                     ->groupby('b.id')
                     ->where('i.status_id','=',$status_id)
                     ->where('b.business_category_id','=',$this->search['brgy_id'])
@@ -337,7 +338,7 @@ class UpcomingInspections extends Component
                         ->join('business_types as bt','bt.id','b.business_type_id')
                         ->join('business_category as bc','bc.id','b.business_category_id')
                         ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-                        ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
+                        ->leftjoin('brgy as brg','brg.id','b.brgy_id')
                         ->groupby('b.id')
                         ->where('i.status_id','=',$status_id)
                         ->where('b.business_category_id','=',$this->search['business_category_id'])
@@ -376,7 +377,7 @@ class UpcomingInspections extends Component
                         ->join('business_types as bt','bt.id','b.business_type_id')
                         ->join('business_category as bc','bc.id','b.business_category_id')
                         ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-                        ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
+                        ->leftjoin('brgy as brg','brg.id','b.brgy_id')
                         ->groupby('b.id')
                         ->where('i.status_id','=',$status_id)
                         ->where($this->search['type'],'like',$this->search['search'] .'%')
