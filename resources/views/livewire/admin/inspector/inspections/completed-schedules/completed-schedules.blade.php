@@ -617,8 +617,8 @@
                                                     </a>
                                                 </td>
                                                 <td class="align-middle text-center">
-                                                    @if(isset($violation_contents['violation']))
-                                                        @if($violation_contents['violation']->added_by == $this->activity_logs['inspector_team_id'])
+                                                    @if(isset($violation_validated_contents['violation']))
+                                                        @if($violation_validated_contents['violation']->added_by == $this->activity_logs['inspector_team_id'])
                                                             <button class="btn btn-danger "wire:click="delete_proof_photo({{$value->id}})"> 
                                                                 Delete
                                                             </button>
