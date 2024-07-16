@@ -1494,10 +1494,11 @@ class OngoingInspections extends Component
     }
     public function update_inspection_items(){
         if(intval($this->issue_inspection['item_id'])){
-            $temp = DB::table('inspection_items')
-            ->where('item_id','=',$this->issue_inspection['item_id'])
-            ->where('inspection_id','=',$this->issue_inspection['id'])
-            ->first();
+            // $temp = DB::table('inspection_items')
+            // ->where('item_id','=',$this->issue_inspection['item_id'])
+            // ->where('inspection_id','=',$this->issue_inspection['id'])
+            // ->first();
+            $temp = null;
             if($temp){
 
             }else{
