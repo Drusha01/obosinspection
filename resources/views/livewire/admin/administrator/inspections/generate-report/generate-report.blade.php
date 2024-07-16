@@ -173,7 +173,7 @@
                                                 <div class="row mx-3">
                                                     <p class="m-0 mt-2 p-0">
                                                         YOU MAY CLAIM YOUR CERTIFICATE OF ANNUAL INSPECTION AT THE
-                                                        OFFICE OF THE BUILDING OFFICIAL ON @if(count($issue_inspection['inspection_violations'])==0) <strong class="underline">{{date_format(date_add(date_create($issue_inspection['inspection']->schedule_date),date_interval_create_from_date_string("3 days")),"M d, Y")}} </strong> @else ______________ @endif
+                                                        OFFICE OF THE BUILDING OFFICIAL ON @if($checked) <strong class="underline">{{date_format(date_add(date_create($issue_inspection['inspection']->schedule_date),date_interval_create_from_date_string("3 days")),"M d, Y")}} </strong> @else ______________ @endif
                                                     </p>
                                                     <p class="m-0 p-0" style="font-size:12px;font-weight: bold;">
                                                         Bring photocopy of OBO O.R. of Business Permit & Annual Inspection Report.
