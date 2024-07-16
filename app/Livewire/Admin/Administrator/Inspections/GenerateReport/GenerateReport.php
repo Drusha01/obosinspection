@@ -99,6 +99,7 @@ class GenerateReport extends Component
             ->toArray()){
             $segragated = true;
 
+            $type_id = 1;
             // segregated // segregated// segregated// segregated// segregated// segregated// segregated// segregated// segregated
 
             $application_types = DB::table('application_types')
@@ -457,6 +458,7 @@ class GenerateReport extends Component
             // segregated // segregated// segregated// segregated// segregated// segregated// segregated// segregated// segregated
         }else{
             $segragated = false;
+            $type_id = 2;
             $application_types = DB::table('application_types')
                 ->where('is_active','=',1)
                 ->get()
@@ -833,6 +835,7 @@ class GenerateReport extends Component
             ->orderBy(DB::raw('LOWER(vc.name)'),'asc')
             ->where('pt.name','Inspector')
             ->where('iim.inspection_id','=',$id)
+            ->where('ivc.type_id','=',$type_id)
             ->get()
             ->toArray();
 
@@ -865,6 +868,7 @@ class GenerateReport extends Component
             ->whereNotNull('it.team_leader_id')
             ->where('pt.name','Inspector')
             ->where('iitl.inspection_id','=',$id)
+            ->where('ivc.type_id','=',$type_id)
             ->get()
             ->toArray();
         $violation_category = DB::table('violation_category')
