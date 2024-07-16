@@ -219,7 +219,7 @@ input[readonly] {
   height: 106px;
 }
 .section-footer .inspected-payment-container {
-  height: 117px;
+  min-height: 117px;
 }
 
 .section-footer .address-notice{
