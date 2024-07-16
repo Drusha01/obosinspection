@@ -216,10 +216,10 @@ input[readonly] {
 }
 .section-footer .inspector-container, 
 .section-footer .violation-container {
-  height: 106px;
+  min-height: 106px;
 }
 .section-footer .inspected-payment-container {
-  height: 117px;
+  min-height: 117px;
 }
 
 .section-footer .address-notice{
