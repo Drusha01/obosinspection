@@ -60,6 +60,7 @@
                             @if($iv_value['violation_id'] == $v_value->id)
                                 &#10003;&nbsp;  &nbsp;  &nbsp; 
                                 {{$v_value->description}}
+                                <br>
                             @endif
                         @endforeach
                     @endif
