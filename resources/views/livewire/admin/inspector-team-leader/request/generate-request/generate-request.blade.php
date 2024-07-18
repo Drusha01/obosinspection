@@ -32,10 +32,10 @@
                 </div>
                 <div class="col-4 d-flex justify-content-end">
                     <button type="button" class="btn btn-primary mr-2"  wire:click="generate_request('requestPDFModaltoggler')">
-                        Request PDF
+                        Notification PDF
                     </button>
                     <button type="button" class="btn btn-primary"  wire:click="generate_request('requestModaltoggler')">
-                        Request
+                        Notify
                     </button>
                 </div>
                 <div wire:ignore.self class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
@@ -78,7 +78,7 @@
                                         <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                     @elseif($filter_value['name'] == 'Inspection Details')
                                         <th scope="col" class="text-center">{{$filter_value['name']}}</th>
-                                    @elseif($filter_value['name'] == 'Request Range' && $filter_value['active'])
+                                    @elseif($filter_value['name'] == 'Notification Range' && $filter_value['active'])
                                         <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                     @else 
                                         <th scope="col">{{$filter_value['name']}}</th>
@@ -99,7 +99,7 @@
                                                 <img class="img-fluid"src="{{asset('storage/content/business/'.$value->{$filter_value['column_name']})}}" alt="" style="max-height:50px;max-width:50px; ">
                                             </a>
                                         </td>
-                                    @elseif($filter_value['name'] == 'Request Range' && $filter_value['active'])
+                                    @elseif($filter_value['name'] == 'Notification Range' && $filter_value['active'])
                                         <td class="align-middle text-center">
                                             {{date_format(date_create($value->request_date),"M d, Y")}} - {{date_format(date_create($value->expiration_date),"M d, Y") }}
                                         </td>
@@ -161,7 +161,7 @@
                 <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="requestModalLabel">Request Inspection </h5>
+                            <h5 class="modal-title" id="requestModalLabel">Notification Inspection </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form wire:submit.prevent="send_request('requestModaltoggler')">
@@ -231,7 +231,7 @@
                                         <button type="submit" disabled class="btn btn-warning">Proceed</button>
                                     @endif
                                 @else 
-                                    <button type="submit" class="btn btn-primary">Request</button>
+                                    <button type="submit" class="btn btn-primary">Notify</button>
                                 @endif
                             </div>
                         </form>
@@ -243,7 +243,7 @@
                 <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="requestPDFModalLabel">Request PDF Inspection </h5>
+                            <h5 class="modal-title" id="requestPDFModalLabel">Notification PDF Inspection </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form wire:submit.prevent="generate_request_pdf('requestPDFModaltoggler')">
@@ -313,7 +313,7 @@
                                         <button type="submit" disabled class="btn btn-warning">Proceed</button>
                                     @endif
                                 @else 
-                                    <button type="submit" class="btn btn-primary">Request</button>
+                                    <button type="submit" class="btn btn-primary">Notify</button>
                                 @endif
                             </div>
                         </form>
@@ -325,7 +325,7 @@
                 <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="requestCategoryListModalLabel">Request Category Lists </h5>
+                            <h5 class="modal-title" id="requestCategoryListModalLabel">Notification Category Lists </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">

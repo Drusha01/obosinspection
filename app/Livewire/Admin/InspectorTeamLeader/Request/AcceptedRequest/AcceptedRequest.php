@@ -13,13 +13,13 @@ class AcceptedRequest extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $title = "Accepted Requests";
+    public $title = "Accepted Notifications";
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
         ['column_name'=> 'business_name','active'=> true,'name'=>'Business Name'],
         ['column_name'=> 'barangay','active'=> true,'name'=>'Barangay'],
         ['column_name'=> 'status_name','active'=> true,'name'=>'Status'],
-        ['column_name'=> 'request_date','active'=> true,'name'=>'Request Range'],
+        ['column_name'=> 'request_date','active'=> true,'name'=>'Notification Range'],
         ['column_name'=> 'accepted_date','active'=> true,'name'=>'Response Date'],
         ['column_name'=> 'id','active'=> true,'name'=>'Action'],
     ];

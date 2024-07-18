@@ -31,12 +31,7 @@
                     </div>
                 </div>
                 <div class="col-4 d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary mx-3"  wire:click="add('requestPDFModaltoggler')">
-                        Request PDF
-                    </button>
-                    <button type="button" class="btn btn-primary"  wire:click="generate_request('requestModaltoggler')">
-                        Request
-                    </button>
+                   
                 </div>
                 <div wire:ignore.self class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -78,7 +73,7 @@
                                         <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                     @elseif($filter_value['name'] == 'Inspection Details')
                                         <th scope="col" class="text-center">{{$filter_value['name']}}</th>
-                                    @elseif($filter_value['name'] == 'Request Range' && $filter_value['active'])
+                                    @elseif($filter_value['name'] == 'Notification Range' && $filter_value['active'])
                                         <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                     @else 
                                         <th scope="col">{{$filter_value['name']}}</th>
@@ -99,7 +94,7 @@
                                                 <img class="img-fluid"src="{{asset('storage/content/business/'.$value->{$filter_value['column_name']})}}" alt="" style="max-height:50px;max-width:50px; ">
                                             </a>
                                         </td>
-                                    @elseif($filter_value['name'] == 'Request Range' && $filter_value['active'])
+                                    @elseif($filter_value['name'] == 'Notification Range' && $filter_value['active'])
                                         <td class="align-middle text-center">
                                             {{date_format(date_create($value->request_date),"M d, Y")}} - {{date_format(date_create($value->expiration_date),"M d, Y") }}
                                         </td>

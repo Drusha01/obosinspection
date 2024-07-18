@@ -143,7 +143,7 @@
                     <span class="d-flex justify-content-between align-items-center">
                         <span>
                             <i class="bi bi-files"></i>
-                            Requests
+                            Notifications
                         </span>
                         <i class="fas  @if(Request()->route()->getPrefix() == 'administrator/request') fa-chevron-up @else fa-chevron-down @endif"></i> 
                     </span>
@@ -153,31 +153,31 @@
                         <li class="nav-item @if(Route::is('administrator-request-generate-request')) active @endif">
                             <a class="nav-link" href="{{ route('administrator-request-generate-request') }}">
                                 <i class="bi bi-file-earmark-plus"></i>
-                                <span>Generate Request</span>
+                                <span>Generate Notification</span>
                             </a>
                         </li>
                         <li class="nav-item @if(Route::is('administrator-request-accepted-request')) active @endif">
                             <a class="nav-link" href="{{ route('administrator-request-accepted-request') }}">
                                 <i class="bi bi-file-earmark-check"></i>
-                                <span>Accepted Request</span>
+                                <span>Accepted Notification</span>
                             </a>
                         </li>
                         <li class="nav-item @if(Route::is('administrator-request-declined-request')) active @endif">
                             <a class="nav-link" href="{{ route('administrator-request-declined-request') }}">
                                 <i class="bi bi-file-earmark-x"></i>
-                                <span>Declined Request</span>
+                                <span>Declined Notification</span>
                             </a>
                         </li>
                         <li class="nav-item @if(Route::is('administrator-request-no-response-request')) active @endif" >
                             <a class="nav-link" href="{{ route('administrator-request-no-response-request') }}">
                                 <i class="bi bi-question-square"></i>
-                                <span>No Response Request</span>
+                                <span>No Response Notification</span>
                             </a>
                         </li>
                         <li class="nav-item @if(Route::is('administrator-request-deleted-request')) active @endif">
                             <a class="nav-link" href="{{ route('administrator-request-deleted-request') }}">
                                 <i class="bi bi-folder-x"></i>
-                                <span>Deleted Request</span>
+                                <span>Deleted Notification</span>
                             </a>
                         </li>
                     </ul>
@@ -362,7 +362,7 @@
                     <span class="d-flex justify-content-between align-items-center">
                         <span>
                             <i class="bi bi-files"></i>
-                            Requests
+                            Notifications
                         </span>
                         <i class="fas  @if(Request()->route()->getPrefix() == 'inspector-team-leader/request') fa-chevron-up @else fa-chevron-down @endif"></i> 
                     </span>
@@ -372,31 +372,31 @@
                         <li class="nav-item @if(Route::is('inspector-team-leader-request-generate-request')) active @endif">
                             <a class="nav-link" href="{{ route('inspector-team-leader-request-generate-request') }}">
                                 <i class="bi bi-file-earmark-plus"></i>
-                                <span>Generate Request</span>
+                                <span>Generate Notification</span>
                             </a>
                         </li>
                         <li class="nav-item @if(Route::is('inspector-team-leader-request-accepted-request')) active @endif">
                             <a class="nav-link" href="{{ route('inspector-team-leader-request-accepted-request') }}">
                                 <i class="bi bi-file-earmark-check"></i>
-                                <span>Accepted Request</span>
+                                <span>Accepted Notification</span>
                             </a>
                         </li>
                         <li class="nav-item @if(Route::is('inspector-team-leader-request-declined-request')) active @endif">
                             <a class="nav-link" href="{{ route('inspector-team-leader-request-declined-request') }}">
                                 <i class="bi bi-file-earmark-x"></i>
-                                <span>Declined Request</span>
+                                <span>Declined Notification</span>
                             </a>
                         </li>
                         <li class="nav-item @if(Route::is('inspector-team-leader-request-no-response-request')) active @endif" >
                             <a class="nav-link" href="{{ route('inspector-team-leader-request-no-response-request') }}">
                                 <i class="bi bi-question-square"></i>
-                                <span>No Response Request</span>
+                                <span>No Response Notification</span>
                             </a>
                         </li>
                         <li class="nav-item @if(Route::is('inspector-team-leader-request-deleted-request')) active @endif">
                             <a class="nav-link" href="{{ route('inspector-team-leader-request-deleted-request') }}">
                                 <i class="bi bi-folder-x"></i>
-                                <span>Deleted Request</span>
+                                <span>Deleted Notification</span>
                             </a>
                         </li>
                     </ul>

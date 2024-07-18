@@ -73,7 +73,7 @@
                                         <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                     @elseif($filter_value['name'] == 'Inspection Details')
                                         <th scope="col" class="text-center">{{$filter_value['name']}}</th>
-                                    @elseif($filter_value['name'] == 'Request Range' && $filter_value['active'])
+                                    @elseif($filter_value['name'] == 'Notification Range' && $filter_value['active'])
                                         <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                     @else 
                                         <th scope="col">{{$filter_value['name']}}</th>
@@ -94,7 +94,7 @@
                                                 <img class="img-fluid"src="{{asset('storage/content/business/'.$value->{$filter_value['column_name']})}}" alt="" style="max-height:50px;max-width:50px; ">
                                             </a>
                                         </td>
-                                    @elseif($filter_value['name'] == 'Request Range' && $filter_value['active'])
+                                    @elseif($filter_value['name'] == 'Notification Range' && $filter_value['active'])
                                         <td class="align-middle text-center">
                                             {{date_format(date_create($value->request_date),"M d, Y")}} - {{date_format(date_create($value->expiration_date),"M d, Y") }}
                                         </td>

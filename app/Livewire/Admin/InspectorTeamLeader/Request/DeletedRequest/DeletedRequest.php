@@ -14,12 +14,12 @@ class DeletedRequest extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $title = "Deleted Requests";
+    public $title = "Deleted Notifications";
     public $filter = [
         ['column_name'=> 'id','active'=> true,'name'=>'#'],
         ['column_name'=> 'business_name','active'=> true,'name'=>'Business Name'],
         ['column_name'=> 'status_name','active'=> true,'name'=>'Status'],
-        ['column_name'=> 'request_date','active'=> true,'name'=>'Request Range'],
+        ['column_name'=> 'request_date','active'=> true,'name'=>'Notification Range'],
     ];
     
     public $activity_logs = [

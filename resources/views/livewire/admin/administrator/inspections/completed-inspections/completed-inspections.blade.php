@@ -121,7 +121,7 @@
                                     @elseif($filter_value['name'] == 'Generate' && $filter_value['active'])
                                         <td class="text-center align-middle">
                                             <a class="btn btn-outline-primary my-1" target="_blank" href="/administrator/inspections/generate/{{$value->id}}">
-                                                 Equipment PDF
+                                                LOE
                                             </a>
                                             <a class="btn btn-outline-primary my-1" target="_blank" href="/administrator/inspections/generate-report/{{$value->id}}">
                                                  Report
@@ -203,7 +203,7 @@
                 <div class="modal-dialog modal-xl modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="issueModalLabel">Inspection Schedule</h5>
+                            <h5 class="modal-title" id="issueModalLabel">Completed Inspection </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">

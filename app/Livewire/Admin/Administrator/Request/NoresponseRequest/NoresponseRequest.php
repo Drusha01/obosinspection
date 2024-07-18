@@ -14,7 +14,7 @@ class NoresponseRequest extends Component
     use WithPagination;
     use WithFileUploads;
 
-    public $title = "No Response Requests";
+    public $title = "No Response Notifications";
 
     public $request  = [
         'id' =>NULL,
@@ -32,7 +32,7 @@ class NoresponseRequest extends Component
         ['column_name'=> 'business_name','active'=> true,'name'=>'Business Name'],
         ['column_name'=> 'barangay','active'=> true,'name'=>'Barangay'],
         ['column_name'=> 'status_name','active'=> true,'name'=>'Status'],
-        ['column_name'=> 'request_date','active'=> true,'name'=>'Request Range'],
+        ['column_name'=> 'request_date','active'=> true,'name'=>'Notification Range'],
         ['column_name'=> 'id','active'=> true,'name'=>'Action'],
     ];
     
