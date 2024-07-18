@@ -1873,13 +1873,8 @@ class InspectionSchedules extends Component
 
         $steps = [
             ['name'=>'Details'],
-            ['name'=>'Items'],
-            ['name'=>'Building'],
-            ['name'=>'Sanitary'],
-            ['name'=>'Signage'],
             ['name'=>'Leaders'],
             ['name'=>'Members'],
-            ['name'=>'Violation'],
         ];
         
         $this->issue_inspection = [
