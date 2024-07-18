@@ -756,41 +756,25 @@
                             </div>
                             @elseif($annual_certificate_inspection['step'] == 2)
                             <div>
-                                <div class="input-group mb-3">
-                                    <select class="form-select" id="teamLeaderSelect"  wire:model="annual_certificate_inspection.inspector_id">
-                                        <option value="">Select Team Member</option>
-                                        @foreach($annual_certificate_inspection['inspectors'] as $key =>  $value)
-                                            <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</option>
-                                        @endforeach
-                                    </select>
-                                    <button class="btn btn-primary" type="button" wire:click="add_annual_inspector()"><i class="bi bi-plus"></i></button>
-                                </div>
                                 <div class="table-responsive">
                                     <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
                                         <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                                             <tr>
                                                 <th>Name</th>
                                                 <th colspan="1">Category <span class="text-danger">*</span></th>
-                                                <th class="align-middle text-center">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach($annual_certificate_inspection['annual_certificate_inspection_inspector']  as $key =>$value)
                                                 <tr>
-                                                    <td>{{$value['content']->first_name.' '.$value['content']->middle_name.' '.$value['content']->last_name.' '.$value['content']->suffix.' ( '.$value['content']->work_role_name.' ) '.(isset($value['content']->inspector_team) ? '( '.$value['content']->inspector_team.' )' : '( Not assigend )')}}</td>
+                                                    <td>{{$value['content']['first_name'].' '.$value['content']['middle_name'].' '.$value['content']['last_name'].' '.$value['content']['suffix'].' ( '.$value['content']['work_role_name'].' ) '.(isset($value['content']['inspector_team']) ? '( '.$value['content']['inspector_team'].' )' : '( Not assigend )')}}</td>
                                                     <td>
-                                                        <select name="" id="" class="form-select" required wire:model.live="annual_certificate_inspection.annual_certificate_inspection_inspector.{{$key}}.category_id">
+                                                        <select name="" id="" class="form-select" required wire:model.live="annual_certificate_inspection.annual_certificate_inspection_inspector.{{$key}}.category_id" wire:change="update_inspector_inspection_role({{$value['content']['user_id']}},{{$key}})">
                                                             <option value="" selected>Select Category</option>
                                                             @foreach($annual_certificate_inspection['annual_certificate_categories'] as $ckey => $cvalue)
                                                                 <option value="{{$cvalue->id}}">{{$cvalue->name}}</option>
                                                             @endforeach
                                                         </select>
-                                                    </td>
-                                                    
-                                                    <td class="align-middle text-center">
-                                                        <button class="btn btn-danger" wire:click="delete_annual_inspector({{$value['content']->id}})">
-                                                            Delete
-                                                        </button>
                                                     </td>
                                                 </tr>
                                             @endforeach
