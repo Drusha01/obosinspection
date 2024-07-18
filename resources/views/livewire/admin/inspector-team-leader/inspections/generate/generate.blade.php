@@ -125,7 +125,7 @@
                                             <td>{{$value['quantity']}}</td>
                                             @foreach($categories as $catkey =>$catvalue)
                                                 @if($catvalue->name == $value['category_name'] )
-                                                    <th class="font-weight-normal"><i>{{number_format($value['fee'] * $value['quantity'], 2)}}</i></th>
+                                                    <th class="font-weight-normal"><i>{{number_format(($value['fee'] * $value['quantity']), 2)}}</i></th>
                                                 @else 
                                                     <th class="font-weight-normal"><i>{{number_format(0, 2)}}</i></th>
                                                 @endif

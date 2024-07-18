@@ -1120,7 +1120,6 @@ class CompletedInspections extends Component
             ['name'=>'Members'],
             ['name'=>'Violation'],
         ];
-        
         $this->issue_inspection = [
             'id' => $inspection->id,
             'status_id' => $inspection->status_id,

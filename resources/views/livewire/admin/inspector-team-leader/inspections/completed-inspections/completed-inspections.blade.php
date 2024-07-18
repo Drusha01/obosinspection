@@ -117,7 +117,7 @@
                                     @elseif($filter_value['name'] == 'Generate' && $filter_value['active'])
                                         <td class="text-center align-middle">
                                             <a class="btn btn-outline-primary my-1" target="_blank" href="/inspector-team-leader/inspections/generate/{{$value->id}}">
-                                                 Equipment PDF
+                                                LOE
                                             </a>
                                             <a class="btn btn-outline-primary my-1" target="_blank" href="/inspector-team-leader/inspections/generate-report/{{$value->id}}">
                                                  Report

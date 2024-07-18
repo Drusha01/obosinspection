@@ -1468,6 +1468,67 @@ class OngoingInspections extends Component
             ['name'=>'Members'],
             ['name'=>'Violation'],
         ];
+
+        $inspection_building_billings = [];
+        if(isset($inspection->building_billing_id)){
+            $inspection_building_billings = DB::table('building_billings as bb')
+                ->select(
+                    "bb.id",
+                    "bb.section_id",
+                    'bbs.name as section_name',
+                    "bb.property_attribute",
+                    "bb.fee",
+                )
+                ->join('building_billing_sections as bbs','bbs.id','bb.section_id')
+                ->where('bb.id','=',$inspection->building_billing_id)
+                ->get()
+                ->toArray();
+        }
+        $inspection_signage_billings = [];
+        if(isset($inspection->signage_id)){
+            $inspection_signage_billings = DB::table('signage_billings as sb')
+                ->select(
+                    'sb.id',
+                    'sbdt.name as display_type_name',
+                    'sbt.name as sign_type_name',
+                    'sb.fee',
+                    'sb.is_active'
+                )
+                ->join('signage_billing_types as sbt','sbt.id','sb.sign_type_id')
+                ->join('signage_billing_display_types as sbdt','sbdt.id','sb.display_type_id')
+                ->where('sb.id','=',$inspection->signage_id)
+                ->get()
+                ->toArray();
+        }
+
+        $inspection_sanitary_billings = DB::table('inspection_sanitary_billings as isb')
+            ->select(
+                'isb.id' ,
+                'isb.inspection_id' ,
+                'isb.sanitary_billing_id' ,
+                'isb.sanitary_quantity' ,
+                'sb.fee' ,
+                'sb.name as sanitary_name',
+            )
+            ->join('sanitary_billings as sb','sb.id','isb.sanitary_billing_id')
+            ->where('isb.inspection_id','=',$id)
+            ->get()
+            ->toArray();
+        $temp = [];
+        foreach ($inspection_sanitary_billings as $key => $value) {
+            array_push($temp,[
+                "id" => $value->id,
+                "inspection_id" => $value->inspection_id,
+                "sanitary_billing_id" => $value->sanitary_billing_id,
+                "sanitary_quantity" => $value->sanitary_quantity,
+                "sanitary_quantity" => $value->sanitary_quantity,
+                "fee" => $value->fee,
+                "sanitary_name" => $value->sanitary_name,
+            ]);
+        }
+        $inspection_sanitary_billings = $temp;
+
+        
         
         $this->issue_inspection = [
             'id' => $inspection->id,
@@ -1511,6 +1572,10 @@ class OngoingInspections extends Component
             'inspector_team_leaders'  => $inspector_team_leaders,
             'violations'  =>$violations,
             'categories'=> $categories,
+
+            'inspection_sanitary_billings' =>$inspection_sanitary_billings,
+            'inspection_signage_billings' =>$inspection_signage_billings,
+            'inspection_building_billings'  =>$inspection_building_billings,
         ];
     }
     public function issue($id,$modal_id){

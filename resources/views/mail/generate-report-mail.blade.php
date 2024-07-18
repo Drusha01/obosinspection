@@ -15,6 +15,8 @@
         ANNUAL INSPECTION REPORT
         <br>
         <br>
+        Inspection ID:{{$issue_inspection['id']}}
+        <br>
         Date of Inspection:  {{date_format(date_create($issue_inspection['inspection']->schedule_date),"M d, Y")}}
         <br>
         Owner of Building: {{$issue_inspection['inspection']->first_name.' '.$issue_inspection['inspection']->middle_name.' '.$issue_inspection['inspection']->last_name.' '.$issue_inspection['inspection']->suffix}}
@@ -82,6 +84,47 @@
             <br>
             FOR THE ISSUANCE OF ANNUAL CERTIFICATE OF ANNUAL INSPECTION AS A REQUIREMENT FOR THE RENEWAL OF YOUR BUSINESS PERMIT.
         @endif
+
+        <?php 
+            $total_assessment_fee = 0;
+            $building_fee = 0;
+            $sanitary_fee = 0;
+            $signage_fee = 0;
+            foreach ($issue_inspection['inspection_building_billings'] as $key => $value) {
+                $total_assessment_fee+= floatval($value->fee);
+                $building_fee  += floatval($value->fee);
+            }
+            
+            foreach ($issue_inspection['inspection_sanitary_billings'] as $key => $value) {
+                $total_assessment_fee+= floatval($value['fee']);
+                $sanitary_fee  += floatval($value['fee']);
+            }
+            foreach ($issue_inspection['inspection_signage_billings'] as $key => $value) {
+                $total_assessment_fee+= floatval($value->fee);
+                $signage_fee  += floatval($value->fee);
+            }
+            $categories = DB::table('categories')
+                ->get()
+                ->toArray();
+            $category_fee = [];
+          
+            foreach ($categories as $key => $value) {
+                $category_fee[$value->name] = 0;
+            }
+
+
+            foreach($issue_inspection['inspection_items'] as $key =>$value){
+                $category_fee[$value['category_name']]+= $value['fee'] * $value['quantity'];
+                $total_assessment_fee += $value['fee'] * $value['quantity'];
+            }
+        ?>
+                                        
+
+        <br>
+        <br>
+        <div>
+            TOTAL ASSESSMENT FEE = ₱ {{number_format($total_assessment_fee, 2);}}
+        </div>
         <br>
         <br>
     </section>
