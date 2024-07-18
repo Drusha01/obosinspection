@@ -1743,6 +1743,24 @@ class CompletedInspections extends Component
         'years' => [],
         'all_brgy' => true,
         'brgy'=> [],
+        'columns'=> [
+            ['column_name'=> 'id','active'=> true,'name'=>'#'],
+            ['column_name'=> 'name','active'=> true,'name'=>'Business name'],
+            ['column_name'=> 'first_name','active'=> true,'name'=>'Owner'],
+            ['column_name'=> 'barangay','active'=> true,'name'=>'Brgy'],
+            ['column_name'=> 'business_category_name','active'=> true,'name'=>'Business Category'],
+            ['column_name'=> 'business_type_name','active'=> true,'name'=>'Business Type'],
+            ['column_name'=> 'occupancy_classification_name','active'=> true,'name'=>'Char of Occu'],
+            ['column_name'=> 'contact_number','active'=> true,'name'=>'Contact #'],
+            ['column_name'=> 'email','active'=> true,'name'=>'Email'],
+            ['column_name'=> 'floor_area','active'=> true,'name'=>'Floor Area'],
+            ['column_name'=> 'signage_area','active'=> true,'name'=>'Signage Area'],
+            ['column_name'=> 'id','active'=> true,'name'=>'Application Type'],
+            ['column_name'=> 'schedule_date','active'=> true,'name'=>'Schedule'],
+            ['column_name'=> 'remarks','active'=> true,'name'=>'Violation'],
+            ['column_name'=> 'remarks','active'=> true,'name'=>'IsComplied?'],
+        
+        ],
 
     ];
     public function update_violation_all(){
@@ -1920,7 +1938,26 @@ class CompletedInspections extends Component
                 return 0;
             }
         }elseif($this->export['step'] == 4){
-            // dd($this->export);
+            
+        }elseif($this->export['step'] == 5){
+            $content_header = [];
+            foreach ($this->export['columns'] as $key => $value) {
+                # code...
+            }
+            if($export['export_type'] == 'EXCEL'){
+                $export = new ExporterController([
+                    $header,
+                    $content
+                ]);
+                
+                return Excel::download($export, $file_name.'.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+            }elseif($export['export_type']){
+                $export = new ExporterController([
+                    $header,
+                    $content
+                ]);
+                return Excel::download($export, $file_name.'.csv', \Maatwebsite\Excel\Excel::CSV);
+            }
         }
     }
     public function export_file($modal_id){
@@ -1935,13 +1972,27 @@ class CompletedInspections extends Component
             'years' => [],
             'all_brgy' => true,
             'brgy'=> [],
-    
+            'columns'=> [
+                ['column_name'=> 'id','active'=> true,'name'=>'#'],
+                ['column_name'=> 'name','active'=> true,'name'=>'Business name'],
+                ['column_name'=> 'first_name','active'=> true,'name'=>'Owner'],
+                ['column_name'=> 'barangay','active'=> true,'name'=>'Brgy'],
+                ['column_name'=> 'business_category_name','active'=> true,'name'=>'Business Category'],
+                ['column_name'=> 'business_type_name','active'=> true,'name'=>'Business Type'],
+                ['column_name'=> 'occupancy_classification_name','active'=> true,'name'=>'Char of Occu'],
+                ['column_name'=> 'contact_number','active'=> true,'name'=>'Contact #'],
+                ['column_name'=> 'email','active'=> true,'name'=>'Email'],
+                ['column_name'=> 'floor_area','active'=> true,'name'=>'Floor Area'],
+                ['column_name'=> 'signage_area','active'=> true,'name'=>'Signage Area'],
+                ['column_name'=> 'id','active'=> true,'name'=>'Application Type'],
+                ['column_name'=> 'schedule_date','active'=> true,'name'=>'Schedule'],
+                ['column_name'=> 'remarks','active'=> true,'name'=>'Violation'],
+                ['column_name'=> 'remarks','active'=> true,'name'=>'IsComplied?'],
+            
+            ],
         ];
         $this->export['step'] = 0;
         $this->dispatch('openModal',$modal_id);
         self::next_export();
     }
-    
-
-    
 }

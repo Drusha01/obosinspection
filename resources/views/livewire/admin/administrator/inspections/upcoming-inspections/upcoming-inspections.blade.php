@@ -116,7 +116,7 @@
                                         <td class="text-center align-middle">
                                             {{date_format(date_create($value->schedule_date),"M d, Y")}}
                                         </td>   
-                                    @elseif($filter_value['name'] == 'Date Count' && $filter_value['active'])
+                                    @elseif($filter_value['name'] == 'Days delayed' && $filter_value['active'])
                                         <td class="align-middle">
                                             {{$value->date_count_minus_year}} days
                                         </td>

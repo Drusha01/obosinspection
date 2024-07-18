@@ -918,7 +918,19 @@
                                         </div>
                                 </div>
                             @elseif($export['step'] == 4)
-                                dynamic columns here
+                                <div class="row text-center">
+                                    <h5>
+                                        Columns
+                                    </h5>
+                                </div>
+                                @foreach($export['columns'] as $key => $value)
+                                    <div class="form-check mx-4">
+                                        <input class="form-check-input" type="checkbox" id="filter-{{$key}}" wire:model.live="export.columns.{{$key}}.active">
+                                        <label class="form-check-label" for="filter-{{$key}}">
+                                            {{$value['name']}}
+                                        </label>
+                                    </div>
+                                @endforeach
                             @endif
                         </div>
                         <div class="modal-footer">

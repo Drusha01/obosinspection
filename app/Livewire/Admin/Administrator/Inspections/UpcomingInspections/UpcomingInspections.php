@@ -45,7 +45,7 @@ class UpcomingInspections extends Component
         ['column_name'=> 'email','active'=> true,'name'=>'Email'],
 
         ['column_name'=> 'last_inspected_date','active'=> true,'name'=>'Last Inspected'],
-        ['column_name'=> 'last_inspected_date_count','active'=> true,'name'=>'Date Count'],
+        ['column_name'=> 'last_inspected_date_count','active'=> true,'name'=>'Days delayed'],
         ['column_name'=> 'id','active'=> true,'name'=>'Action'],
     ];
 
