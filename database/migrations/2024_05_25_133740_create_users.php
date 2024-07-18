@@ -17,6 +17,7 @@ return new class extends Migration
             password VARCHAR(255) NOT NULL,
             role_id INT NOT NULL,
             person_id INT NOT NULL,
+            annual_certificate_category_id INT,
             is_active BOOL DEFAULT 1,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
             date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

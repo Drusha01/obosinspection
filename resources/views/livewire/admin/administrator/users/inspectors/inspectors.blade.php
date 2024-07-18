@@ -418,10 +418,21 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-12">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label for="contact_number" class="form-label">Contact Number <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" required wire:model="person.contact_number" placeholder="Enter contact #">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="brgy_id" class="form-label">Inspector Role <span class="text-danger">*</span></label>
+                                        <select class="form-select" aria-label="Select Barangay" required wire:model="person.annual_certificate_category_id">
+                                            <option value="">Select Inspector Role</option>
+                                            @foreach($annual_certificate_categories as $key => $value)
+                                                <option value="{{$value->id}}">{{$value->name}}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -548,10 +559,21 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-12">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label for="contact_number" class="form-label">Contact Number <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" required wire:model="person.contact_number" placeholder="Enter contact #">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="brgy_id" class="form-label">Inspector Role <span class="text-danger">*</span></label>
+                                        <select class="form-select" aria-label="Select Barangay" required wire:model="person.annual_certificate_category_id">
+                                            <option value="">Select Inspector Role</option>
+                                            @foreach($annual_certificate_categories as $key => $value)
+                                                <option value="{{$value->id}}">{{$value->name}}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                             </div>

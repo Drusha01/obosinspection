@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
+use App\Http\Controllers\export as ExporterController;
+
 
 class CompletedInspections extends Component
 {
@@ -1737,7 +1739,7 @@ class CompletedInspections extends Component
 
 
     public $export = [
-        'export_type'=> NULL,
+        'export_type'=> 'Excel',
         'step'=>1,
         'violation_all'=>true,
         'with_violation'=>true,
@@ -1948,14 +1950,14 @@ class CompletedInspections extends Component
             foreach ($this->export['columns'] as $key => $value) {
                 # code...
             }
-            if($export['export_type'] == 'EXCEL'){
+            if($this->export['export_type'] == 'Excel'){
                 $export = new ExporterController([
                     $header,
                     $content
                 ]);
                 
                 return Excel::download($export, $file_name.'.xlsx', \Maatwebsite\Excel\Excel::XLSX);
-            }elseif($export['export_type']){
+            }elseif($this->export['export_type'] == 'CSV'){
                 $export = new ExporterController([
                     $header,
                     $content
@@ -1966,7 +1968,7 @@ class CompletedInspections extends Component
     }
     public function export_file($modal_id){
         $this->export = [
-            'export_type'=> NULL,
+            'export_type'=> 'Excel',
             'step'=>1,
             'violation_all'=>true,
             'with_violation'=>true,

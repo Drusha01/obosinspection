@@ -23,6 +23,7 @@ class Inspectors extends Component
     public $inspector_bss_category = [];
     public $inspector_item_category = [];
     public $temp_inspector_category = [];
+    public $annual_certificate_categories = [];
     public $category_role = [
         'id' => NULL,
         'person_id' => NULL,
@@ -37,6 +38,7 @@ class Inspectors extends Component
         ['column_name'=> 'first_name','active'=> true,'name'=>'Firstname'],
         ['column_name'=> 'middle_name','active'=> true,'name'=>'Middlename'],
         ['column_name'=> 'last_name','active'=> true,'name'=>'Lastname'],
+        ['column_name'=> 'inspection_role','active'=> true,'name'=>'Inspection Role'],
         ['column_name'=> 'work_role_name','active'=> true,'name'=>'Work Role'],
         ['column_name'=> 'category_role','active'=> true,'name'=>'ORL Category Role'],
         ['column_name'=> 'category_role','active'=> true,'name'=>'NORL Category Role'],
@@ -60,6 +62,7 @@ class Inspectors extends Component
         'current_password'=>NULL,
         'password'=>NULL,
         'cpassword'=> NULL,
+        'annual_certificate_category_id'=> NULL,
     ];
     public $activity_logs = [
         'created_by' => NULL,
@@ -148,6 +151,10 @@ class Inspectors extends Component
             ->where('is_active','=',1)
             ->get()
             ->toArray();
+        $this->annual_certificate_categories = DB::table('annual_certificate_categories')
+            ->orderby('name','asc')
+            ->get()
+            ->toArray();
         $session = $request->session()->all();
         $table_filter = DB::table('table_filters')
         ->where('user_id',$session['id'])
@@ -218,10 +225,12 @@ class Inspectors extends Component
                 "u.date_updated",
                 'wr.id as work_role_id',
                 'wr.name as work_role_name',
+                'acc.name as inspection_role',
                 )
             ->join('persons as p','p.id','u.person_id')
             ->join('person_types as pt', 'pt.id','p.person_type_id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
+            ->leftjoin('annual_certificate_categories as acc','u.annual_certificate_category_id','acc.id')
             ->where('pt.name','=','Inspector')
             ->where(DB::raw("CONCAT(p.first_name,' ',p.last_name)"),'like',$this->search['search'] .'%')
             ->orderBy('id','desc')
@@ -301,6 +310,7 @@ class Inspectors extends Component
             'email' => NULL,
             'img_url' => NULL,
             'signature' => NULL,
+            'annual_certificate_category_id'=> NULL,
         ];
         $this->category_role = [
             'id' => NULL,
@@ -382,6 +392,21 @@ class Inspectors extends Component
         //     );
         //     return 0;
         // }
+        if(!intval($this->person['annual_certificate_category_id']) && 
+            DB::table('annual_certificate_categories')
+                ->where('id','=',$this->person['annual_certificate_category_id'])
+                ->first()
+        ){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'Please select Inpection role!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return 0;
+        }
         if(!intval($this->person['work_role_id']) && 
             DB::table('work_roles')
                 ->where('id','=',$this->person['work_role_id'])
@@ -569,7 +594,8 @@ class Inspectors extends Component
                     'username'=> $this->person['username'],
                     'password' =>password_hash($this->person['password'], PASSWORD_ARGON2I) ,
                     'role_id'=>1,
-                    'person_id'=>$person_details->id
+                    'person_id'=>$person_details->id,
+                    'annual_certificate_category_id'=>$this->person['annual_certificate_category_id'],
                 ]);
             $this->dispatch('swal:redirect',
                 position         									: 'center',
@@ -610,6 +636,7 @@ class Inspectors extends Component
                 'p.signature',
                 "u.date_created",
                 "u.date_updated",
+                'u.annual_certificate_category_id'
                 )
             ->join('persons as p','p.id','u.person_id')
             ->join('person_types as pt', 'pt.id','p.person_type_id')
@@ -635,6 +662,7 @@ class Inspectors extends Component
                 'current_password'=>NULL,
                 'password'=>NULL,
                 'cpassword'=> NULL,
+                'annual_certificate_category_id'=>$edit->annual_certificate_category_id,
             ];
             $this->dispatch('openModal',$modal_id);
         }
@@ -833,6 +861,11 @@ class Inspectors extends Component
                 return;
             }
         } 
+        DB::table('users as u')
+            ->where('u.id','=',$edit->id)
+            ->update([
+                'annual_certificate_category_id'=>$this->person['annual_certificate_category_id'],
+            ]);
         if(DB::table('persons as p')
             ->where('p.id','=', $edit->person_id)
             ->update([
