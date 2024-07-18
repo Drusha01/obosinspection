@@ -130,7 +130,9 @@
                                         </td>   
                                     @elseif($filter_value['name'] == 'Date Count' && $filter_value['active'])
                                         <td class="align-middle">
-                                            {{$value->date_count_minus_year}} days
+                                            @if($value->date_count_minus_year > 0)
+                                                {{$value->date_count_minus_year}} days
+                                            @endif
                                         </td>
                                     @elseif($filter_value['name'] == 'Action' && $filter_value['active'])
                                         <td class="align-middle">

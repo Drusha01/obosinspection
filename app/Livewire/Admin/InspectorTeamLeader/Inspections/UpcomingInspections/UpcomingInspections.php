@@ -16,7 +16,7 @@ class UpcomingInspections extends Component
     use WithFileUploads;
     public $title = "Upcoming Inspections";
 
-    public $max_date = 365;
+    public $max_date = (11 * 30) + 5;
     public $inspector_leaders;
     public $inspector_members;
 
