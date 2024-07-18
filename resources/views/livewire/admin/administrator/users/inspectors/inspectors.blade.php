@@ -418,29 +418,10 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="mb-3">
-                                        <label for="brgy_id" class="form-label">Barangay <span class="text-danger">*</span></label>
-                                        <select class="form-select" aria-label="Select Barangay" required wire:model="person.brgy_id">
-                                            <option value="">Select Barangay</option>
-                                            @foreach($brgy as $key => $value)
-                                                <option value="{{$value->id}}">{{$value->brgyDesc}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-12">
                                     <div class="mb-3">
                                         <label for="contact_number" class="form-label">Contact Number <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" required wire:model="person.contact_number" placeholder="Enter contact #">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                                        <input type="email" class="form-control" required wire:model="person.email" placeholder="Enter email">
                                     </div>
                                 </div>
                             </div>
@@ -567,32 +548,14 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="mb-3">
-                                        <label for="brgy_id" class="form-label">Barangay <span class="text-danger">*</span></label>
-                                        <select class="form-select" aria-label="Select Barangay" required wire:model="person.brgy_id">
-                                            <option value="">Select Barangay</option>
-                                            @foreach($brgy as $key => $value)
-                                                <option value="{{$value->id}}">{{$value->brgyDesc}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-12">
                                     <div class="mb-3">
                                         <label for="contact_number" class="form-label">Contact Number <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" required wire:model="person.contact_number" placeholder="Enter contact #">
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                                        <input type="email" class="form-control" required wire:model="person.email" placeholder="Enter email">
-                                    </div>
-                                </div>
-                            </div>
+                           
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
