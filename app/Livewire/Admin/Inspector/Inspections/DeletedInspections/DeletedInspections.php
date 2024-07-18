@@ -35,6 +35,7 @@ class DeletedInspections extends Component
         'remarks' => NULL,
         'date_signed' => NULL,
         'step'=> 1,
+        'steps'=>[],
         'item_id'=> NULL,
         'sanitary_billing_id'=> NULL,
 
@@ -1026,6 +1027,17 @@ class DeletedInspections extends Component
         }
         
         
+        $steps = [
+            ['name'=>'Details'],
+            ['name'=>'Items'],
+            ['name'=>'Building'],
+            ['name'=>'Sanitary'],
+            ['name'=>'Signage'],
+            ['name'=>'Leaders'],
+            ['name'=>'Members'],
+            ['name'=>'Violation'],
+        ];
+        
         $this->issue_inspection = [
             'id' => $inspection->id,
             'status_id' => $inspection->status_id,
@@ -1039,6 +1051,7 @@ class DeletedInspections extends Component
             'remarks' => $inspection->remarks,
             'date_signed' => $inspection->date_signed,
             'step'=> $step,
+            'steps'=>$steps,
 
             'segregated'=>  $segragated,
             'inspection_business_name' => $inspection->business_name. ' ( '.$inspection->business_type_name.' )',

@@ -2,10 +2,10 @@
     <div class="content">
         <div class="container-fluid">
             <div class="row d-flex mt-4 mb-4">
-                <div class="col">
+                <div class="col-lg-8 col-md-12">
                     <h1 class="h3 mb-0 text-gray-800">{{$title}}</h1>
                 </div>
-                <div class="col-2">
+                <div class="col-3">
                     <div class=" d-flex ">
                         <span for="rows" class="align-middle mt-2">Brgy</span>
                             <select name="" id=""  class="form-select" wire:model.live.debounce="search.brgy_id">
@@ -17,8 +17,8 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-2">
-                    <div class=" d-flex ">
+                <div class="col-lg-2 col-md-2">
+                    <div class="col-2 d-flex ">
                         <span for="rows" class="align-middle mt-2">Show</span>
                         <select name="" id="rows" class="form-select text-center"  style="min:width:40px;" wire:change="save_filter()" wire:model.defer="table_filter.table_rows" >
                             <option value="5">5</option>
@@ -541,15 +541,19 @@
                                 </div>
                             @endif
                             <hr>
-                            <div class="row ">
-                                <div class="col d-flex justify-content-center">
-                                @for($i=0; $i < 8; $i++)
-                                    @if(($issue_inspection['step']-1) == $i)
-                                        <button type="button" id="prevButton" class="btn btn-secondary mx-2" wire:click="go_issue({{$i+1}})" >{{$i+1}}</button>                                      
-                                    @else
-                                        <button type="button" id="prevButton" class="btn btn-outline-secondary mx-2" wire:click="go_issue({{$i+1}})" >{{$i+1}}</button>                                      
-                                    @endif
-                                @endfor                                         
+                             <div class="row ">
+                                <div class="col-lg-12 d-flex justify-content-center">
+                                    <div class="row d-flex justify-content-center">
+                                        <div class="col-12">
+                                            @foreach($issue_inspection['steps'] as $key =>$value)
+                                                    @if(($issue_inspection['step']-1) == $key)
+                                                        <button type="button" id="prevButton" class="btn btn-secondary m-1" wire:click="go_issue({{$key+1}})" >{{$value['name']}}</button>                                      
+                                                    @else
+                                                        <button type="button" id="prevButton" class="btn btn-outline-secondary m-1" wire:click="go_issue({{$key+1}})" >{{$value['name']}}</button>                                      
+                                                    @endif
+                                            @endforeach                                      
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <hr>

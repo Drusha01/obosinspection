@@ -61,6 +61,7 @@ class InspectionSchedules extends Component
         'remarks' => NULL,
         'date_signed' => NULL,
         'step'=> 1,
+        'steps'=>[],
         'item_id'=> NULL,
         'sanitary_billing_id'=> NULL,
 
@@ -1870,6 +1871,17 @@ class InspectionSchedules extends Component
             ->get()
             ->toArray();
 
+        $steps = [
+            ['name'=>'Details'],
+            ['name'=>'Items'],
+            ['name'=>'Building'],
+            ['name'=>'Sanitary'],
+            ['name'=>'Signage'],
+            ['name'=>'Leaders'],
+            ['name'=>'Members'],
+            ['name'=>'Violation'],
+        ];
+        
         $this->issue_inspection = [
             'id' => $inspection->id,
             'status_id' => $inspection->status_id,
@@ -1885,6 +1897,7 @@ class InspectionSchedules extends Component
             'date_signed' => $inspection->date_signed,
             
             'step'=> $this->issue_inspection['step'],
+            'steps'=>$steps,
             'violation_category'=>$violation_category,
             'inspector_bss_category'=>$inspector_bss_category,
             'email_inspection_inspector_team_leaders'=>$email_inspection_inspector_team_leaders,
