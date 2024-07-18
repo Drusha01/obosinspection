@@ -95,6 +95,10 @@
                                         <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                     @elseif($filter_value['name'] == 'Inspection Details')
                                         <th scope="col" class="text-center">{{$filter_value['name']}}</th>
+                                    @elseif($filter_value['name'] == 'Payment OR' && $filter_value['active'])
+                                        <th scope="col" class="text-center">{{$filter_value['name']}}</th>
+                                    @elseif($filter_value['name'] == 'Claimed' && $filter_value['active'])
+                                        <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                     @else 
                                         <th scope="col">{{$filter_value['name']}}</th>
                                     @endif
@@ -166,6 +170,20 @@
                                             }
                                             ?>
                                         </td> 
+                                    @elseif($filter_value['name'] == 'Payment OR' && $filter_value['active'])
+                                        <td class="align-middle text-center">
+                                            <button class="btn btn-primary" wire:click="payment({{$value->id}},'ORModaltoggler')">
+                                                Payment OR
+                                            </button>
+                                        </td>
+                                    @elseif($filter_value['name'] == 'Claimed' && $filter_value['active'])
+                                        <td class="align-middle text-center">
+                                            @if(isset($value->or_number))
+                                                <span class="badge text-light p-2 bg-success">Claimed</span>
+                                            @else 
+                                                <span class="badge text-light p-2 bg-danger">Unpaid</span>
+                                            @endif
+                                        </td>
                                     @else
                                         @if($filter_value['active'])
                                             <td class="align-middle">{{ $value->{$filter_value['column_name']} }}</td>
@@ -193,7 +211,7 @@
             <button type="button" data-bs-toggle="modal" data-bs-target="#certModal" id="certModaltoggler" style="display:none;"></button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#ProofModal" id="ProofModaltoggler" style="display:none;"></button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#ValidatedProofModal" id="ValidatedProofModaltoggler" style="display:none;"></button>
-            
+            <button type="button" data-bs-toggle="modal" data-bs-target="#ORModal" id="ORModaltoggler" style="display:none;"></button>
             
             <div wire:ignore.self class="modal fade" id="issueModal" tabindex="-1" aria-labelledby="issueModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -572,6 +590,34 @@
                     </div>
                 </div>
             </div>
+
+            <div wire:ignore.self class="modal fade" id="ORModal" tabindex="-1" aria-labelledby="ORModalLabel" aria-hidden="true" >
+                <div class="modal-dialog modal-md ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ORModalLabel">Payment Official Receipt</h5>
+                            <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form  wire:submit.prevent="update_or_number({{$inspection_id}},'ORModaltoggler')">
+                            <div class="modal-body">
+                                <div class="row d-flex">
+                                    <label for="formFileSm" class="form-label text-dark mt-2">Payment Official Receipt</label>
+                                    <div class="col-12">
+                                        <div class="mb-3">
+                                            <input class="form-control form-control" id="formFileSm" wire:model="payment_or" type="number">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                                <button type="submit" class="btn btn-success">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
 
             <div wire:ignore.self class="modal fade" id="certModal" tabindex="-1" aria-labelledby="certModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl modal-dialog-centered">

@@ -23,6 +23,8 @@ class CompletedSchedules extends Component
         ['column_name'=> 'business_type_name','active'=> true,'name'=>'Business Type'],
         ['column_name'=> 'schedule_date','active'=> true,'name'=>'Schedule'],
         ['column_name'=> 'id','active'=> true,'name'=>'Generate'],
+        ['column_name'=> 'or_number','active'=> true,'name'=>'Payment OR'],
+        ['column_name'=> 'or_number','active'=> true,'name'=>'Claimed'],
         ['column_name'=> 'id','active'=> true,'name'=>'Violation'],
         ['column_name'=> 'id','active'=> true,'name'=>'Inspection Details'],
     ];
@@ -223,6 +225,7 @@ class CompletedSchedules extends Component
             $table_data = DB::table('inspections as i')
                 ->select(
                     'i.id',
+                    'i.or_number',
                     'b.img_url',
                     'b.name',
                     'p.first_name',
@@ -258,6 +261,7 @@ class CompletedSchedules extends Component
             $table_data = DB::table('inspections as i')
                 ->select(
                     'i.id',
+                    'i.or_number',
                     'b.img_url',
                     'b.name',
                     'p.first_name',
@@ -1311,6 +1315,47 @@ class CompletedSchedules extends Component
             } 
         }
         return 0;
+    }
+    public $payment_or = NULL;
+    public $inspection_id = NULL;
+    public function payment($id,$modal_id){
+        $this->inspection_id = $id;
+        $payment_or = DB::table('inspections')
+        ->select(
+            'or_number'
+        )
+        ->where('id','=',$this->inspection_id)
+        ->first();
+        $this->payment_or = $payment_or->or_number;
+        $this->dispatch('openModal',$modal_id);
+    }
+    public function update_or_number($id,$modal_id){
+        if(intval($this->payment_or)>0){
+            DB::table('inspections')
+                ->where('id','=',$this->inspection_id)
+                ->update([
+                    'or_number'=>$this->payment_or
+                ]);
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'success',
+                title             									: 'Official Receipt saved!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            $this->dispatch('openModal',$modal_id);
+        }else{
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'Please input a valid Official Receipt!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return 0;
+        }
     }
 }
 

@@ -21,9 +21,15 @@ return new class extends Migration
             application_type_id INT,
             remarks VARCHAR(1024),
             date_signed DATE,
+            or_number INT,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
             date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            FOREIGN KEY (business_id) REFERENCES businesses(id)
+            FOREIGN KEY (business_id) REFERENCES businesses(id),
+            FOREIGN KEY (building_billing_id) REFERENCES building_billings(id),
+            FOREIGN KEY (application_type_id) REFERENCES application_types(id),
+            FOREIGN KEY (signage_id) REFERENCES signage_billings(id),
+            FOREIGN KEY (status_id) REFERENCES inspection_status(id)
+            
         );');
     }
 
