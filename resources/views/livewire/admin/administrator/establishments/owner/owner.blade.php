@@ -171,10 +171,7 @@
                                     <label for="contact_number" class="form-label">Contact Number <span class="text-danger">*</span></label>
                                     <input type="number" class="form-control" required wire:model="person.contact_number" placeholder="Enter Phone number">
                                 </div>
-                                <div class="mb-3">
-                                    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                                    <input type="email" class="form-control" required wire:model="person.email" placeholder="Enter email">
-                                </div>
+                                
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
@@ -224,10 +221,6 @@
                                 <div class="mb-3">
                                     <label for="contact_number" class="form-label">Contact Number <span class="text-danger">*</span></label>
                                     <input type="number" class="form-control" required wire:model="person.contact_number" placeholder="Enter Phone number">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                                    <input type="email" class="form-control" required wire:model="person.email" placeholder="Enter email">
                                 </div>
                             </div>
                             <div class="modal-footer">

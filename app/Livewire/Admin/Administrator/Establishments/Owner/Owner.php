@@ -23,7 +23,6 @@ class Owner extends Component
         ['column_name'=> 'last_name','active'=> true,'name'=>'Lastname'],
         ['column_name'=> 'suffix','active'=> true,'name'=>'Suffix'],
         ['column_name'=> 'contact_number','active'=> true,'name'=>'Contact #'],
-        ['column_name'=> 'email','active'=> true,'name'=>'Email'],
         ['column_name'=> 'id','active'=> true,'name'=>'Action'],
     ];
    
@@ -53,7 +52,6 @@ class Owner extends Component
     public $search_by = [
         ['name'=>'Name','column_name'=>'b.name'],
         // ['name'=>'Contact','column_name'=>'b.contact_number'],
-        ['name'=>'Email','column_name'=>'b.email'],
     ];
     
     public $table_filter;
@@ -368,42 +366,42 @@ class Owner extends Component
                 }
             }
         }
-        if(!strlen($this->person['email'])){
-            $this->dispatch('swal:redirect',
-                position         									: 'center',
-                icon              									: 'warning',
-                title             									: 'Please enter email!',
-                showConfirmButton 									: 'true',
-                timer             									: '1000',
-                link              									: '#'
-            );
-            return 0;
-        }else{
-            if(!filter_var($this->person['email'], FILTER_VALIDATE_EMAIL)) {
-                $this->dispatch('swal:redirect',
-                    position         									: 'center',
-                    icon              									: 'warning',
-                    title             									: 'Invalid email!',
-                    showConfirmButton 									: 'true',
-                    timer             									: '1000',
-                    link              									: '#'
-                );
-                return 0;
-            }
-            if(DB::table('persons')
-                ->where('email','=',$this->person['email'])
-                ->first()){
-                $this->dispatch('swal:redirect',
-                    position         									: 'center',
-                    icon              									: 'warning',
-                    title             									: 'Email exist!',
-                    showConfirmButton 									: 'true',
-                    timer             									: '1000',
-                    link              									: '#'
-                );
-                return 0;
-            }
-        }
+        // if(!strlen($this->person['email'])){
+        //     $this->dispatch('swal:redirect',
+        //         position         									: 'center',
+        //         icon              									: 'warning',
+        //         title             									: 'Please enter email!',
+        //         showConfirmButton 									: 'true',
+        //         timer             									: '1000',
+        //         link              									: '#'
+        //     );
+        //     return 0;
+        // }else{
+        //     if(!filter_var($this->person['email'], FILTER_VALIDATE_EMAIL)) {
+        //         $this->dispatch('swal:redirect',
+        //             position         									: 'center',
+        //             icon              									: 'warning',
+        //             title             									: 'Invalid email!',
+        //             showConfirmButton 									: 'true',
+        //             timer             									: '1000',
+        //             link              									: '#'
+        //         );
+        //         return 0;
+        //     }
+        //     if(DB::table('persons')
+        //         ->where('email','=',$this->person['email'])
+        //         ->first()){
+        //         $this->dispatch('swal:redirect',
+        //             position         									: 'center',
+        //             icon              									: 'warning',
+        //             title             									: 'Email exist!',
+        //             showConfirmButton 									: 'true',
+        //             timer             									: '1000',
+        //             link              									: '#'
+        //         );
+        //         return 0;
+        //     }
+        // }
         $person['img_url'] = 'default.png';
         if($this->person['img_url']){
             if($this->person['img_url']){
@@ -579,43 +577,43 @@ class Owner extends Component
                 }
             }
         }
-        if(!strlen($this->person['email'])){
-            $this->dispatch('swal:redirect',
-                position         									: 'center',
-                icon              									: 'warning',
-                title             									: 'Please enter email!',
-                showConfirmButton 									: 'true',
-                timer             									: '1000',
-                link              									: '#'
-            );
-            return 0;
-        }else{
-            if(!filter_var($this->person['email'], FILTER_VALIDATE_EMAIL)) {
-                $this->dispatch('swal:redirect',
-                    position         									: 'center',
-                    icon              									: 'warning',
-                    title             									: 'Invalid email!',
-                    showConfirmButton 									: 'true',
-                    timer             									: '1000',
-                    link              									: '#'
-                );
-                return 0;
-            }
-            if(DB::table('persons')
-                ->where('id','<>',$id)
-                ->where('email','=',$this->person['email'])
-                ->first()){
-                $this->dispatch('swal:redirect',
-                    position         									: 'center',
-                    icon              									: 'warning',
-                    title             									: 'Email exist!',
-                    showConfirmButton 									: 'true',
-                    timer             									: '1000',
-                    link              									: '#'
-                );
-                return 0;
-            }
-        }
+        // if(!strlen($this->person['email'])){
+        //     $this->dispatch('swal:redirect',
+        //         position         									: 'center',
+        //         icon              									: 'warning',
+        //         title             									: 'Please enter email!',
+        //         showConfirmButton 									: 'true',
+        //         timer             									: '1000',
+        //         link              									: '#'
+        //     );
+        //     return 0;
+        // }else{
+        //     if(!filter_var($this->person['email'], FILTER_VALIDATE_EMAIL)) {
+        //         $this->dispatch('swal:redirect',
+        //             position         									: 'center',
+        //             icon              									: 'warning',
+        //             title             									: 'Invalid email!',
+        //             showConfirmButton 									: 'true',
+        //             timer             									: '1000',
+        //             link              									: '#'
+        //         );
+        //         return 0;
+        //     }
+        //     if(DB::table('persons')
+        //         ->where('id','<>',$id)
+        //         ->where('email','=',$this->person['email'])
+        //         ->first()){
+        //         $this->dispatch('swal:redirect',
+        //             position         									: 'center',
+        //             icon              									: 'warning',
+        //             title             									: 'Email exist!',
+        //             showConfirmButton 									: 'true',
+        //             timer             									: '1000',
+        //             link              									: '#'
+        //         );
+        //         return 0;
+        //     }
+        // }
         $person['img_url'] = $edit->img_url;
         if($this->person['img_url']){
             if($this->person['img_url']){
