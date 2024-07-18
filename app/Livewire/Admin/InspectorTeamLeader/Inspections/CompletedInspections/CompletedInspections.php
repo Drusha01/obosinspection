@@ -1242,14 +1242,20 @@ class CompletedInspections extends Component
                 'p.img_url',
                 'wr.id as work_role_id',
                 'wr.name as work_role_name',
+                'it.name as inspector_team',
+                'u.annual_certificate_category_id',
+                'u.id as user_id',
                 )
             ->join('persons as p','p.id','iim.person_id')
+            ->leftjoin('inspector_members as im','im.member_id','iim.person_id')
+            ->leftjoin('inspector_teams as it','it.id','im.inspector_team_id')
             ->join('person_types as pt', 'pt.id','p.person_type_id')
+            ->join('users as u','u.person_id','p.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
             ->where('iim.inspection_id','=',$id)
             ->get()
             ->toArray();
-        
+
         $inspection_team_leaders = DB::table('inspection_inspector_team_leaders as iitl')
             ->select(
                 'p.id',
@@ -1260,19 +1266,49 @@ class CompletedInspections extends Component
                 'p.img_url',
                 'wr.id as work_role_id',
                 'wr.name as work_role_name',
+                'it.name as inspector_team',
+                'u.annual_certificate_category_id',
+                'u.id as user_id',
                 )
             ->join('persons as p','p.id','iitl.person_id')
+            ->leftjoin('inspector_members as im','im.member_id','iitl.person_id')
+            ->leftjoin('inspector_teams as it','it.team_leader_id','iitl.person_id')
             ->join('person_types as pt', 'pt.id','p.person_type_id')
+            ->join('users as u','u.person_id','p.id')
             ->join('work_roles as wr', 'wr.id','p.work_role_id')
             ->where('iitl.inspection_id','=',$id)
             ->get()
             ->toArray();
         $inspectors = [];
         foreach ($inspection_members as $key => $value) {
-            array_push($inspectors,$value);
+            array_push($inspectors,[
+                'user_id' => $value->user_id,
+                'id' => $value->id,
+                'first_name'=> $value->first_name,
+                'middle_name'=> $value->middle_name,
+                'last_name'=> $value->last_name,
+                'suffix'=> $value->suffix,
+                'img_url'=> $value->img_url,
+                'work_role_id'=> $value->work_role_id,
+                'work_role_name'=> $value->work_role_name,
+                'inspector_team'=> $value->inspector_team,
+                'annual_certificate_category_id'=> $value->annual_certificate_category_id,
+            ]);
         }
         foreach ($inspection_team_leaders as $key => $value) {
-            array_push($inspectors,$value);
+            array_push($inspectors,[
+                'user_id' => $value->user_id,
+                'id' => $value->id,
+                'first_name'=> $value->first_name,
+                'middle_name'=> $value->middle_name,
+                'last_name'=> $value->last_name,
+                'suffix'=> $value->suffix,
+                'img_url'=> $value->img_url,
+                'work_role_id'=> $value->work_role_id,
+                'work_role_name'=> $value->work_role_name,
+                'inspector_team'=> $value->inspector_team,
+                'annual_certificate_category_id'=> $value->annual_certificate_category_id,
+            ]);
         }
         $annual_certificate_categories = DB::table('annual_certificate_categories as acc')
             ->get()
@@ -1375,7 +1411,13 @@ class CompletedInspections extends Component
         if($this->annual_certificate_inspection['step'] == 1){
             if(intval($this->annual_certificate_inspection['business_id'])){
                 $this->annual_certificate_inspection['step']+=1;
-               
+                foreach ($this->annual_certificate_inspection['inspectors'] as $key => $value) {
+                    array_push($this->annual_certificate_inspection['annual_certificate_inspection_inspector'],[
+                        'content'=>$value,
+                        'category_id'=>$value['annual_certificate_category_id'],
+                    ]);
+                }
+
             }else{
                 $this->dispatch('swal:redirect',
                     position         									: 'center',
@@ -1404,7 +1446,7 @@ class CompletedInspections extends Component
                     $this->dispatch('swal:redirect',
                         position         									: 'center',
                         icon              									: 'warning',
-                        title             									: 'Please category for '.$value['content']->first_name.' '.$value['content']->middle_name.' '.$value['content']->last_name.' '.$value['content']->suffix.' ( '.$value['content']->work_role_name.' ) ',
+                        title             									: 'Please category for '.$value['content']['first_name'].' '.$value['content']['middle_name'].' '.$value['content']['last_name'].' '.$value['content']['suffix'].' ( '.$value['content']['work_role_name'].' ) ',
                         showConfirmButton 									: 'true',
                         timer             									: '1500',
                         link              									: '#'
@@ -1442,7 +1484,7 @@ class CompletedInspections extends Component
                     DB::table('annual_certificate_inspection_inspectors')
                     ->insert([
                         'annual_certificate_inspection_id'=> $temp->id,
-                        'person_id' => $value['content']->id,
+                        'person_id' => $value['content']['id'],
                         'category_id' => $value['category_id'],
                     ]);
                 }
@@ -1663,5 +1705,12 @@ class CompletedInspections extends Component
             );
             return 0;
         }
+    }
+    public function update_inspector_inspection_role($id,$key){
+        DB::table('users as u')
+        ->where('u.id','=',$id)
+        ->update([
+            'annual_certificate_category_id'=>$this->annual_certificate_inspection['annual_certificate_inspection_inspector'][$key]['category_id'],
+        ]);
     }
 }
