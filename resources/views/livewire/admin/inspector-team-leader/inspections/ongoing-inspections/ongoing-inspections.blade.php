@@ -419,15 +419,19 @@
                                     <h5 class="text-center my-2 text-black">
                                         Building Details
                                     </h5>
-                                    <div class="mb-3">
-                                        <label for="name" class="form-label">Building Information</label>
-                                        <?php $valid = false;?>
-                                        @foreach($issue_inspection['inspector_bss_category'] as $key => $value) 
-                                            @if($value->category_name == 'Building') 
-                                               <?php $valid = true; ?>                                    
-                                            @endif  
-                                        @endforeach
-                                        @if($valid)
+                                    <?php $valid = false;?>
+                                    @foreach($issue_inspection['inspector_bss_category'] as $key => $value) 
+                                    @if($value->category_name == 'Building') 
+                                    <?php $valid = true; ?>                                    
+                                    @endif  
+                                    @endforeach
+                                    @if($valid)
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">FLoor area</label>
+                                            <input type="number" class="form-control" wire:model="issue_inspection.floor_area" wire:change="update_floor_area()">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">Building Information</label>
                                             <div class="mb-3">
                                                 <select class="form-select"   aria-label="Select Select Building Billing" wire:change="update_building_billing()" required wire:model="issue_inspection.building_billing_id">
                                                     <option value="">Select Building billing</option>
@@ -440,7 +444,14 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                        @else
+                                        </div>
+                                    @else
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">FLoor area</label>
+                                            <input type="number" class="form-control" disabled wire:model="issue_inspection.floor_area" wire:change="update_floor_area()">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">Building Information</label>
                                             <div class="mb-3">
                                                 <select class="form-select" disabled aria-label="Select Select Building Billing" wire:change="update_building_billing()" required wire:model="issue_inspection.building_billing_id">
                                                     <option value="">Select Building billing</option>
@@ -453,9 +464,9 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                        @endif
+                                        </div>
+                                    @endif
                                         
-                                    </div>
                                     <div class="mb-3">
                                         <label for="inspection_date" class="form-label">Fee</label>
                                         <input type="text" class="form-control" disabled wire:model="issue_inspection.building_billing_fee"  >
@@ -534,7 +545,6 @@
                                         Signage Details
                                     </h5>
                                     <div class="mb-3">
-                                        <label for="name" class="form-label">Signage Information</label>
                                         <?php $valid = false;?>
                                         @foreach($issue_inspection['inspector_bss_category'] as $key => $value) 
                                             @if($value->category_name == 'Signage') 
@@ -542,6 +552,11 @@
                                             @endif  
                                         @endforeach
                                         @if($valid)
+                                            <div class="mb-3">
+                                                <label for="name" class="form-label">Signage area</label>
+                                                <input type="number" class="form-control" wire:model="issue_inspection.signage_area" wire:change="update_signage_area()">
+                                            </div>
+                                            <label for="name" class="form-label">Signage Information</label>
                                             <div class="mb-3">
                                                 <select class="form-select" aria-label="Select Select Signage Billing" wire:change="update_signage_billing()" required wire:model="issue_inspection.signage_id">
                                                     <option value="">Select Signage billing</option>
@@ -555,6 +570,11 @@
                                                 </select>
                                             </div>
                                         @else
+                                            <div class="mb-3">
+                                                <label for="name" class="form-label">Signage area</label>
+                                                <input type="number" class="form-control" disabled wire:model="issue_inspection.signage_area" wire:change="update_signage_area()">
+                                            </div>
+                                            <label for="name" class="form-label">Signage Information</label>
                                             <div class="mb-3">
                                                 <select class="form-select" disabled aria-label="Select Select Signage Billing" wire:change="update_signage_billing()" required wire:model="issue_inspection.signage_id">
                                                     <option value="">Select Signage billing</option>

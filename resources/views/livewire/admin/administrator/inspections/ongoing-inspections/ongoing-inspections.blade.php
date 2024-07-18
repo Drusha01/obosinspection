@@ -428,6 +428,10 @@
                                         Building Details
                                     </h5>
                                     <div class="mb-3">
+                                        <label for="name" class="form-label">Floor area</label>
+                                        <input type="number" class="form-control" wire:model="issue_inspection.floor_area" wire:change="update_floor_area()">
+                                    </div>
+                                    <div class="mb-3">
                                         <label for="name" class="form-label">Building Information</label>
                                         <div class="mb-3">
                                             <select class="form-select" aria-label="Select Select Building Billing" wire:change="update_building_billing()" required wire:model="issue_inspection.building_billing_id">
@@ -500,6 +504,10 @@
                                     <h5 class="text-center my-2 text-black">
                                         Signage Details
                                     </h5>
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">Signage area</label>
+                                        <input type="number" class="form-control" wire:model="issue_inspection.signage_area" wire:change="update_signage_area()">
+                                    </div>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">Signage Information</label>
                                         <div class="mb-3">

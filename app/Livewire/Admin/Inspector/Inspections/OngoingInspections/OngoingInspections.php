@@ -1389,6 +1389,8 @@ class OngoingInspections extends Component
             'signage_billing_fee' => $signage_billing_fee,
             'building_billing_id' => $inspection->building_billing_id,
             'building_billing_fee' => $building_billing_fee,
+            'floor_area' => $inspection->floor_area,
+            'signage_area' => $inspection->signage_area,
             'application_type_id' => $inspection->application_type_id,
             'remarks' => $inspection->remarks,
             'date_signed' => $inspection->date_signed,
@@ -1421,6 +1423,22 @@ class OngoingInspections extends Component
             'inspector_team_leaders'  => $inspector_team_leaders,
             'violations'  =>$violations,
         ];
+    }
+    public function update_floor_area(){
+        DB::table('businesses')
+            ->where('id','=',$this->issue_inspection['business_id'])
+            ->update([
+                'floor_area'=>$this->issue_inspection['floor_area']
+            ]);
+        self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
+    }
+    public function update_signage_area(){
+        DB::table('businesses')
+            ->where('id','=',$this->issue_inspection['business_id'])
+            ->update([
+                'signage_area'=>$this->issue_inspection['signage_area']
+            ]);
+        self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
     }
     public function issue($id,$modal_id){
         self::update_inspection_data($id,1);
