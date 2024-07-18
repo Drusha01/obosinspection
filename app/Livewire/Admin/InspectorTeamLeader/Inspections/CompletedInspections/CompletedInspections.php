@@ -673,11 +673,11 @@ class CompletedInspections extends Component
                     'description',
                     'c.name as category_name',
                     'v.is_active',
+                    'iv.remarks',
                     'iv.added_by',
-                    'remarks'
                 )
                 ->join('violations as v','v.id','iv.violation_id')
-                ->join('categories as c','v.category_id','c.id')
+                ->join('violation_category as c','v.category_id','c.id')
                 ->where('iv.inspection_id','=',$id)
                 ->get()
                 ->toArray();
@@ -1025,7 +1025,7 @@ class CompletedInspections extends Component
                     'iv.added_by',
                 )
                 ->join('violations as v','v.id','iv.violation_id')
-                ->join('categories as c','v.category_id','c.id')
+                ->join('violation_category as c','v.category_id','c.id')
                 ->where('iv.inspection_id','=',$id)
                 ->get()
                 ->toArray();

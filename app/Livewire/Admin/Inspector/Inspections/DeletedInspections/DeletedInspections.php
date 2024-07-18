@@ -597,9 +597,10 @@ class DeletedInspections extends Component
                     'c.name as category_name',
                     'v.is_active',
                     'iv.added_by',
+                    'remarks',
                 )
                 ->join('violations as v','v.id','iv.violation_id')
-                ->join('categories as c','v.category_id','c.id')
+                ->join('violation_category as c','v.category_id','c.id')
                 ->where('iv.inspection_id','=',$id)
                 ->get()
                 ->toArray();
@@ -623,6 +624,7 @@ class DeletedInspections extends Component
                     'category_name'=> $value->category_name,
                     "id" => $value->id,
                     "added_by" => $value->added_by,
+                    "remarks" => $value->remarks,
                 ]);
             }
             $inspection_violations = $temp;
@@ -935,16 +937,18 @@ class DeletedInspections extends Component
                 ]);
             }
             $inspection_sanitary_billings = $temp;
-            $inspection_violations = DB::table('inspection_violations as iv')
+            $inspection_violations =  DB::table('inspection_violations as iv')
                 ->select(
                     'iv.id',
                     'v.id as violation_id',
                     'description',
                     'c.name as category_name',
-                    'v.is_active'
+                    'v.is_active',
+                    'iv.added_by',
+                    'remarks',
                 )
                 ->join('violations as v','v.id','iv.violation_id')
-                ->join('categories as c','v.category_id','c.id')
+                ->join('violation_category as c','v.category_id','c.id')
                 ->where('iv.inspection_id','=',$id)
                 ->get()
                 ->toArray();
@@ -967,6 +971,8 @@ class DeletedInspections extends Component
                     'description'=> $value->description,
                     'category_name'=> $value->category_name,
                     "id" => $value->id,
+                    "added_by" => $value->added_by,
+                    "remarks" => $value->remarks,
                 ]);
             }
             $inspection_violations = $temp;
