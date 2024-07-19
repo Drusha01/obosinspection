@@ -1355,6 +1355,7 @@ class OngoingInspections extends Component
             ->orderBy(DB::raw('LOWER(vc.name)'),'asc')
             ->where('pt.name','Inspector')
             ->where('iim.inspection_id','=',$id)
+            ->where('ivc.type_id','=',$type_id)
             ->get()
             ->toArray();
 
@@ -1387,6 +1388,7 @@ class OngoingInspections extends Component
             ->whereNotNull('it.team_leader_id')
             ->where('pt.name','Inspector')
             ->where('iitl.inspection_id','=',$id)
+            ->where('ivc.type_id','=',$type_id)
             ->get()
             ->toArray();
             

@@ -119,7 +119,7 @@
                                     @elseif($filter_value['name'] == 'Days delayed' && $filter_value['active'])
                                         <td class="align-middle">
                                             @if($value->date_count_minus_year > 0)
-                                            {{$value->date_count_minus_year}} days
+                                                {{$value->date_count_minus_year}} days
                                             @endif
                                         </td>
                                     @elseif($filter_value['name'] == 'Action' && $filter_value['active'])
