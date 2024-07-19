@@ -23,8 +23,8 @@ class CompletedInspections extends Component
         ['column_name'=> 'business_type_name','active'=> true,'name'=>'Business Type'],
         ['column_name'=> 'schedule_date','active'=> true,'name'=>'Schedule'],
         ['column_name'=> 'id','active'=> true,'name'=>'Generate'],
-        ['column_name'=> 'or_number','active'=> true,'name'=>'Payment OR'],
-        ['column_name'=> 'or_number','active'=> true,'name'=>'Claimed'],
+        ['column_name'=> 'or_number','active'=> true,'name'=>'Claim'],
+        ['column_name'=> 'or_number','active'=> true,'name'=>'iSClaimed?'],
         ['column_name'=> 'id','active'=> true,'name'=>'Violation'],
         ['column_name'=> 'id','active'=> true,'name'=>'Inspection Details'],
     ];
@@ -1679,21 +1679,38 @@ class CompletedInspections extends Component
         $this->dispatch('openModal',$modal_id);
     }
     public function update_or_number($id,$modal_id){
-        if(intval($this->payment_or)>0){
+        $this->payment_or = rand();
+        DB::table('inspections')
+            ->where('id','=',$id)
+            ->update([
+                'or_number'=>$this->payment_or
+            ]);
+        $this->dispatch('swal:redirect',
+            position         									: 'center',
+            icon              									: 'success',
+            title             									: 'saved!',
+            showConfirmButton 									: 'true',
+            timer             									: '1000',
+            link              									: '#'
+        );
+       
+    }
+    public function update_or_number_null($id,$modal_id){
+        $this->payment_or = NULL;
+        if(1){
             DB::table('inspections')
-                ->where('id','=',$this->inspection_id)
+                ->where('id','=',$id)
                 ->update([
-                    'or_number'=>$this->payment_or
+                    'or_number'=>NULL
                 ]);
             $this->dispatch('swal:redirect',
                 position         									: 'center',
                 icon              									: 'success',
-                title             									: 'Official Receipt saved!',
+                title             									: 'saved!',
                 showConfirmButton 									: 'true',
                 timer             									: '1000',
                 link              									: '#'
             );
-            $this->dispatch('openModal',$modal_id);
         }else{
             $this->dispatch('swal:redirect',
                 position         									: 'center',
