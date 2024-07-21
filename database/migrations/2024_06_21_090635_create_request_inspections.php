@@ -18,6 +18,8 @@ return new class extends Migration
             request_date DATE NOT NULL,
             expiration_date DATE NOT NULL,
             accepted_date DATE DEFAULT NULL,
+            request_type BOOL DEFAULT 1,
+            schedule_date DATE NOT NULL,
             is_responded BOOL DEFAULT 0,
             reason VARCHAR(510) DEFAULT NULL,
             hash VARCHAR(50) UNIQUE NOT NULL,

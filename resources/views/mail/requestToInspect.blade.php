@@ -126,6 +126,9 @@
         </div>
 
         <div class="footer">
+            <strong> Please response within {{$response_duration}} </strong>
+            <br>
+            <br>
             <p>Best Regards,</p>
             <p>OBO Office : 554-1570 / 0933 5436 999</p>
             <p>OBO Office 2/F GSC Investment Action Center, Cityhall Compound, General Santos City</p>

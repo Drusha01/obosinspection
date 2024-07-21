@@ -24,6 +24,11 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="d-flex justify-content-center">
+                                            <strong><p class="p-0 m-0">Please response within  {{ date_format(date_create($request_inspection['request']->request_date),"M d, Y ").' to '.date_format(date_create($request_inspection['request']->expiration_date),"M d, Y ") }} </strong> </p>
+                                        </div>
+                                    </div>
                                 @else 
                                     <div class="row">
                                         <div class="col-lg-12">
@@ -42,6 +47,11 @@
                                                     <input type="submit" name="submit" value="Decline" class="btn btn-danger btn-user btn-block">
                                                 </form>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="d-flex justify-content-center">
+                                            <strong><p class="p-0 m-0">Please response within  {{ date_format(date_create($request_inspection['request']->request_date),"M d, Y ").' to '.date_format(date_create($request_inspection['request']->expiration_date),"M d, Y ") }} </strong> </p>
                                         </div>
                                     </div>
                                 @endif
