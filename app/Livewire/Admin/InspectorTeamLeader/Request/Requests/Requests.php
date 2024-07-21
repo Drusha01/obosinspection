@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Livewire\Admin\Administrator\Request\Requests;
+namespace App\Livewire\Admin\InspectorTeamLeader\Request\Requests;
+
 
 use Livewire\Component;
 use Illuminate\Http\Request;
@@ -158,15 +159,21 @@ class Requests extends Component
     }
 
     public function mount(Request $request){
-
+        $session = $request->session()->all();
         $city_mun = DB::table('citymun')
         ->where('citymunDesc','=','GENERAL SANTOS CITY (DADIANGAS)')
         ->first();
-        $this->brgy = DB::table('brgy')
-            ->where('citymunCode','=',$city_mun->citymunCode)
-            ->orderBy('brgyDesc','asc')
-            ->get()
-            ->toArray();
+        $this->brgy = DB::table('team_target_barangays as ttb')
+        ->select(
+            'ttb.id',
+            'b.brgyDesc',
+            'ttb.brgy_id'
+            )
+        ->join('brgy as b','b.id','ttb.brgy_id')
+        ->join('inspector_teams as it','ttb.inspector_team_id','it.id')
+        ->where('it.team_leader_id','=',$session['id'])
+        ->get()
+        ->toArray();
 
         $request_status = DB::table('request_status as rs')
             ->get()
@@ -237,8 +244,13 @@ class Requests extends Component
         }
     }
 
-    public function render()
+    public function render(Request $request)
     {
+        $session = $request->session()->all();
+        $person = DB::table('users as u')
+            ->select('u.person_id')
+            ->where('u.id','=',$session['id'])
+            ->first();
         if($this->search['search'] != $this->search['search_prev']){
             $this->search['search_prev'] = $this->search['search'];
             $this->resetPage();
@@ -268,12 +280,17 @@ class Requests extends Component
                     )
                     ->where('b.is_active','=',1)
                     ->join('persons as p','p.id','b.owner_id')
-                    ->join('brgy as brg','brg.id','b.brgy_id')
                     ->join('business_types as bt','bt.id','b.business_type_id')
                     ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+                    
+                    ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
+                    ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
+                    ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
+                    ->where('it.team_leader_id','=',$person->person_id)
+                    
                     ->where('b.brgy_id','=',$this->modal['brgy_id'] )
-                    ->where('b.name','like',$this->modal['search'] .'%')
                     ->where('b.business_category_id','=',$this->modal['business_category_id'])
+                    ->where('b.name','like',$this->modal['search'] .'%')
                     ->limit(15)
                     ->get()
                     ->toArray();
@@ -299,9 +316,14 @@ class Requests extends Component
                     )
                     ->where('b.is_active','=',1)
                     ->join('persons as p','p.id','b.owner_id')
-                    ->join('brgy as brg','brg.id','b.brgy_id')
                     ->join('business_types as bt','bt.id','b.business_type_id')
                     ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+
+                    ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
+                    ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
+                    ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
+                    ->where('it.team_leader_id','=',$person->person_id)
+
                     ->where('b.brgy_id','=',$this->modal['brgy_id'] )
                     ->where('b.name','like',$this->modal['search'] .'%')
                     ->limit(15)
@@ -331,11 +353,16 @@ class Requests extends Component
                     )
                     ->where('b.is_active','=',1)
                     ->join('persons as p','p.id','b.owner_id')
-                    ->join('brgy as brg','brg.id','b.brgy_id')
                     ->join('business_types as bt','bt.id','b.business_type_id')
                     ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
-                    ->where('b.name','like',$this->modal['search'] .'%')
+
+                    ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
+                    ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
+                    ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
+                    ->where('it.team_leader_id','=',$person->person_id)
+                    
                     ->where('b.business_category_id','=',$this->modal['business_category_id'])
+                    ->where('b.name','like',$this->modal['search'] .'%')
                     ->limit(15)
                     ->get()
                     ->toArray();
@@ -361,15 +388,22 @@ class Requests extends Component
                     )
                     ->where('b.is_active','=',1)
                     ->join('persons as p','p.id','b.owner_id')
-                    ->join('brgy as brg','brg.id','b.brgy_id')
                     ->join('business_types as bt','bt.id','b.business_type_id')
                     ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+
+                    ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
+                    ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
+                    ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
+                    ->where('it.team_leader_id','=',$person->person_id)
+
                     ->where('b.name','like',$this->modal['search'] .'%')
                     ->limit(15)
                     ->get()
                     ->toArray();
             }
+
         }
+
         if($this->search['status_id'] == -1){
             $table_data = DB::table('request_inspections as ri')
                 ->select(
@@ -403,7 +437,12 @@ class Requests extends Component
                 ->join('request_status as rs','rs.id','ri.status_id')
                 ->join('businesses as b','b.id','ri.business_id')
                 ->join('persons as p','p.id','b.owner_id')
-                ->join('brgy as brg','brg.id','b.brgy_id')
+
+                ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
+                ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
+                ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
+                ->where('it.team_leader_id','=',$person->person_id)
+
                 ->join('business_types as bt','bt.id','b.business_type_id')
                 ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
                 ->where('rs.name','=','Pending')
@@ -444,7 +483,12 @@ class Requests extends Component
                 ->join('request_status as rs','rs.id','ri.status_id')
                 ->join('businesses as b','b.id','ri.business_id')
                 ->join('persons as p','p.id','b.owner_id')
-                ->join('brgy as brg','brg.id','b.brgy_id')
+                
+                ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
+                ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
+                ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
+                ->where('it.team_leader_id','=',$person->person_id)
+
                 ->join('business_types as bt','bt.id','b.business_type_id')
                 ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
                 ->where('rs.id','=',$this->search['status_id'])
@@ -485,7 +529,12 @@ class Requests extends Component
                 ->join('request_status as rs','rs.id','ri.status_id')
                 ->join('businesses as b','b.id','ri.business_id')
                 ->join('persons as p','p.id','b.owner_id')
-                ->join('brgy as brg','brg.id','b.brgy_id')
+                
+                ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
+                ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
+                ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
+                ->where('it.team_leader_id','=',$person->person_id)
+
                 ->join('business_types as bt','bt.id','b.business_type_id')
                 ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
                 ->where('rs.id','=',$this->search['status_id'])
@@ -494,7 +543,7 @@ class Requests extends Component
                 ->paginate($this->table_filter['table_rows']);
         }
 
-        return view('livewire.admin.administrator.request.requests.requests',[
+        return view('livewire.admin.inspector-team-leader.request.requests.requests',[
             'table_data'=>$table_data
         ])
         ->layout('components.layouts.admin',[
@@ -864,7 +913,7 @@ class Requests extends Component
                 title             									: 'Successfully generated!',
                 showConfirmButton 									: 'true',
                 timer             									: '1500',
-                link              									: ($_SERVER['REMOTE_PORT'] == 80? 'https://': 'http://' ).$_SERVER['SERVER_NAME'].'/administrator/request/generate-request-pdf/'.$this->hash.'/'.$this->request['request_date'].'/'.$this->request['expiration_date'],
+                link              									: ($_SERVER['REMOTE_PORT'] == 80? 'https://': 'http://' ).$_SERVER['SERVER_NAME'].'/inspector-team-leader/request/generate-request-pdf/'.$this->hash.'/'.$this->request['request_date'].'/'.$this->request['expiration_date'],
             );
             $this->dispatch('openModal',$modal_id);
         }
@@ -1035,10 +1084,37 @@ class Requests extends Component
         ];
         $this->dispatch('openModal',$modal_id);
     }
-    public function next($modal_id){
+    public function next(Request $request, $modal_id){
+        $session = $request->session()->all();
         if($this->inspection['step'] == 1){
             if(intval($this->inspection['business_id'])){
                 $this->inspection['step']+=1;
+                // self add
+                $inspector_leaders = DB::table('persons as p')
+                ->select(
+                    "p.id",
+                    "p.person_type_id",
+                    "p.brgy_id",
+                    "p.work_role_id",
+                    "p.first_name",
+                    "p.middle_name",
+                    "p.last_name",
+                    "p.suffix",
+                    "p.contact_number",
+                    "p.email",
+                    "p.img_url",
+                    'wr.name as work_role_name',
+                )
+                ->join('inspector_teams as it','p.id','it.team_leader_id')
+                ->join('person_types as pt','p.person_type_id','pt.id')
+                ->join('work_roles as wr', 'wr.id','p.work_role_id')
+                ->join('users as u','p.id','u.person_id')
+                ->whereNotNull('it.team_leader_id')
+                ->where('u.id','=',$session['id'])
+                ->where('pt.name','Inspector')
+                ->first();
+                $this->inspection['inspector_leader_id'] = $inspector_leaders->id;
+                self::add_team_leader();
             }else{
                 $this->dispatch('swal:redirect',
                     position         									: 'center',
@@ -1064,6 +1140,44 @@ class Requests extends Component
                 );
                 return 0;
             }
+
+            $inspector_members = DB::table('persons as p')
+            ->select(
+                "p.id",
+                "p.person_type_id",
+                "p.brgy_id",
+                "p.work_role_id",
+                "p.first_name",
+                "p.middle_name",
+                "p.last_name",
+                "p.suffix",
+                "p.contact_number",
+                "p.email",
+                "p.img_url",
+                'wr.name as work_role_name',
+                'it.name as inspector_team',
+            )
+            ->join('inspector_members as im','im.member_id','p.id')
+            ->leftjoin('inspector_teams as iit','iit.id','im.inspector_team_id')
+            ->join('inspector_teams as it','im.inspector_team_id','it.id')
+            ->join('person_types as pt','p.person_type_id','pt.id')
+            ->join('work_roles as wr', 'wr.id','p.work_role_id')
+            ->where('pt.name','Inspector')
+            ->where('it.team_leader_id','=',$session['id'])
+            ->get()
+            ->toArray();
+            foreach ($inspector_members as $key => $value) {
+                $valid = true;
+                foreach ($this->inspection['inspector_members'] as $im_key => $im_value) {
+                    if($im_value->id == $value->id){
+                      $valid = false;
+                    }
+                }
+                if($valid){
+                    array_push($this->inspection['inspector_members'],$value);
+                }
+            }
+                
             
         }elseif($this->inspection['step'] == 3){
             if(!intval($this->inspection['business_id'])){
@@ -1246,7 +1360,7 @@ class Requests extends Component
             $this->dispatch('swal:redirect',
                 position         									: 'center',
                 icon              									: 'success',
-                title             									: 'Team leader has been added!',
+                title             									: 'Team member has been added!',
                 showConfirmButton 									: 'true',
                 timer             									: '1000',
                 link              									: '#'
@@ -1256,7 +1370,7 @@ class Requests extends Component
             $this->dispatch('swal:redirect',
                 position         									: 'center',
                 icon              									: 'warning',
-                title             									: 'Please select team leader!',
+                title             									: 'Please member team leader!',
                 showConfirmButton 									: 'true',
                 timer             									: '1000',
                 link              									: '#'

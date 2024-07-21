@@ -183,7 +183,6 @@
                     </ul>
                 </div>
             </li> -->
-            </li>
             <li class="nav-item  @if(Route::is('administrator-notifications')) active @endif">
                 <a class="nav-link" href="{{ route('administrator-notifications') }}">
                     <i class="bi bi-files"></i>
@@ -363,8 +362,15 @@
                 </div>
             </li>
             
+            <li class="nav-item  @if(Route::is('inspector-team-leader-notifications')) active @endif">
+                <a class="nav-link" href="{{ route('inspector-team-leader-notifications') }}">
+                    <i class="bi bi-files"></i>
+                    Notifications
+                </a>
+            </li>
+
           
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Requestdropdown" aria-expanded="@if(Request()->route()->getPrefix() == 'inspector-team-leader/request') true @else false @endif" aria-controls="Requestdropdown">
                     <span class="d-flex justify-content-between align-items-center">
                         <span>
@@ -408,7 +414,7 @@
                         </li>
                     </ul>
                 </div>
-            </li>
+            </li> -->
             <li class="nav-item">
                 <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Inspectionsdropdown" aria-expanded="@if(Request()->route()->getPrefix() == 'inspector-team-leader/inspections') true @else false @endif" aria-controls="Inspectionsdropdown">
                     <span class="d-flex justify-content-between align-items-center">

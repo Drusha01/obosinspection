@@ -54,7 +54,7 @@ use App\Livewire\Admin\InspectorTeamLeader\Inspections\OngoingInspections\Ongoin
 use App\Livewire\Admin\InspectorTeamLeader\Inspections\UpcomingInspections\UpcomingInspections as InspectorTeamLeaderUpcomingInspections;
 use App\Livewire\Admin\InspectorTeamLeader\Profile\Profile as InspectorTeamLeaderProfile;
 use App\Livewire\Admin\InspectorTeamLeader\Violations\Violations as InspectorTeamLeaderViolations;
-
+use App\Livewire\Admin\InspectorTeamLeader\Request\Requests\Requests as InspectorTeamLeaderRequests;
 use App\Livewire\Admin\InspectorTeamLeader\Request\AcceptedRequest\AcceptedRequest as InspectorTeamLeaderAcceptedRequest;
 use App\Livewire\Admin\InspectorTeamLeader\Request\CompletedRequest\CompletedRequest as InspectorTeamLeaderCompletedRequest;
 use App\Livewire\Admin\InspectorTeamLeader\Request\DeclinedRequest\DeclinedRequest as InspectorTeamLeaderDeclinedRequest;
@@ -179,8 +179,10 @@ Route::middleware([Authenticated::class,IsValid::class,IsInspectorTeamLeader::cl
             Route::get('/no-response-request', InspectorTeamLeaderNoresponseRequest::class)->name('inspector-team-leader-request-no-response-request');
             Route::get('/declined-request', InspectorTeamLeaderDeclinedRequest::class)->name('inspector-team-leader-request-declined-request');
             Route::get('/deleted-request', InspectorTeamLeaderDeletedRequest::class)->name('inspector-team-leader-request-deleted-request');
-            Route::get('/generate-request-pdf/{id}/{start_date}/{end_date}', InspectorTeamLeaderGeneratePdf::class)->name('inspector-team-leader-request-generate-pdf-request');
+            Route::get('/generate-request-pdf/{hash}/{start_date}/{end_date}', InspectorTeamLeaderGeneratePdf::class)->name('inspector-team-leader-request-generate-pdf-request');
+            Route::get('/notifications', InspectorTeamLeaderRequests::class)->name('inspector-team-leader-notifications');
         });
+        
         Route::get('/certifications', InspectorTeamLeaderCertification::class)->name('inspector-team-leader-certifications');
         Route::get('/certifications/generate/{id}', InspectorTeamLeaderCertificateGenerate::class)->name('inspector-team-leader-generate-certifications');
         Route::get('/profile', InspectorTeamLeaderProfile::class)->name('inspector-team-leader-profile');

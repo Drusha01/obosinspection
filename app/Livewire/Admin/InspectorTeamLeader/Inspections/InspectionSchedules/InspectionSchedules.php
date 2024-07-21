@@ -2533,7 +2533,7 @@ class InspectionSchedules extends Component
             $this->dispatch('swal:redirect',
                 position         									: 'center',
                 icon              									: 'success',
-                title             									: 'Team leader has been added!',
+                title             									: 'Team member has been added!',
                 showConfirmButton 									: 'true',
                 timer             									: '1000',
                 link              									: '#'
@@ -2543,7 +2543,7 @@ class InspectionSchedules extends Component
             $this->dispatch('swal:redirect',
                 position         									: 'center',
                 icon              									: 'warning',
-                title             									: 'Please select team leader!',
+                title             									: 'Please select team member!',
                 showConfirmButton 									: 'true',
                 timer             									: '1000',
                 link              									: '#'
