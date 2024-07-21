@@ -225,7 +225,7 @@
             <button type="button" data-bs-toggle="modal" data-bs-target="#ORModal" id="ORModaltoggler" style="display:none;"></button>
             
             
-            <div wire:ignore.self class="modal fade" id="issueModal" tabindex="-1" aria-labelledby="issueModalLabel" aria-hidden="true">
+            <div wire:ignore.self class="modal fade" id="issueCompleteModal" tabindex="-1" aria-labelledby="issueModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">

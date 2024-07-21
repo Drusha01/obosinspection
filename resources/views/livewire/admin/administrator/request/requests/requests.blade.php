@@ -509,11 +509,11 @@
                                     Inspection Details
                                 </h5>
                                 @if(isset($inspection['business']))
-                                <div class="row">
-                                    <div class="col-12 text-dark">
-                                        <p>Business name: {{$inspection['business']->name.' ('.$inspection['business']->business_type_name.' )' }}</p>
+                                    <div class="row">
+                                        <div class="col-12 text-dark">
+                                            <p>Business name: {{$inspection['business']->name.' ('.$inspection['business']->business_type_name.' )' }}</p>
+                                        </div>
                                     </div>
-                                </div>
                                 @endif
                                 <div class="mb-3">
                                     <label for="inspection_date" class="form-label">Inspection Date  <span class="text-danger">*</span></label>

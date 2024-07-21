@@ -190,7 +190,13 @@
                 </a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item  @if(Route::is('administrator-inspections')) active @endif">
+                <a class="nav-link" href="{{ route('administrator-inspections') }}">
+                    <i class="fas fa-fw fa-calendar-check"></i>
+                    Inspections
+                </a>
+            </li>
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Inspectionsdropdown" aria-expanded="@if(Request()->route()->getPrefix() == 'administrator/inspections') true @else false @endif" aria-controls="Inspectionsdropdown">
                     <span class="d-flex justify-content-between align-items-center">
                         <span>
@@ -234,7 +240,7 @@
                         </li>
                     </ul>
                 </div>
-            </li>
+            </li> -->
             <li class="nav-item  @if(Route::is('administrator-certifications')) active @endif">
                 <a class="nav-link" href="{{ route('administrator-certifications') }}">
                     <i class="fa-solid fa-fw fa-triangle-exclamation"></i>
@@ -369,6 +375,13 @@
                 </a>
             </li>
 
+            <li class="nav-item  @if(Route::is('inspector-team-leader-inspections')) active @endif">
+                <a class="nav-link" href="{{ route('inspector-team-leader-inspections') }}">
+                    <i class="fas fa-fw fa-calendar-check"></i>
+                    Inspections
+                </a>
+            </li>
+
           
             <!-- <li class="nav-item">
                 <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Requestdropdown" aria-expanded="@if(Request()->route()->getPrefix() == 'inspector-team-leader/request') true @else false @endif" aria-controls="Requestdropdown">
@@ -415,7 +428,7 @@
                     </ul>
                 </div>
             </li> -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#Inspectionsdropdown" aria-expanded="@if(Request()->route()->getPrefix() == 'inspector-team-leader/inspections') true @else false @endif" aria-controls="Inspectionsdropdown">
                     <span class="d-flex justify-content-between align-items-center">
                         <span>
@@ -459,7 +472,7 @@
                         </li>
                     </ul>
                 </div>
-            </li>
+            </li> -->
             <li class="nav-item @if(Route::is('inspector-team-leader-certifications')) active @endif">
                 <a class="nav-link" href="{{ route('inspector-team-leader-certifications') }}">
                     <i class="fa-solid fa-fw fa-triangle-exclamation"></i>

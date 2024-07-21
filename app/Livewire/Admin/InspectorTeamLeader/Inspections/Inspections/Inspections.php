@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Livewire\Admin\Administrator\Inspections\Inspections;
+namespace App\Livewire\Admin\InspectorTeamLeader\Inspections\Inspections;
+
 
 use Livewire\Component;
 use Illuminate\Http\Request;
@@ -263,12 +264,16 @@ class Inspections extends Component
         $city_mun = DB::table('citymun')
         ->where('citymunDesc','=','GENERAL SANTOS CITY (DADIANGAS)')
         ->first();
-        $this->brgy = DB::table('brgy')
-            ->where('citymunCode','=',$city_mun->citymunCode)
-            ->orderBy('brgyDesc','asc')
+        $this->brgy = DB::table('team_target_barangays as ttb')
+            ->select(
+                'b.brgyDesc',
+                'b.id'
+                )
+            ->join('brgy as b','b.id','ttb.brgy_id')
+            ->join('inspector_teams as it','ttb.inspector_team_id','it.id')
+            ->where('it.team_leader_id','=',$session['id'])
             ->get()
             ->toArray();
-        
 
         $this->inspector_members = DB::table('persons as p')
             ->select(
@@ -678,7 +683,7 @@ class Inspections extends Component
                 }
             }
         }
-        return view('livewire.admin.administrator.inspections.inspections.inspections',[
+        return view('livewire.admin.inspector-team-leader.inspections.inspections.inspections',[
             'table_data'=>$table_data
         ])
         ->layout('components.layouts.admin',[

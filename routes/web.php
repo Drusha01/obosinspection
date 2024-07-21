@@ -46,6 +46,7 @@ use App\Livewire\Admin\InspectorTeamLeader\Equipments\Category\Category as Inspe
 use App\Livewire\Admin\InspectorTeamLeader\Equipments\Items\Items as InspectorTeamLeaderItems;
 use App\Livewire\Admin\InspectorTeamLeader\Establishments\Businesses\Businesses as InspectorTeamLeaderBusinesses;
 use App\Livewire\Admin\InspectorTeamLeader\Establishments\Owners\Owners as InspectorTeamLeaderOwners;
+use App\Livewire\Admin\InspectorTeamLeader\Inspections\Inspections\Inspections as InspectorTeamLeaderInspections;
 use App\Livewire\Admin\InspectorTeamLeader\Inspections\CompletedInspections\CompletedInspections as InspectorTeamLeaderCompletedInspections;
 use App\Livewire\Admin\InspectorTeamLeader\Inspections\DeletedInspections\DeletedInspections as InspectorTeamLeaderDeletedInspections;
 use App\Livewire\Admin\InspectorTeamLeader\Inspections\Generate\Generate  as InspectorTeamLeaderGenerate;
@@ -172,6 +173,8 @@ Route::middleware([Authenticated::class,IsValid::class,IsInspectorTeamLeader::cl
             Route::get('/generate-report/{id}', AdministratorGenerateReport::class)->name('inspector-team-leader-inspections-generate-report');
             Route::get('/completed-inspections', InspectorTeamLeaderCompletedInspections::class)->name('inspector-team-leader-inspections-completed-inspections');
             Route::get('/upcoming-inspections', InspectorTeamLeaderUpcomingInspections::class)->name('inspector-team-leader-inspections-upcoming-inspections');
+            Route::get('/inspections',InspectorTeamLeaderInspections::class)->name('inspector-team-leader-inspections');
+          
         });
         Route::prefix('request')->group(function () {
             Route::get('/accepted-request', InspectorTeamLeaderAcceptedRequest::class)->name('inspector-team-leader-request-accepted-request');
