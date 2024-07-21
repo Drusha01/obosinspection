@@ -620,6 +620,7 @@ class OngoingInspections extends Component
             ->get()
             ->toArray()){
             $segragated = true;
+            $type_id = 1;
 
             // segregated // segregated// segregated// segregated// segregated// segregated// segregated// segregated// segregated
 
@@ -979,6 +980,7 @@ class OngoingInspections extends Component
             // segregated // segregated// segregated// segregated// segregated// segregated// segregated// segregated// segregated
         }else{
             $segragated = false;
+            $type_id = 2;
             $application_types = DB::table('application_types')
                 ->where('is_active','=',1)
                 ->get()
