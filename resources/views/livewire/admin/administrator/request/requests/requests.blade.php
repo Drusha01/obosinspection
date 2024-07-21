@@ -168,7 +168,7 @@
                                         <td class="text-end align-middle">
                                             @switch($value->status_name)
                                                 @case("Pending")
-                                                    @if($value->request_type)
+                                                    @if($value->request_type == 0)
                                                         <a class="btn btn-primary" target="_blank" wire:click="add({{$value->id}},'addModaltoggler')">
                                                             Add-Inspection
                                                         </a>
