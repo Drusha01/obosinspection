@@ -246,10 +246,40 @@
                                             </td>
                                         @else 
                                             <td class="text-center align-middle">
-                                                @if($value->{$filter_value['column_name']} == 'With Violation/s')
-                                                    <span class="badge text-light p-2 bg-warning">With Violation</span>
+                                                @if($value->status_name == 'Completed' || $value->status_name == 'Deleted' )
+                                                    <?php 
+                                                        $violations = DB::table('inspection_violations as iv')
+                                                            ->select(
+                                                                'iv.id',
+                                                                'description',
+                                                                'remarks'
+                                                            )
+                                                            ->join('violations as v','v.id','iv.violation_id')
+                                                            ->where('inspection_id','=',$value->id)
+                                                            ->get()
+                                                            ->toArray();
+                                                        if(count($violations)<=0){
+                                                            echo '<span class="badge text-light p-2 bg-primary">No Violation</span>';
+                                                        }elseif(count($violations)>0){
+                                                            $valid = true;
+                                                            foreach ($violations as $key => $value_violation) {
+                                                                if(!isset($value_violation->remarks)){
+                                                                    $valid = false;
+                                                                }
+                                                            }
+                                                            if($valid){
+                                                                echo '<span class="badge text-light p-2 bg-primary">Complied</span>';
+                                                            }else{
+                                                                echo '<span class="badge text-light p-2 bg-warning">Un-complied</span>';
+                                                            }
+                                                        }
+                                                    ?>
                                                 @else
-                                                    <span class="badge text-light p-2 bg-primary">No Violation</span>
+                                                    @if($value->{$filter_value['column_name']} == 'With Violation/s')
+                                                        <span class="badge text-light p-2 bg-warning">With Violation</span>
+                                                    @else
+                                                        <span class="badge text-light p-2 bg-primary">No Violation</span>
+                                                    @endif
                                                 @endif
                                             
                                             </td>
