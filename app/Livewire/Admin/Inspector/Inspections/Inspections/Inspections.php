@@ -270,7 +270,9 @@ class Inspections extends Component
                 )
             ->join('brgy as b','b.id','ttb.brgy_id')
             ->join('inspector_teams as it','ttb.inspector_team_id','it.id')
-            ->where('it.team_leader_id','=',$session['id'])
+            ->join('inspector_members as im','im.inspector_team_id','it.id')
+            ->where('im.member_id','=',$session['id'])
+            ->orderby('brgyDesc','asc')
             ->get()
             ->toArray();
 
@@ -406,14 +408,10 @@ class Inspections extends Component
                         ->join('inspection_status as st','st.id','i.status_id')
                         ->join('businesses as b','b.id','i.business_id')
                         ->leftjoin('persons as p','p.id','b.owner_id')
-                        
-                        ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
-                        ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
-                        ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
-                        ->where('iim.person_id','=',$person->person_id)
-
+                        ->join('brgy as brg','brg.id','b.brgy_id')
                         ->join('business_types as bt','bt.id','b.business_type_id')
                         ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+                        ->where('iim.person_id','=',$person->person_id)
                         ->where('b.brgy_id','=',$this->search['brgy_id'] )
                         ->where('b.business_category_id','=',$this->search['business_category_id'])
                         ->where($this->search['type'],'like',$this->search['search'] .'%')
@@ -446,14 +444,10 @@ class Inspections extends Component
                         ->join('inspection_status as st','st.id','i.status_id')
                         ->join('businesses as b','b.id','i.business_id')
                         ->leftjoin('persons as p','p.id','b.owner_id')
-                        
-                        ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
-                        ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
-                        ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
-                        ->where('iim.person_id','=',$person->person_id)
-
+                        ->join('brgy as brg','brg.id','b.brgy_id')
                         ->join('business_types as bt','bt.id','b.business_type_id')
                         ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+                        ->where('iim.person_id','=',$person->person_id)
                         ->where('b.brgy_id','=',$this->search['brgy_id'] )
                         ->where($this->search['type'],'like',$this->search['search'] .'%')
                         ->orderBy('i.id','desc')
@@ -487,14 +481,10 @@ class Inspections extends Component
                         ->join('inspection_status as st','st.id','i.status_id')
                         ->join('businesses as b','b.id','i.business_id')
                         ->leftjoin('persons as p','p.id','b.owner_id')
-                        
-                        ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
-                        ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
-                        ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
-                        ->where('iim.person_id','=',$person->person_id)
-
+                        ->join('brgy as brg','brg.id','b.brgy_id')
                         ->join('business_types as bt','bt.id','b.business_type_id')
                         ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+                        ->where('iim.person_id','=',$person->person_id)
                         ->where('b.business_category_id','=',$this->search['business_category_id'])
                         ->where($this->search['type'],'like',$this->search['search'] .'%')
                         ->orderBy('i.id','desc')
@@ -525,14 +515,10 @@ class Inspections extends Component
                         ->join('inspection_status as st','st.id','i.status_id')
                         ->join('businesses as b','b.id','i.business_id')
                         ->leftjoin('persons as p','p.id','b.owner_id')
-                        
-                        ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
-                        ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
-                        ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
-                        ->where('iim.person_id','=',$person->person_id)
-
+                        ->join('brgy as brg','brg.id','b.brgy_id')
                         ->join('business_types as bt','bt.id','b.business_type_id')
                         ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+                        ->where('iim.person_id','=',$person->person_id)
                         ->where($this->search['type'],'like',$this->search['search'] .'%')
                         ->orderBy('i.id','desc')
                         ->paginate($this->table_filter['table_rows']);
@@ -570,7 +556,6 @@ class Inspections extends Component
                         DB::raw('DATEDIFF(NOW(),max(i.schedule_date))-365 as date_count_minus_year'),
                     )
                     ->join('inspections as i','b.id','i.business_id')
-                    ->join('inspection_inspector_members as iim','iim.inspection_id','i.id')
                     ->join('inspection_status as st','st.id','i.status_id')
                     ->leftjoin('persons as p','p.id','b.owner_id')
                     ->join('business_types as bt','bt.id','b.business_type_id')
@@ -580,7 +565,8 @@ class Inspections extends Component
                     ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
                     ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
                     ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
-                    ->where('iim.person_id','=',$person->person_id)
+                    ->join('inspector_members as im','im.inspector_team_id','it.id')
+                    ->where('im.member_id','=',$person->person_id)
 
                     ->groupby('b.id')
                     ->where('b.brgy_id','=',$this->search['brgy_id'])
@@ -616,7 +602,6 @@ class Inspections extends Component
                         DB::raw('DATEDIFF(NOW(),max(i.schedule_date))-365 as date_count_minus_year'),
                     )
                     ->join('inspections as i','b.id','i.business_id')
-                    ->join('inspection_inspector_members as iim','iim.inspection_id','i.id')
                     ->join('inspection_status as st','st.id','i.status_id')
                     ->leftjoin('persons as p','p.id','b.owner_id')
                     ->join('business_types as bt','bt.id','b.business_type_id')
@@ -626,11 +611,12 @@ class Inspections extends Component
                     ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
                     ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
                     ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
-                    ->where('iim.person_id','=',$person->person_id)
+                    ->join('inspector_members as im','im.inspector_team_id','it.id')
+                    ->where('im.member_id','=',$person->person_id)
 
                     ->groupby('b.id')
                     ->where('i.status_id','=',$status_id)
-                    ->where('b.business_category_id','=',$this->search['business_category_id'])
+                    ->where('b.brgy_id','=',$this->search['brgy_id'])
                     ->where($this->search['type'],'like',$this->search['search'] .'%')
                     ->having( DB::raw('DATEDIFF(NOW(),max(i.schedule_date))'),'>',$this->max_date)
                     ->orderBy( DB::raw('max(i.schedule_date)'),'asc')
@@ -664,7 +650,6 @@ class Inspections extends Component
                             DB::raw('DATEDIFF(NOW(),max(i.schedule_date))-365 as date_count_minus_year'),
                         )
                         ->join('inspections as i','b.id','i.business_id')
-                        ->join('inspection_inspector_members as iim','iim.inspection_id','i.id')
                         ->join('inspection_status as st','st.id','i.status_id')
                         ->leftjoin('persons as p','p.id','b.owner_id')
                         ->join('business_types as bt','bt.id','b.business_type_id')
@@ -674,7 +659,8 @@ class Inspections extends Component
                         ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
                         ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
                         ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
-                        ->where('iim.person_id','=',$person->person_id)
+                        ->join('inspector_members as im','im.inspector_team_id','it.id')
+                        ->where('im.member_id','=',$person->person_id)
 
                         ->groupby('b.id')
                         ->where('i.status_id','=',$status_id)
@@ -710,7 +696,6 @@ class Inspections extends Component
                             DB::raw('DATEDIFF(NOW(),max(i.schedule_date))-365 as date_count_minus_year'),
                         )
                         ->join('inspections as i','b.id','i.business_id')
-                       ->join('inspection_inspector_members as iim','iim.inspection_id','i.id')
                         ->join('inspection_status as st','st.id','i.status_id')
                         ->leftjoin('persons as p','p.id','b.owner_id')
                         ->join('business_types as bt','bt.id','b.business_type_id')
@@ -720,7 +705,8 @@ class Inspections extends Component
                         ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
                         ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
                         ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
-                        ->where('iim.person_id','=',$person->person_id)
+                        ->join('inspector_members as im','im.inspector_team_id','it.id')
+                        ->where('im.member_id','=',$person->person_id)
 
                         ->groupby('b.id')
                         ->where('i.status_id','=',$status_id)
@@ -755,18 +741,14 @@ class Inspections extends Component
                             'i.remarks',
             
                         )
-                       ->join('inspection_inspector_members as iim','iim.inspection_id','i.id')
+                        ->join('inspection_inspector_members as iim','iim.inspection_id','i.id')
                         ->join('inspection_status as st','st.id','i.status_id')
                         ->join('businesses as b','b.id','i.business_id')
                         ->leftjoin('persons as p','p.id','b.owner_id')
-                        
-                        ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
-                        ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
-                        ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
-                        ->where('iim.person_id','=',$person->person_id)
-
+                        ->join('brgy as brg','brg.id','b.brgy_id')
                         ->join('business_types as bt','bt.id','b.business_type_id')
                         ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+                        ->where('iim.person_id','=',$person->person_id)
                         ->where('st.id','=',$this->search['status_id'])
                         ->where('b.brgy_id','=',$this->search['brgy_id'] )
                         ->where('b.business_category_id','=',$this->search['business_category_id'])
@@ -800,14 +782,10 @@ class Inspections extends Component
                         ->join('inspection_status as st','st.id','i.status_id')
                         ->join('businesses as b','b.id','i.business_id')
                         ->leftjoin('persons as p','p.id','b.owner_id')
-                        
-                        ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
-                        ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
-                        ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
-                        ->where('iim.person_id','=',$person->person_id)
-
+                        ->join('brgy as brg','brg.id','b.brgy_id')
                         ->join('business_types as bt','bt.id','b.business_type_id')
                         ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+                        ->where('iim.person_id','=',$person->person_id)
                         ->where('st.id','=',$this->search['status_id'])
                         ->where('b.brgy_id','=',$this->search['brgy_id'] )
                         ->where($this->search['type'],'like',$this->search['search'] .'%')
@@ -842,14 +820,10 @@ class Inspections extends Component
                         ->join('inspection_status as st','st.id','i.status_id')
                         ->join('businesses as b','b.id','i.business_id')
                         ->leftjoin('persons as p','p.id','b.owner_id')
-                        
-                        ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
-                        ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
-                        ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
-                        ->where('iim.person_id','=',$person->person_id)
-
+                        ->join('brgy as brg','brg.id','b.brgy_id')
                         ->join('business_types as bt','bt.id','b.business_type_id')
                         ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+                        ->where('iim.person_id','=',$person->person_id)
                         ->where('st.id','=',$this->search['status_id'])
                         ->where('b.business_category_id','=',$this->search['business_category_id'])
                         ->where($this->search['type'],'like',$this->search['search'] .'%')
@@ -881,14 +855,10 @@ class Inspections extends Component
                         ->join('inspection_status as st','st.id','i.status_id')
                         ->join('businesses as b','b.id','i.business_id')
                         ->leftjoin('persons as p','p.id','b.owner_id')
-                        
-                        ->leftjoin('team_target_barangays as ttb','ttb.brgy_id','b.brgy_id')
-                        ->leftjoin('brgy as brg','brg.id','ttb.brgy_id')
-                        ->join('inspector_teams as it','it.id','ttb.inspector_team_id')
-                        ->where('iim.person_id','=',$person->person_id)
-
+                        ->join('brgy as brg','brg.id','b.brgy_id')
                         ->join('business_types as bt','bt.id','b.business_type_id')
                         ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+                        ->where('iim.person_id','=',$person->person_id)
                         ->where('st.id','=',$this->search['status_id'])
                         ->where($this->search['type'],'like',$this->search['search'] .'%')
                         ->orderBy('i.id','desc')

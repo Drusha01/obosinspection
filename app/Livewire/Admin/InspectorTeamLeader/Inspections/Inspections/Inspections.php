@@ -272,6 +272,7 @@ class Inspections extends Component
             ->join('brgy as b','b.id','ttb.brgy_id')
             ->join('inspector_teams as it','ttb.inspector_team_id','it.id')
             ->where('it.team_leader_id','=',$session['id'])
+            ->orderby('brgyDesc','asc')
             ->get()
             ->toArray();
 
@@ -625,7 +626,7 @@ class Inspections extends Component
 
                     ->groupby('b.id')
                     ->where('i.status_id','=',$status_id)
-                    ->where('b.business_category_id','=',$this->search['business_category_id'])
+                    ->where('b.brgy_id','=',$this->search['brgy_id'])
                     ->where($this->search['type'],'like',$this->search['search'] .'%')
                     ->having( DB::raw('DATEDIFF(NOW(),max(i.schedule_date))'),'>',$this->max_date)
                     ->orderBy( DB::raw('max(i.schedule_date)'),'asc')
