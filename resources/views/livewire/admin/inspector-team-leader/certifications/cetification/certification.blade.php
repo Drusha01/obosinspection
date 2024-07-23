@@ -124,7 +124,7 @@
                                        
                                     @elseif($filter_value['name'] == 'Action' && $filter_value['active'])
                                         <td class="text-center align-middle">
-                                            <a class="btn btn-outline-primary my-1" target="_blank" href="/administrator/certifications/generate/{{$value->id}}">
+                                            <a class="btn btn-outline-primary my-1" target="_blank" href="/inspector-team-leader/certifications/generate/{{$value->id}}">
                                                 Generate Certificate
                                             </a>
                                         </td>
