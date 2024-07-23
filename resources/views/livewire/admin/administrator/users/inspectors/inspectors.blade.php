@@ -217,7 +217,7 @@
                                                 {{$value->name}}
                                             </td>
                                             <td class="align-middle text-center">
-                                                <button class="btn btn-danger" type="button" wire:click="delete_violation_category_role({{$value->id}})">
+                                                <button class="btn btn-danger" type="button" wire:click="delete_violation_category_role({{$value->id}},{{$category_role['type_id']}})">
                                                     Delete
                                                 </button>
                                             </td>
@@ -276,7 +276,7 @@
                                                 {{$value->name}}
                                             </td>
                                             <td class="align-middle text-center">
-                                                <button class="btn btn-danger" type="button" wire:click="delete_item_category_role({{$value->id}})">
+                                                <button class="btn btn-danger" type="button" wire:click="delete_item_category_role({{$value->id}},{{$category_role['type_id']}})">
                                                     Delete
                                                 </button>
                                             </td>
@@ -335,7 +335,7 @@
                                                 {{$value->name}}
                                             </td>
                                             <td class="align-middle text-center">
-                                                <button class="btn btn-danger" type="button" wire:click="delete_bss_category_role({{$value->id}})">
+                                                <button class="btn btn-danger" type="button" wire:click="delete_bss_category_role({{$value->id}},{{$category_role['type_id']}})">
                                                     Delete
                                                 </button>
                                             </td>

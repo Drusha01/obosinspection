@@ -33,6 +33,7 @@ use App\Livewire\Admin\Inspector\Inspections\CompletedSchedules\CompletedSchedul
 use App\Livewire\Admin\Inspector\Inspections\DeletedInspections\DeletedInspections as InspectorDeletedInspections;
 use App\Livewire\Admin\Inspector\Inspections\InspectionSchedules\InspectionSchedules as InspectorInspectionSchedules;
 use App\Livewire\Admin\Inspector\Inspections\OngoingInspections\OngoingInspections as InspectorOngoingInspections;
+use App\Livewire\Admin\Inspector\Inspections\Inspections\Inspections as InspectorInspections;
 use App\Livewire\Admin\Inspector\Profile\Profile as InspectorProfile;
 use App\Livewire\Admin\Inspector\Violations\Violations as InspectorViolations;
 
@@ -144,6 +145,7 @@ Route::middleware([Authenticated::class,IsValid::class,IsInspector::class])->gro
             Route::get('/deleted-inspections', InspectorDeletedInspections::class)->name('inspector-inspections-deleted-inspections');
             Route::get('/generate-report/{id}', AdministratorGenerateReport::class)->name('inspector-inspections-generate-report');
             Route::get('/completed-inspections', InspectorCompletedSchedules::class)->name('inspector-inspections-completed-inspections');
+            Route::get('/inspections',InspectorInspections::class)->name('inspector-inspections');
         });
         Route::get('/certifications', InspectorCertification::class)->name('inspector-certifications');
         Route::get('/certifications/generate/{id}', InspectorCertificateGenerate::class)->name('inspector-generate-certifications');

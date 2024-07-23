@@ -2,15 +2,40 @@
     <div class="content">
         <div class="container-fluid">
             <div class="row d-flex mt-4 mb-4">
-                <div class="col-lg-7 col-md-12">
+                <div class="col-lg-4 col-md-4">
                     <h1 class="h3 mb-0 text-gray-800">{{$title}}</h1>
                 </div>
                 <div class="col-lg-2 col-md-2">
                     <div class=" d-flex ">
                         <span for="rows" class="align-middle mt-2">Status</span>
                             <select name="" id=""  class="form-select" wire:model.live.debounce="search.status_id">
+                                <option value="">Select All</option>
                                 @foreach($status as $key => $value)
                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
+                                @endforeach
+                            </select>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2">
+                    <div class=" d-flex ">
+                        <span for="rows" class="align-middle mt-2">category</span>
+                            <select name="" id=""  class="form-select" wire:model.live.debounce="search.business_category_id">
+                                <option value="">Select category</option>
+                                @foreach($business_categories as $key => $value)
+                                    <option value="{{$value->id}}">{{$value->name}}</option>
+                                @endforeach
+                            </select>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2">
+                    <div class=" d-flex ">
+                        <span for="rows" class="align-middle mt-2">Brgy</span>
+                            <select name="" id=""  class="form-select" wire:model.live.debounce="search.brgy_id">
+                                <option value="">Select Barangay</option>
+                                @foreach($brgy as $key => $value)
+                                    <option value="{{$value->id}}">{{$value->brgyDesc}}</option>
                                 @endforeach
                             </select>
                         </select>
@@ -170,43 +195,46 @@
                                                 @case("Pending")
                                                     @if($value->request_type == 0)
                                                         <a class="btn btn-primary" target="_blank" wire:click="add({{$value->id}},'addModaltoggler')">
-                                                            Add-Inspection
+                                                            <i class="bi bi-calendar-plus"></i>
                                                         </a>
+                                                        <button class="btn btn-outline-secondary" wire:click="edit({{$value->id}},'declineModaltoggler')">
+                                                            <i class="bi bi-calendar2-x"></i>
+                                                        </button>
                                                     @endif
-                                                    <a class="btn btn-outline-primary" target="_blank" href="/inspector-team-leader/request/generate-request-pdf/{{$value->hash}}/{{$value->request_date}}/{{$value->expiration_date}}">
-                                                        Generate Letter
+                                                    <a class="btn btn-outline-primary" target="_blank" href="/administrator/request/generate-request-pdf/{{$value->hash}}/{{$value->request_date}}/{{$value->expiration_date}}">
+                                                        <i class="bi bi-file-earmark-font"></i>
                                                     </a>
                                                     <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
-                                                        Delete
+                                                        <i class="bi bi-trash3"></i>
                                                     </button>
                                                     @break
                                                 @case("Accepted")
                                                     <a class="btn btn-primary" target="_blank"  wire:click="add({{$value->id}},'addModaltoggler')">
-                                                        Add-Inspection
+                                                        <i class="bi bi-calendar-plus"></i>
                                                     </a>
                                                     <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
-                                                        Delete
+                                                        <i class="bi bi-trash3"></i>
                                                     </button>
                                                     @break
                                                 @case("Declined")
                                                     <a class="btn btn-primary" target="_blank" wire:click="reissue_request({{$value->id}},'reIssueRequestModaltoggler')">
-                                                        Re-issue
+                                                        <i class="bi bi-send-check"></i>
                                                     </a>
                                                     <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
-                                                        Delete
+                                                        <i class="bi bi-trash3"></i>
                                                     </button>
                                                     @break
                                                 @case("Deleted")
                                                     @break
                                                 @case("No response")
                                                     <a class="btn btn-primary" target="_blank" wire:click="reissue_request({{$value->id}},'reIssueRequestModaltoggler')">
-                                                        Re-issue
+                                                        <i class="bi bi-send-check"></i>
                                                     </a>
                                                     <a class="btn btn-outline-primary" target="_blank" href="/administrator/request/generate-request-pdf/{{$value->hash}}/{{$value->request_date}}/{{$value->expiration_date}}">
-                                                        Generate Letter
+                                                        <i class="bi bi-file-earmark-font"></i>
                                                     </a>
                                                     <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
-                                                        Delete
+                                                        <i class="bi bi-trash3"></i>
                                                     </button>
                                                     @break
                                                 @case("Completed")
@@ -238,7 +266,8 @@
             <button type="button" data-bs-toggle="modal" data-bs-target="#requestCategoryListModal" id="requestCategoryListModaltoggler" style="display:none;"></button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#addModal" id="addModaltoggler" style="display:none;"></button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#reIssueRequestModal" id="reIssueRequestModaltoggler" style="display:none;"></button>
-            
+            <button type="button" data-bs-toggle="modal" data-bs-target="#declineModal" id="declineModaltoggler" style="display:none;"></button>
+           
             
             <div wire:ignore.self class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -261,6 +290,26 @@
                 </div>
             </div>
 
+            <div wire:ignore.self class="modal fade" id="declineModal" tabindex="-1" aria-labelledby="declineModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="declineModalLabel">Decline</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form wire:submit.prevent="save_decline({{$request['id']}},'declineModaltoggler')">
+                            <div class="modal-body">
+                                <div>Are you sure you want to decline this?</div>
+                                </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                                <button type="submit" class="btn btn-outline-secondary">Decline</button>
+                            </div>
+                        </form> 
+                    </div>
+                </div>
+            </div>
+            
             <div wire:ignore.self class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
@@ -438,12 +487,30 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
+                            <div class="row">
+                                <div class="col-8">
+                                <form wire:submit.prevent="add_category_to_request_list()">
+                                        <div class="mb-3">
+                                            <select class="form-select" aria-label="Select Member" required wire:model="business_category.id">
+                                                <option value="">Select Business Category</option>
+                                                @foreach($business_category_list as $key => $value)
+                                                    <option value="{{$value->id}}">{{$value->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 mx-3" >
+                                        <button class="btn btn-primary" type="submit">Add</button>
+                                    </div>
+                                </div>
+                            </form>
                             <div class="table-responsive">
                                 <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
                                     <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                                         <tr>
                                             <th class="align-middle text-center"></th>
                                             <th class="align-middle"> Category</th>
+                                            <th class="align-middle text-center">Action </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -452,6 +519,11 @@
                                                 <td class="align-middle text-center">{{$key+1}}</td>
                                                 <td class="mx-2 align-middle">
                                                     {{$value->name}}
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <button class="btn btn-danger" type="button" wire:click="delete_request_category({{$value->id}})">
+                                                        <i class="bi bi-trash3"></i>
+                                                    </button>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -486,11 +558,11 @@
                                     Inspection Details
                                 </h5>
                                 @if(isset($inspection['business']))
-                                <div class="row">
-                                    <div class="col-12 text-dark">
-                                        <p>Business name: {{$inspection['business']->name.' ('.$inspection['business']->business_type_name.' )' }}</p>
+                                    <div class="row">
+                                        <div class="col-12 text-dark">
+                                            <p>Business name: {{$inspection['business']->name.' ('.$inspection['business']->business_type_name.' )' }}</p>
+                                        </div>
                                     </div>
-                                </div>
                                 @endif
                                 <div class="mb-3">
                                     <label for="inspection_date" class="form-label">Inspection Date  <span class="text-danger">*</span></label>
@@ -502,6 +574,15 @@
                                 <h5 class="text-center my-2 text-black">
                                     Team Leaders  <span class="text-danger">*</span> 
                                 </h5>
+                                <div class="input-group mb-3">
+                                    <select class="form-select" id="teamLeaderSelect" wire:model.live="inspection.inspector_leader_id">
+                                        <option value="">Select Team Leader</option>
+                                        @foreach($inspector_leaders as $key =>  $value)
+                                            <option value="{{$value->id}}">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</option>
+                                        @endforeach
+                                    </select>
+                                    <button class="btn btn-primary" type="button" wire:click="add_team_leader()"><i class="bi bi-plus"></i></button>
+                                </div>
                                 <div class="table-responsive">
                                     <table class="table table-striped table-hover bg-secondary" style="border-radius: 10px; overflow: hidden;">
                                         <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
@@ -516,7 +597,7 @@
                                                     <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                     <td class="align-middle text-center">
                                                         <button class="btn btn-danger " wire:click="delete_team_leader({{$key}})">
-                                                            Delete
+                                                            <i class="bi bi-trash3"></i>
                                                         </button>
                                                     </td>
                                                 </tr>
@@ -555,7 +636,7 @@
                                                     <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                     <td class="align-middle text-center">
                                                         <button class="btn btn-danger " wire:click="delete_team_member({{$key}})">
-                                                            Delete
+                                                            <i class="bi bi-trash3"></i>
                                                         </button>
                                                     </td>
                                                 </tr>

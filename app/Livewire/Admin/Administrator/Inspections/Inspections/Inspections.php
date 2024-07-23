@@ -195,7 +195,7 @@ class Inspections extends Component
         $temp_status = [];
         foreach ($inspection_status as $key => $value) {
             if($value->name == 'Pending'){
-                $this->search['status_id'] = $value->id;
+                // $this->search['status_id'] = $value->id;
             }
             array_push($temp_status,[
                 'name'=>$value->name,
@@ -367,7 +367,144 @@ class Inspections extends Component
                 $this->search['type'] = $this->search_by[0]['column_name'];
             }
         }
-        if($this->search['status_id'] == -1){
+        if(!intval($this->search['status_id'])){
+            if(intval($this->search['brgy_id']) ){
+                if($this->search['business_category_id']){
+                    $table_data = DB::table('inspections as i')
+                        ->select(
+                            'i.id',
+                            'b.img_url',
+                            'b.name',
+                            'p.first_name',
+                            'p.middle_name',
+                            'p.last_name',
+                            'p.suffix',
+                            'brg.brgyDesc as barangay',
+                            'bt.name as business_type_name',
+                            'oc.character_of_occupancy as occupancy_classification_name',
+                            'b.contact_number',
+                            'b.email',
+                            'b.floor_area',
+                            'b.signage_area',
+                            'b.is_active',
+                            'st.name as status_name',
+                            'i.schedule_date',
+                            'i.remarks',
+            
+                        )
+                        ->join('inspection_status as st','st.id','i.status_id')
+                        ->join('businesses as b','b.id','i.business_id')
+                        ->leftjoin('persons as p','p.id','b.owner_id')
+                        ->join('brgy as brg','brg.id','b.brgy_id')
+                        ->join('business_types as bt','bt.id','b.business_type_id')
+                        ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+                        ->where('b.brgy_id','=',$this->search['brgy_id'] )
+                        ->where('b.business_category_id','=',$this->search['business_category_id'])
+                        ->where($this->search['type'],'like',$this->search['search'] .'%')
+                        ->orderBy('i.id','desc')
+                        ->paginate($this->table_filter['table_rows']);
+                }else{
+                    $table_data = DB::table('inspections as i')
+                        ->select(
+                            'i.id',
+                            'b.img_url',
+                            'b.name',
+                            'p.first_name',
+                            'p.middle_name',
+                            'p.last_name',
+                            'p.suffix',
+                            'brg.brgyDesc as barangay',
+                            'bt.name as business_type_name',
+                            'oc.character_of_occupancy as occupancy_classification_name',
+                            'b.contact_number',
+                            'b.email',
+                            'b.floor_area',
+                            'b.signage_area',
+                            'b.is_active',
+                            'st.name as status_name',
+                            'i.schedule_date',
+                            'i.remarks',
+            
+                        )
+                        ->join('inspection_status as st','st.id','i.status_id')
+                        ->join('businesses as b','b.id','i.business_id')
+                        ->leftjoin('persons as p','p.id','b.owner_id')
+                        ->join('brgy as brg','brg.id','b.brgy_id')
+                        ->join('business_types as bt','bt.id','b.business_type_id')
+                        ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+                        ->where('b.brgy_id','=',$this->search['brgy_id'] )
+                        ->where($this->search['type'],'like',$this->search['search'] .'%')
+                        ->orderBy('i.id','desc')
+                        ->paginate($this->table_filter['table_rows']);
+                }
+            }else{
+                if($this->search['business_category_id']){
+                    $table_data = DB::table('inspections as i')
+                        ->select(
+                            'i.id',
+                            'b.img_url',
+                            'b.name',
+                            'p.first_name',
+                            'p.middle_name',
+                            'p.last_name',
+                            'p.suffix',
+                            'brg.brgyDesc as barangay',
+                            'bt.name as business_type_name',
+                            'oc.character_of_occupancy as occupancy_classification_name',
+                            'b.contact_number',
+                            'b.email',
+                            'b.floor_area',
+                            'b.signage_area',
+                            'b.is_active',
+                            'st.name as status_name',
+                            'i.schedule_date',
+                            'i.remarks',
+        
+                        )
+                        ->join('inspection_status as st','st.id','i.status_id')
+                        ->join('businesses as b','b.id','i.business_id')
+                        ->leftjoin('persons as p','p.id','b.owner_id')
+                        ->join('brgy as brg','brg.id','b.brgy_id')
+                        ->join('business_types as bt','bt.id','b.business_type_id')
+                        ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+                        ->where('b.business_category_id','=',$this->search['business_category_id'])
+                        ->where($this->search['type'],'like',$this->search['search'] .'%')
+                        ->orderBy('i.id','desc')
+                        ->paginate($this->table_filter['table_rows']);
+                }else{
+                    $table_data = DB::table('inspections as i')
+                        ->select(
+                            'i.id',
+                            'b.img_url',
+                            'b.name',
+                            'p.first_name',
+                            'p.middle_name',
+                            'p.last_name',
+                            'p.suffix',
+                            'brg.brgyDesc as barangay',
+                            'bt.name as business_type_name',
+                            'oc.character_of_occupancy as occupancy_classification_name',
+                            'b.contact_number',
+                            'b.email',
+                            'b.floor_area',
+                            'b.signage_area',
+                            'b.is_active',
+                            'st.name as status_name',
+                            'i.schedule_date',
+                            'i.remarks',
+                        )
+                        ->join('inspection_status as st','st.id','i.status_id')
+                        ->join('businesses as b','b.id','i.business_id')
+                        ->leftjoin('persons as p','p.id','b.owner_id')
+                        ->join('brgy as brg','brg.id','b.brgy_id')
+                        ->join('business_types as bt','bt.id','b.business_type_id')
+                        ->join('occupancy_classifications as oc','oc.id','b.occupancy_classification_id')
+                        ->where($this->search['type'],'like',$this->search['search'] .'%')
+                        ->orderBy('i.id','desc')
+                        ->paginate($this->table_filter['table_rows']);
+                }
+            }
+        }elseif($this->search['status_id'] == -1){
             $status_id = DB::table('inspection_status as ii')
             ->where('name','=','Completed')
             ->first()->id;
@@ -534,8 +671,8 @@ class Inspections extends Component
                         ->having( DB::raw('DATEDIFF(NOW(),max(i.schedule_date))'),'>',$this->max_date)
                         ->orderBy( DB::raw('max(i.schedule_date)'),'asc')
                         ->paginate($this->table_filter['table_rows']);
-                    }
                 }
+            }
         }else{
             if(intval($this->search['brgy_id']) ){
                 if($this->search['business_category_id']){
@@ -686,7 +823,15 @@ class Inspections extends Component
     }
 
     public function issue($id,$modal_id){
-        $this->issue_inspection['step'] = 1;
+        if($modal_id == 'issueCompleteModaltoggler'){
+            $this->updated_complied = [
+                'password'=> NULL,
+                'inspection_violations'=> [],
+            ];
+            $this->issue_inspection['step'] = 8;
+        }else{
+            $this->issue_inspection['step'] = 1;
+        }
         self::update_inspection_data($id);
         $this->dispatch('openModal',$modal_id);
     }
@@ -2028,6 +2173,82 @@ class Inspections extends Component
         }
         $this->inspection['inspector_members'] = $temp;
     }
+    public $updated_complied = [
+        'password'=> NULL,
+        'inspection_violations'=> [],
+    ];
+    public function add_inspection_violation($id){
+        $valid = true;
+        foreach ($this->updated_complied['inspection_violations'] as $key => $value) {
+            if($value['id'] == $id){
+                $valid = false;
+            }
+        }
+        if($valid){
+            array_push($this->updated_complied['inspection_violations'],['id'=>$id]);
+        }
+    }
+    public function save_complied_violations(Request $request){
+        $session = $request->session()->all();
+        if(strlen($this->updated_complied['password']) == 0){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'Please input password!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return;
+        }
+        $user_details = DB::table('users as u')
+                ->select(
+                    'u.id',
+                    'u.password',
+                    )
+                ->where('u.id','=',$session['id'])
+                ->first();
+           
+        if( $user_details && password_verify($this->updated_complied['password'],$user_details->password)){
+            foreach ($this->updated_complied['inspection_violations'] as $key => $value) {
+                foreach ($this->issue_inspection['inspection_violations'] as $m_key => $m_value) {
+                    if($value['id'] == $m_value['id']){
+                        if($m_value['remarks']){
+                            DB::table('inspection_violations')
+                            ->where('id','=',$m_value['id'])
+                            ->where('inspection_id','=',$this->issue_inspection['id'])
+                            ->update([
+                                'remarks'=>1
+                            ]);
+                        }else{
+                            DB::table('inspection_violations')
+                            ->where('id','=',$m_value['id'])
+                            ->where('inspection_id','=',$this->issue_inspection['id'])
+                            ->update([
+                                'remarks'=>NULL
+                            ]);
+                        }
+                    }
+                }
+            }
+            $this->updated_complied = [
+                'password'=> NULL,
+                'inspection_violations'=> [],
+            ];
+            self::update_inspection_data($this->issue_inspection['id']);
+        }else{
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'Invalid password!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return;
+        }
+    }
+
     public function update_complied_violation($id){
         $inspection_violation = DB::table('inspection_violations')
             ->where('id','=',$id)
@@ -2330,7 +2551,11 @@ class Inspections extends Component
     }
 
     public function reopenModal(){
-        $this->dispatch('openModal','issueCompleteModaltoggler');
+        if($this->issue_inspection['inspection']->status_id == 2){
+            $this->dispatch('openModal','issueModaltoggler');
+        }else{
+            $this->dispatch('openModal','issueCompleteModaltoggler');
+        }
     }
     public function update_violation_proof_data($id){
         $inspection_violation_contents = DB::table('inspection_violation_contents as ivc')
@@ -3382,6 +3607,117 @@ class Inspections extends Component
                 'log_details' => 'has deleted a violation ( '.$var->description.' )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
         ]);
         DB::table('inspection_violations')
+            ->where('id','=',$id)
+            ->where('inspection_id','=',$this->issue_inspection['id'])
+            ->delete();
+        self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
+       
+    }
+    public function update_delete_team_leaders($id){
+        $temp =  DB::table('persons as p')
+        ->select(
+            "p.id",
+            "p.person_type_id",
+            "p.brgy_id",
+            "p.work_role_id",
+            "p.first_name",
+            "p.middle_name",
+            "p.last_name",
+            "p.suffix",
+            "p.contact_number",
+            "p.email",
+            "p.img_url",
+            'wr.name as work_role_name',
+        )
+        ->join('inspection_inspector_team_leaders as iitl','p.id','iitl.person_id')
+        ->join('person_types as pt','p.person_type_id','pt.id')
+        ->join('work_roles as wr', 'wr.id','p.work_role_id')
+        ->where('pt.name','Inspector')
+        ->where('iitl.inspection_id','=',$this->issue_inspection['id'])
+        ->get()
+        ->toArray();
+        if(count($temp)>=1){
+           
+            $var = DB::table('inspection_inspector_team_leaders as iitl')
+                ->join('persons as p','p.id','iitl.person_id')
+                ->where('iitl.inspection_id','=',$this->issue_inspection['id'])
+                ->where('iitl.id','=',$id)
+                ->first();
+                
+            $edit = DB::table('inspections as i')
+                ->select(
+                    'b.id',
+                    'b.img_url',
+                    'b.name',
+                    'b.occupancy_classification_id',
+                    'b.business_type_id',
+                    'b.street_address',
+                    'b.contact_number',
+                    'b.email',
+                    'b.floor_area',
+                    'b.signage_area',
+                    'bt.name as business_type_name',
+                )
+                ->join('businesses as b','b.id','i.business_id')
+                ->join('business_types as bt','bt.id','b.business_type_id')
+                ->where('i.id','=',$this->issue_inspection['id'])
+                ->first();
+            DB::table('activity_logs')
+                ->insert([
+                    'created_by' => $this->activity_logs['created_by'],
+                    'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                    'log_details' => 'has deleted a team leader ( '.$var->first_name.' '.$var->middle_name.' '.$var->last_name.' '.$var->suffix.' '.' )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
+            ]);
+            DB::table('inspection_inspector_team_leaders')
+            ->where('id','=',$id)
+            ->where('inspection_id','=',$this->issue_inspection['id'])
+            ->delete();
+
+            self::update_inspection_data($this->issue_inspection['id'],$this->issue_inspection['step']);
+        }else{
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'You cannot delete!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return 0;
+        }
+    }
+    public function update_delete_members($id){
+        $var = DB::table('inspection_inspector_members as iim')
+                ->join('persons as p','p.id','iim.person_id')
+                ->where('iim.inspection_id','=',$this->issue_inspection['id'])
+                ->where('iim.id','=',$id)
+                ->first();
+            
+        $edit = DB::table('inspections as i')
+            ->select(
+                'b.id',
+                'b.img_url',
+                'b.name',
+                'b.occupancy_classification_id',
+                'b.business_type_id',
+                'b.street_address',
+                'b.contact_number',
+                'b.email',
+                'b.floor_area',
+                'b.signage_area',
+                'bt.name as business_type_name',
+            )
+            ->join('businesses as b','b.id','i.business_id')
+            ->join('business_types as bt','bt.id','b.business_type_id')
+            ->where('i.id','=',$this->issue_inspection['id'])
+            ->first();
+        DB::table('activity_logs')
+            ->insert([
+                'created_by' => $this->activity_logs['created_by'],
+                'inspector_team_id' => $this->activity_logs['inspector_team_id'],
+                'log_details' => 'has deleted a member ( '.$var->first_name.' '.$var->middle_name.' '.$var->last_name.' '.$var->suffix.' '.' )  for '.$edit->name.' (' .$edit->business_type_name. ') ',
+        ]);
+        DB::table('inspection_inspector_members')
             ->where('id','=',$id)
             ->where('inspection_id','=',$this->issue_inspection['id'])
             ->delete();

@@ -10,6 +10,7 @@
                     <div class=" d-flex ">
                         <span for="rows" class="align-middle mt-2">Status</span>
                             <select name="" id=""  class="form-select" wire:model.live.debounce="search.status_id">
+                                <option value="">Select All</option>
                                 @foreach($status as $key => $value)
                                     <option value="{{$value['id']}}">{{$value['name']}}</option>
                                 @endforeach
@@ -121,7 +122,7 @@
                                             <th scope="col" class="text-center">Last Inspected Date</th>
                                             <th scope="col" class="text-center">Days Delayed</th>
                                         @else
-                                            <th scope="col" class="text-center">{{$filter_value['name']}}</th>
+                                            <th scope="col" class="text-center">Violation result</th>
                                         @endif
                                     @else 
                                         <th scope="col">{{$filter_value['name']}}</th>
@@ -147,36 +148,33 @@
                                             @switch($value->status_name)
                                                 @case("Pending")
                                                     <button class="btn btn-outline-secondary" wire:click="update_status({{$value->id}},'On-going')">
-                                                        On-going
-                                                    </button>
-                                                    <button class="btn btn-primary" wire:click="issue({{$value->id}},'issueModaltoggler')">
-                                                        Inspection Details
+                                                        <i class="bi bi-play-circle"></i>
                                                     </button>
                                                     @if($value->is_active)
                                                         <button class="btn btn-danger" wire:click="edit({{$value->id}},'deactivateModaltoggler')">
-                                                            Delete
+                                                            <i class="bi bi-trash3"></i>
                                                         </button>
                                                     @endif
                                                     @break
                                                 @case("On-going")
                                                     <button class="btn btn-outline-secondary" wire:click="update_status({{$value->id}},'Pending')">
-                                                        Pending
+                                                        <i class="bi bi-pause-circle"></i>
                                                     </button>
                                                     <button class="btn btn-secondary"  wire:click="edit({{$value->id}},'completeModaltoggler')">
-                                                        Complete
+                                                        <i class="bi bi-check-circle"></i>
                                                     </button>
                                                     <button class="btn btn-primary" wire:click="issue({{$value->id}},'issueModaltoggler')">
-                                                        Inspection Details
+                                                        <i class="bi bi-file-earmark-text"></i>
                                                     </button>
                                                     @if($value->is_active)
                                                         <button class="btn btn-danger" wire:click="edit({{$value->id}},'deactivateModaltoggler')">
-                                                            Delete
+                                                            <i class="bi bi-trash3"></i>
                                                         </button>
                                                     @endif
                                                     @break
                                                 @case("Deleted")
                                                     <button class="btn btn-primary" wire:click="issue({{$value->id}},'issueDeletedModaltoggler')">
-                                                        Inspection Details
+                                                        <i class="bi bi-file-earmark-text"></i>
                                                     </button>
                                                     @break
                                                 @case("Completed")
@@ -184,7 +182,7 @@
                                                         LOE
                                                     </a>
                                                     <a class="btn btn-outline-primary my-1" target="_blank" href="/administrator/inspections/generate-report/{{$value->id}}">
-                                                        Report
+                                                        Violation Report
                                                     </a>
                                                     <?php 
                                                         $violations = DB::table('inspection_violations as iv')
@@ -215,16 +213,12 @@
                                                                 Certificate
                                                             </button>';
                                                         }else{
-                                                            echo '
-                                                             <button class="btn btn-outline-primary" disabled wire:click="generate_cert('.$value->id.',\'certModaltoggler\')" >
-                                                                Certificate
-                                                            </button>';
                                                         }
                                                     }
                                                     ?>
                                                     
                                                     <button class="btn btn-primary" wire:click="issue({{$value->id}},'issueCompleteModaltoggler')">
-                                                        Inspection Details
+                                                        <i class="bi bi-file-earmark-text"></i>
                                                     </button>
                                                     @break
                                                 @case('Upcoming')
@@ -287,7 +281,7 @@
                                     @elseif($filter_value['name'] == 'Inspection Details' && $filter_value['active'])
                                         <td class="text-center align-middle">
                                             <button class="btn btn-primary" wire:click="issue({{$value->id}},'issueModaltoggler')">
-                                                Inspection Details
+                                                <i class="bi bi-file-earmark-text"></i>
                                             </button>
                                         </td>   
                                     @elseif($filter_value['name'] == 'Schedule' && $filter_value['active'])
@@ -387,7 +381,7 @@
                                                     <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                     <td class="align-middle text-center">
                                                         <button class="btn btn-danger "  wire:click="delete_team_leader({{$key}})">
-                                                            Delete
+                                                            <i class="bi bi-trash3"></i>
                                                         </button>
                                                     </td>
                                                 </tr>
@@ -426,7 +420,7 @@
                                                     <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                     <td class="align-middle text-center">
                                                         <button class="btn btn-danger "  wire:click="delete_team_member({{$key}})">
-                                                            Delete
+                                                            <i class="bi bi-trash3"></i>
                                                         </button>
                                                     </td>
                                                 </tr>
@@ -520,7 +514,7 @@
                                                         <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                         <td class="align-middle text-center">
                                                             <button class="btn btn-danger " wire:click="update_delete_team_leaders({{$value->id}})">
-                                                                Delete
+                                                                <i class="bi bi-trash3"></i>
                                                             </button>
                                                         </td>
                                                     </tr>
@@ -561,7 +555,7 @@
                                                         <td class="align-middle">{{$value->first_name.' '.$value->middle_name.' '.$value->last_name.' '.$value->suffix.' ( '.$value->work_role_name.' ) '.(isset($value->inspector_team) ? '( '.$value->inspector_team.' )' : '( Not assigend )')}}</td>
                                                         <td class="align-middle text-center">
                                                             <button class="btn btn-danger " wire:click="update_delete_members({{$value->id}})"> 
-                                                                Delete
+                                                                <i class="bi bi-trash3"></i>
                                                             </button>
                                                         </td>
                                                     </tr>
@@ -642,7 +636,7 @@
                                                         <td class="align-middle">{{$value['fee']*$value['quantity']}}</td>
                                                         <td class="align-middle text-center">
                                                             <button class="btn btn-danger " wire:click="update_delete_item({{$value['id']}})">
-                                                                Delete
+                                                                <i class="bi bi-trash3"></i>
                                                             </button>
                                                         </td>
                                                     </tr>
@@ -663,7 +657,7 @@
                                     </h5>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">Floor area</label>
-                                        <input type="number" class="form-control" wire:model="issue_inspection.floor_area" wire:change="update_floor_area()">
+                                        <input type="number" disabled class="form-control" wire:model="issue_inspection.floor_area" wire:change="update_floor_area()">
                                     </div>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">Building Information</label>
@@ -719,7 +713,7 @@
                                                         <td class="align-middle">{{$value['fee']*$value['sanitary_quantity']}}</td>
                                                         <td class="align-middle text-center">
                                                             <button class="btn btn-danger " wire:click="update_delete_sanitary({{$value['id']}})">
-                                                                Delete
+                                                                <i class="bi bi-trash3"></i>
                                                             </button>
                                                         </td>
                                                     </tr>
@@ -740,7 +734,7 @@
                                     </h5>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">Signage area</label>
-                                        <input type="number" class="form-control" wire:model="issue_inspection.signage_area" wire:change="update_signage_area()">
+                                        <input type="number" disabled class="form-control" wire:model="issue_inspection.signage_area" wire:change="update_signage_area()">
                                     </div>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">Signage Information</label>
@@ -781,9 +775,8 @@
                                             <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                                                 <tr>
                                                     <th>Description</th>
-                                                    <th class="text-center">Has Proof</th>
-                                                    <th>
-                                                        Proof
+                                                    <th class="align-middle text-center">
+                                                        Violation Proof
                                                     </th>
                                                     <th class="align-middle text-center">Action</th>
                                                 </tr>
@@ -798,20 +791,21 @@
                                                                     ->where('inspection_violation_id','=',$value['id'])
                                                                     ->first()
                                                                 ){
-                                                                    echo '<span class="badge text-light p-2 bg-primary">W/ Proof</span>';
+                                                                    echo '
+                                                                    <button class="btn btn-primary "wire:click="view_violation_proof('.$value['id'].',\'ProofModaltoggler\')"> 
+                                                                        <i class="bi bi-search"></i>
+                                                                    </button>';
                                                                 }else{
-                                                                    echo '<span class="badge text-light p-2 bg-warning">W/out Proof</span>';
+                                                                    echo '
+                                                                    <button class="btn btn-warning "wire:click="view_violation_proof('.$value['id'].',\'ProofModaltoggler\')"> 
+                                                                        <i class="bi bi-search"></i>
+                                                                    </button>';
                                                                 }
                                                             ?>
                                                         </td>
-                                                        <td>
-                                                            <button class="btn btn-primary "wire:click="view_violation_proof({{$value['id']}},'ProofModaltoggler')"> 
-                                                                View
-                                                            </button>
-                                                        </td>
                                                         <td class="align-middle text-center">
                                                             <button class="btn btn-danger "wire:click="update_delete_violation({{$value['id']}})"> 
-                                                                Delete
+                                                                <i class="bi bi-trash3"></i>
                                                             </button>
                                                         </td>
                                                     </tr>
@@ -1117,7 +1111,6 @@
                                             <thead class="table-dark" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                                                 <tr>
                                                     <th>Description</th>
-                                                    <th class="text-center">Has Proof</th>
                                                     <th class="text-center">Proof</th >
                                                     <th class="text-center">Validated Proof</th >
                                                     <th class="text-center">  isValidated</th>
@@ -1133,25 +1126,25 @@
                                                                     ->where('inspection_violation_id','=',$value['id'])
                                                                     ->first()
                                                                 ){
-                                                                    echo '<span class="badge text-light p-2 bg-primary">W/ Proof</span>';
+                                                                    echo '
+                                                                    <button class="btn btn-primary "wire:click="view_violation_proof('.$value['id'].',\'ProofModaltoggler\')"> 
+                                                                        <i class="bi bi-search"></i>
+                                                                    </button>';
                                                                 }else{
-                                                                    echo '<span class="badge text-light p-2 bg-warning">W/out Proof</span>';
+                                                                    echo '
+                                                                    <button class="btn btn-warning "wire:click="view_violation_proof('.$value['id'].',\'ProofModaltoggler\')"> 
+                                                                        <i class="bi bi-search"></i>
+                                                                    </button>';
                                                                 }
                                                             ?>
                                                         </td>
                                                         <td class="text-center">
-                                                            <button class="btn btn-primary "wire:click="view_violation_proof({{$value['id']}},'ProofModaltoggler')"> 
-                                                                View
-                                                            </button>
-                                                        </td>
-                                                        <td class="text-center">
                                                             <button class="btn btn-primary "wire:click="view_violation_validated_proof({{$value['id']}},'ValidatedProofModaltoggler')"> 
-                                                                View
+                                                                <i class="bi bi-search"></i>
                                                             </button>
                                                         </td>
-                                                        
                                                         <td class="text-center align-middle">
-                                                            <input type="checkbox"  value="1" @if($value['remarks'])) checked @endif  wire:change="update_complied_violation({{$value['id']}})">
+                                                            <input type="checkbox" wire:model="issue_inspection.inspection_violations.{{$key}}.remarks"   wire:change="add_inspection_violation({{$value['id']}})">
                                                         </td>
                                                     </tr>
                                                 @empty
@@ -1162,6 +1155,17 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                    @if(count($updated_complied['inspection_violations'])>0)
+                                    <div class="row">
+                                        <label for="name" class="form-label">Password <span class="text-danger">*</span></label>
+                                        <div class="mb-3 col">
+                                            <input type="password" class="form-control" id="violation-password" autocomplete="off" wire:model="updated_complied.password" placeholder="Enter password">
+                                        </div>
+                                        <div class="col-lg-1">
+                                            <button type="button" class="btn btn-primary" wire:click="save_complied_violations()">Save</button>
+                                        </div>
+                                    </div>
+                                    @endif
                                 </div>
                             @endif
                             <hr>
@@ -1457,9 +1461,6 @@
                                                 <tr>
                                                     <th>Description</th>
                                                     <th class="text-center">Has Proof</th>
-                                                    <th>
-                                                        Proof
-                                                    </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -1477,11 +1478,6 @@
                                                                     echo '<span class="badge text-light p-2 bg-warning">W/out Proof</span>';
                                                                 }
                                                             ?>
-                                                        </td>
-                                                        <td>
-                                                            <button class="btn btn-primary "wire:click="view_violation_proof({{$value['id']}},'ProofModaltoggler')"> 
-                                                                View
-                                                            </button>
                                                         </td>
                                                     </tr>
                                                 @empty
@@ -1620,7 +1616,7 @@
                                                 </td>
                                                 <td class="align-middle text-center">
                                                     <button class="btn btn-danger "wire:click="delete_proof_photo({{$value->id}})"> 
-                                                        Delete
+                                                        <i class="bi bi-trash3"></i>
                                                     </button>
                                                 </td>
                                             </tr>
@@ -1685,7 +1681,7 @@
                                                 </td>
                                                 <td class="align-middle text-center">
                                                     <button class="btn btn-danger "wire:click="delete_validated_proof_photo({{$value->id}})"> 
-                                                        Delete
+                                                        <i class="bi bi-trash3"></i>
                                                     </button>
                                                 </td>
                                             </tr>

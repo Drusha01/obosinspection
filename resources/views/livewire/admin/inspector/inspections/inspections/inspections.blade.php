@@ -240,40 +240,10 @@
                                             </td>
                                         @else 
                                             <td class="text-center align-middle">
-                                                @if($value->status_name == 'Completed' || $value->status_name == 'Deleted' )
-                                                    <?php 
-                                                        $violations = DB::table('inspection_violations as iv')
-                                                            ->select(
-                                                                'iv.id',
-                                                                'description',
-                                                                'remarks'
-                                                            )
-                                                            ->join('violations as v','v.id','iv.violation_id')
-                                                            ->where('inspection_id','=',$value->id)
-                                                            ->get()
-                                                            ->toArray();
-                                                        if(count($violations)<=0){
-                                                            echo '<span class="badge text-light p-2 bg-primary">No Violation</span>';
-                                                        }elseif(count($violations)>0){
-                                                            $valid = true;
-                                                            foreach ($violations as $key => $value_violation) {
-                                                                if(!isset($value_violation->remarks)){
-                                                                    $valid = false;
-                                                                }
-                                                            }
-                                                            if($valid){
-                                                                echo '<span class="badge text-light p-2 bg-primary">Complied</span>';
-                                                            }else{
-                                                                echo '<span class="badge text-light p-2 bg-warning">Un-complied</span>';
-                                                            }
-                                                        }
-                                                    ?>
+                                                @if($value->{$filter_value['column_name']} == 'With Violation/s')
+                                                    <span class="badge text-light p-2 bg-warning">With Violation</span>
                                                 @else
-                                                    @if($value->{$filter_value['column_name']} == 'With Violation/s')
-                                                        <span class="badge text-light p-2 bg-warning">With Violation</span>
-                                                    @else
-                                                        <span class="badge text-light p-2 bg-primary">No Violation</span>
-                                                    @endif
+                                                    <span class="badge text-light p-2 bg-primary">No Violation</span>
                                                 @endif
                                             
                                             </td>
@@ -608,40 +578,77 @@
                                                         <td class="align-middle">{{$value['name']}}</td>
                                                         <td class="align-middle">{{$value['category_name']}}</td>
                                                         <td class="align-middle">{{$value['section_name']}}</td>
-                                                        <td class="align-middle" colspan="3">
+                                                        @if($value['added_by'] == $this->activity_logs['inspector_team_id'])
+                                                            <td class="align-middle" colspan="3">
 
-                                                            <?php 
-                                                                $equipments_billing = DB::table('equipment_billings as eb')
-                                                                    ->select(
-                                                                        'eb.id',
-                                                                        'eb.capacity'
-                                                                        )
-                                                                    ->join('equipment_billing_sections as ebs','ebs.id','eb.section_id')
-                                                                    // ->orderBy('eb.id','desc')
-                                                                    ->where('ebs.category_id','=',$value['category_id'])
-                                                                    ->where('ebs.id','=',$value['section_id'])
-                                                                    ->get()
-                                                                    ->toArray();
-                                                            ?>
-                                                                <select class="form-select" id="teamLeaderSelect" wire:change="update_equipment_billing({{$value['id']}},{{$key}})" wire:model="issue_inspection.inspection_items.{{$key}}.equipment_billing_id">
-                                                                    <option value="">Select Capacity</option>
-                                                                    @foreach($equipments_billing as $eb_key => $eb_value)
-                                                                        <option value="{{$eb_value->id}}">{{$eb_value->capacity}}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                        </td>
-                                                        <td class="align-middle"  colspan="1">
-                                                            <input type="number" class="form-control" wire:change="update_item_quantity({{$value['id']}},{{$key}})" min="1" wire:model="issue_inspection.inspection_items.{{$key}}.quantity">
-                                                        </td>
-                                                        <td class="align-middle">
-                                                            <input type="number" step="0.01" class="form-control" wire:change="update_item_power_rating({{$value['id']}},{{$key}})" min="0.01" wire:model="issue_inspection.inspection_items.{{$key}}.power_rating">
-                                                        </td>
-                                                        <td class="align-middle">{{$value['fee']*$value['quantity']}}</td>
-                                                        <td class="align-middle text-center">
-                                                            <button class="btn btn-danger " wire:click="update_delete_item({{$value['id']}})">
-                                                                Delete
-                                                            </button>
-                                                        </td>
+                                                                <?php 
+                                                                    $equipments_billing = DB::table('equipment_billings as eb')
+                                                                        ->select(
+                                                                            'eb.id',
+                                                                            'eb.capacity'
+                                                                            )
+                                                                        ->join('equipment_billing_sections as ebs','ebs.id','eb.section_id')
+                                                                        // ->orderBy('eb.id','desc')
+                                                                        ->where('ebs.category_id','=',$value['category_id'])
+                                                                        ->where('ebs.id','=',$value['section_id'])
+                                                                        ->get()
+                                                                        ->toArray();
+                                                                ?>
+                                                                    <select class="form-select" id="teamLeaderSelect" wire:change="update_equipment_billing({{$value['id']}},{{$key}})" wire:model="issue_inspection.inspection_items.{{$key}}.equipment_billing_id">
+                                                                        <option value="">Select Capacity</option>
+                                                                        @foreach($equipments_billing as $eb_key => $eb_value)
+                                                                            <option value="{{$eb_value->id}}">{{$eb_value->capacity}}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                            </td>
+                                                            <td class="align-middle"  colspan="1">
+                                                                <input type="number" class="form-control" wire:change="update_item_quantity({{$value['id']}},{{$key}})" min="1" wire:model="issue_inspection.inspection_items.{{$key}}.quantity">
+                                                            </td>
+                                                            <td class="align-middle">
+                                                                <input type="number" step="0.01" class="form-control" wire:change="update_item_power_rating({{$value['id']}},{{$key}})" min="0.01" wire:model="issue_inspection.inspection_items.{{$key}}.power_rating">
+                                                            </td>
+                                                            <td class="align-middle">{{$value['fee']*$value['quantity']}}</td>
+                                                            <td class="align-middle text-center">
+                                                                <button class="btn btn-danger " wire:click="update_delete_item({{$value['id']}})">
+                                                                    Delete
+                                                                </button>
+                                                            </td>
+                                                        @else 
+                                                            <td class="align-middle" colspan="3">
+
+                                                                <?php 
+                                                                    $equipments_billing = DB::table('equipment_billings as eb')
+                                                                        ->select(
+                                                                            'eb.id',
+                                                                            'eb.capacity'
+                                                                            )
+                                                                        ->join('equipment_billing_sections as ebs','ebs.id','eb.section_id')
+                                                                        // ->orderBy('eb.id','desc')
+                                                                        ->where('ebs.category_id','=',$value['category_id'])
+                                                                        ->where('ebs.id','=',$value['section_id'])
+                                                                        ->get()
+                                                                        ->toArray();
+                                                                ?>
+                                                                    <select  disabled class="form-select" id="teamLeaderSelect" wire:change="update_equipment_billing({{$value['id']}},{{$key}})" wire:model="issue_inspection.inspection_items.{{$key}}.equipment_billing_id">
+                                                                        <option value="">Select Capacity</option>
+                                                                        @foreach($equipments_billing as $eb_key => $eb_value)
+                                                                            <option value="{{$eb_value->id}}">{{$eb_value->capacity}}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                            </td>
+                                                            <td class="align-middle"  colspan="1">
+                                                                <input type="number" disabled class="form-control" wire:change="update_item_quantity({{$value['id']}},{{$key}})" min="1" wire:model="issue_inspection.inspection_items.{{$key}}.quantity">
+                                                            </td>
+                                                            <td class="align-middle">
+                                                                <input type="number"  disabled step="0.01" class="form-control" wire:change="update_item_power_rating({{$value['id']}},{{$key}})" min="0.01" wire:model="issue_inspection.inspection_items.{{$key}}.power_rating">
+                                                            </td>
+                                                            <td class="align-middle">{{$value['fee']*$value['quantity']}}</td>
+                                                            <td class="align-middle text-center">
+                                                                <button class="btn btn-danger " disabled wire:click="update_delete_item({{$value['id']}})">
+                                                                    Delete
+                                                                </button>
+                                                            </td>
+                                                        @endif
                                                     </tr>
                                                 @empty
                                                     <tr>
@@ -653,7 +660,7 @@
                                         </table>
                                     </div>
                                 </div>
-                                @elseif($issue_inspection['step'] == 5)
+                            @elseif($issue_inspection['step'] == 5)
                                 <div wire:key="{{$issue_inspection['step']}}">
                                     <h5 class="text-center my-2 text-black">
                                         Building Details
@@ -832,6 +839,7 @@
                                         <input type="text" class="form-control" disabled wire:model="issue_inspection.signage_billing_fee">
                                     </div>
                                 </div>
+                        
                             @elseif($issue_inspection['step'] == 8)
                                 <div wire:key="{{$issue_inspection['step']}}">
                                     <h5 class="text-center my-2 text-black">
@@ -866,29 +874,55 @@
                                                 @forelse($issue_inspection['inspection_violations']  as $key => $value)
                                                     <tr>
                                                         <td class="align-middle">{{$value['description'].' ( '.$value['category_name']. ' ) '}}</td>
-                                                        <td class="align-middle text-center">
-                                                            <?php
-                                                                if(DB::table('inspection_violation_contents')
-                                                                    ->where('inspection_violation_id','=',$value['id'])
-                                                                    ->first()
-                                                                ){
-                                                                    echo '
-                                                                    <button class="btn btn-primary "wire:click="view_violation_proof('.$value['id'].',\'ProofModaltoggler\')"> 
-                                                                        <i class="bi bi-search"></i>
-                                                                    </button>';
-                                                                }else{
-                                                                    echo '
-                                                                    <button class="btn btn-warning "wire:click="view_violation_proof('.$value['id'].',\'ProofModaltoggler\')"> 
-                                                                        <i class="bi bi-search"></i>
-                                                                    </button>';
-                                                                }
-                                                            ?>
-                                                        </td>
-                                                        <td class="align-middle text-center">
-                                                            <button class="btn btn-danger "wire:click="update_delete_violation({{$value['id']}})"> 
-                                                                <i class="bi bi-trash3"></i>
-                                                            </button>
-                                                        </td>
+                                                        @if($value['added_by'] == $this->activity_logs['inspector_team_id'])
+                                                            <td class="align-middle text-center">
+                                                                <?php
+                                                                    if(DB::table('inspection_violation_contents')
+                                                                        ->where('inspection_violation_id','=',$value['id'])
+                                                                        ->first()
+                                                                    ){
+                                                                        echo '
+                                                                        <button class="btn btn-primary "wire:click="view_violation_proof('.$value['id'].',\'ProofModaltoggler\')"> 
+                                                                            <i class="bi bi-search"></i>
+                                                                        </button>';
+                                                                    }else{
+                                                                        echo '
+                                                                        <button class="btn btn-warning "wire:click="view_violation_proof('.$value['id'].',\'ProofModaltoggler\')"> 
+                                                                            <i class="bi bi-search"></i>
+                                                                        </button>';
+                                                                    }
+                                                                ?>
+                                                            </td>
+                                                            <td class="align-middle text-center">
+                                                                <button class="btn btn-danger "wire:click="update_delete_violation({{$value['id']}})"> 
+                                                                    <i class="bi bi-trash3"></i>
+                                                                </button>
+                                                            </td>
+                                                        @else 
+                                                            <td class="align-middle text-center">
+                                                                <?php
+                                                                    if(DB::table('inspection_violation_contents')
+                                                                        ->where('inspection_violation_id','=',$value['id'])
+                                                                        ->first()
+                                                                    ){
+                                                                        echo '
+                                                                        <button class="btn btn-primary " disabled wire:click="view_violation_proof('.$value['id'].',\'ProofModaltoggler\')"> 
+                                                                            <i class="bi bi-search"></i>
+                                                                        </button>';
+                                                                    }else{
+                                                                        echo '
+                                                                        <button class="btn btn-warning " disabled wire:click="view_violation_proof('.$value['id'].',\'ProofModaltoggler\')"> 
+                                                                            <i class="bi bi-search"></i>
+                                                                        </button>';
+                                                                    }
+                                                                ?>
+                                                            </td>
+                                                            <td class="align-middle text-center">
+                                                                <button class="btn btn-danger " disabled wire:click="update_delete_violation({{$value['id']}})"> 
+                                                                    <i class="bi bi-trash3"></i>
+                                                                </button>
+                                                            </td>
+                                                        @endif
                                                     </tr>
                                                 @empty
                                                     <tr>

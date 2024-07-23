@@ -1099,7 +1099,7 @@ class Inspectors extends Component
             }
         }
     }
-    public function delete_violation_category_role($id){
+    public function delete_violation_category_role($id,$type_id){
         if(DB::table('inspector_violation_category')
             ->where('id','=',$id)
             ->delete()   
@@ -1111,6 +1111,7 @@ class Inspectors extends Component
                 )
                 ->join('violation_category as vc','vc.id','ivc.category_id')
                 ->where('person_id','=',$this->category_role['person_id'])
+                ->where('type_id','=',$type_id)
                 ->get()
                 ->toArray(); 
             $this->violation_category = DB::table('violation_category')
@@ -1203,7 +1204,7 @@ class Inspectors extends Component
             }
         }
     }
-    public function delete_item_category_role($id){
+    public function delete_item_category_role($id,$type_id){
         if(DB::table('inspector_item_category')
             ->where('id','=',$id)
             ->delete()   
@@ -1215,6 +1216,7 @@ class Inspectors extends Component
                 )
                 ->join('categories as c','c.id','iic.category_id')
                 ->where('person_id','=',$this->category_role['person_id'])
+                ->where('type_id','=',$type_id)
                 ->get()
                 ->toArray(); 
             $this->categories = DB::table('categories')
@@ -1278,7 +1280,7 @@ class Inspectors extends Component
             }
         }
     }
-    public function delete_bss_category_role($id){
+    public function delete_bss_category_role($id,$type_id){
         if(DB::table('inspector_bss_category')
             ->where('id','=',$id)
             ->delete()   
@@ -1290,6 +1292,7 @@ class Inspectors extends Component
                 )
                 ->join('bss_category as bc','bc.id','ibc.category_id')
                 ->where('person_id','=',$this->category_role['person_id'])
+                ->where('type_id','=',$type_id)
                 ->get()
                 ->toArray(); 
             $this->bss_category = DB::table('bss_category')
