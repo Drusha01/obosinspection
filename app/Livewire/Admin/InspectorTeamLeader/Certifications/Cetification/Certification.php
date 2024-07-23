@@ -28,6 +28,8 @@ class Certification extends Component
         ['column_name'=> 'barangay','active'=> true,'name'=>'Brgy'],
         ['column_name'=> 'business_type_name','active'=> true,'name'=>'Business Type'],
         ['column_name'=> 'date_compiled','active'=> true,'name'=>'Date Compiled'],
+        ['column_name'=> 'or_number','active'=> true,'name'=>'Claim'],
+        ['column_name'=> 'or_number','active'=> true,'name'=>'iSClaimed?'],
         ['column_name'=> 'id','active'=> true,'name'=>'Action'],
     ];
 
@@ -296,7 +298,6 @@ class Certification extends Component
                 ->where($this->search['type'],'like',$this->search['search'] .'%')
                 ->orderBy('aci.id','desc')
                 ->paginate($this->table_filter['table_rows']);
-            dd($person->person_id);
         }
         return view('livewire.admin.inspector-team-leader.certifications.cetification.certification',[
             'table_data'=>$table_data
