@@ -20,6 +20,7 @@ return new class extends Migration
             occupancy_no INT DEFAULT NULL,
             date_compiled DATE NOT NULL,
             issued_on DATE DEFAULT NULL,
+            or_number INT,
             date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
             date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             FOREIGN KEY (business_id) REFERENCES businesses(id),

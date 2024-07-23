@@ -89,6 +89,10 @@
                                         <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                     @elseif($filter_value['name'] == 'Inspection Details')
                                         <th scope="col" class="text-center">{{$filter_value['name']}}</th>
+                                    @elseif($filter_value['name'] == 'Claim' && $filter_value['active'])
+                                        <th scope="col" class="text-center">{{$filter_value['name']}}</th>
+                                    @elseif($filter_value['name'] == 'iSClaimed?' && $filter_value['active'])
+                                        <th scope="col" class="text-center">{{$filter_value['name']}}</th>
                                     @else 
                                         <th scope="col">{{$filter_value['name']}}</th>
                                     @endif
@@ -120,11 +124,8 @@
                                        
                                     @elseif($filter_value['name'] == 'Action' && $filter_value['active'])
                                         <td class="text-center align-middle">
-                                            <a class="btn btn-outline-primary my-1" target="_blank" href="/inspector-team-leader/certifications/generate/{{$value->id}}">
+                                            <a class="btn btn-outline-primary my-1" target="_blank" href="/administrator/certifications/generate/{{$value->id}}">
                                                 Generate Certificate
-                                            </a>
-                                            <a class="btn btn-outline-primary my-1" target="_blank" href="/administrator/certifications/generate/reportdsavdkafjlsk">
-                                                Generate Report
                                             </a>
                                         </td>
                                     @elseif($filter_value['name'] == 'Inspection Details' && $filter_value['active'])
@@ -136,6 +137,26 @@
                                     @elseif($filter_value['name'] == 'Date Compiled' && $filter_value['active'])
                                         <td class="align-middle">
                                             {{date_format(date_create($value->date_compiled),"M d, Y")}}
+                                        </td>
+                                    @elseif($filter_value['name'] == 'Claim' && $filter_value['active'])
+                                        <td class="align-middle text-center">
+                                            @if(isset($value->or_number))
+                                                <button class="btn btn-danger" wire:click="update_or_number_null({{$value->id}},'ORModaltoggler')">
+                                                    Un-Claim
+                                                </button>
+                                            @else 
+                                                <button class="btn btn-primary" wire:click="update_or_number({{$value->id}},'ORModaltoggler')">
+                                                    Claimed
+                                                </button>
+                                            @endif
+                                        </td>
+                                    @elseif($filter_value['name'] == 'iSClaimed?' && $filter_value['active'])
+                                        <td class="align-middle text-center">
+                                            @if(isset($value->or_number))
+                                                <span class="badge text-light p-2 bg-success">Yes</span>
+                                            @else 
+                                                <span class="badge text-light p-2 bg-danger">No</span>
+                                            @endif
                                         </td>
                                     @else
                                         @if($filter_value['active'])
