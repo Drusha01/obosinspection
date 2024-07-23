@@ -178,10 +178,10 @@
                                                     </button>
                                                     @break
                                                 @case("Completed")
-                                                    <a class="btn btn-outline-primary my-1" target="_blank" href="/administrator/inspections/generate/{{$value->id}}">
+                                                    <a class="btn btn-outline-primary my-1" target="_blank" href="/inspector-team-leader/inspections/generate/{{$value->id}}">
                                                         LOE
                                                     </a>
-                                                    <a class="btn btn-outline-primary my-1" target="_blank" href="/administrator/inspections/generate-report/{{$value->id}}">
+                                                    <a class="btn btn-outline-primary my-1" target="_blank" href="/inspector-team-leader/inspections/generate-report/{{$value->id}}">
                                                         Violation Report
                                                     </a>
                                                     <?php 

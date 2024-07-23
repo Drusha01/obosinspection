@@ -147,22 +147,7 @@
                                         <td class="text-end align-middle">
                                             @switch($value->status_name)
                                                 @case("Pending")
-                                                    <button class="btn btn-outline-secondary" wire:click="update_status({{$value->id}},'On-going')">
-                                                        <i class="bi bi-play-circle"></i>
-                                                    </button>
-                                                    @if($value->is_active)
-                                                        <button class="btn btn-danger" wire:click="edit({{$value->id}},'deactivateModaltoggler')">
-                                                            <i class="bi bi-trash3"></i>
-                                                        </button>
-                                                    @endif
-                                                    @break
                                                 @case("On-going")
-                                                    <button class="btn btn-outline-secondary" wire:click="update_status({{$value->id}},'Pending')">
-                                                        <i class="bi bi-pause-circle"></i>
-                                                    </button>
-                                                    <button class="btn btn-secondary"  wire:click="edit({{$value->id}},'completeModaltoggler')">
-                                                        <i class="bi bi-check-circle"></i>
-                                                    </button>
                                                     <button class="btn btn-primary" wire:click="issue({{$value->id}},'issueModaltoggler')">
                                                         <i class="bi bi-file-earmark-text"></i>
                                                     </button>
@@ -178,10 +163,10 @@
                                                     </button>
                                                     @break
                                                 @case("Completed")
-                                                    <a class="btn btn-outline-primary my-1" target="_blank" href="/administrator/inspections/generate/{{$value->id}}">
+                                                    <a class="btn btn-outline-primary my-1" target="_blank" href="/inspector/inspections/generate/{{$value->id}}">
                                                         LOE
                                                     </a>
-                                                    <a class="btn btn-outline-primary my-1" target="_blank" href="/administrator/inspections/generate-report/{{$value->id}}">
+                                                    <a class="btn btn-outline-primary my-1" target="_blank" href="/inspector/inspections/generate-report/{{$value->id}}">
                                                         Violation Report
                                                     </a>
                                                     <?php 

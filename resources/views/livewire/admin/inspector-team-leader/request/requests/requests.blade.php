@@ -201,7 +201,7 @@
                                                             <i class="bi bi-calendar2-x"></i>
                                                         </button>
                                                     @endif
-                                                    <a class="btn btn-outline-primary" target="_blank" href="/administrator/request/generate-request-pdf/{{$value->hash}}/{{$value->request_date}}/{{$value->expiration_date}}">
+                                                    <a class="btn btn-outline-primary" target="_blank" href="/inspector-team-leader/request/generate-request-pdf/{{$value->hash}}/{{$value->request_date}}/{{$value->expiration_date}}">
                                                         <i class="bi bi-file-earmark-font"></i>
                                                     </a>
                                                     <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
@@ -230,7 +230,7 @@
                                                     <a class="btn btn-primary" target="_blank" wire:click="reissue_request({{$value->id}},'reIssueRequestModaltoggler')">
                                                         <i class="bi bi-send-check"></i>
                                                     </a>
-                                                    <a class="btn btn-outline-primary" target="_blank" href="/administrator/request/generate-request-pdf/{{$value->hash}}/{{$value->request_date}}/{{$value->expiration_date}}">
+                                                    <a class="btn btn-outline-primary" target="_blank" href="/inspector-team-leader/request/generate-request-pdf/{{$value->hash}}/{{$value->request_date}}/{{$value->expiration_date}}">
                                                         <i class="bi bi-file-earmark-font"></i>
                                                     </a>
                                                     <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
