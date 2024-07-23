@@ -147,15 +147,11 @@
                                         <td class="text-end align-middle">
                                             @switch($value->status_name)
                                                 @case("Pending")
+                                                    @break
                                                 @case("On-going")
                                                     <button class="btn btn-primary" wire:click="issue({{$value->id}},'issueModaltoggler')">
                                                         <i class="bi bi-file-earmark-text"></i>
                                                     </button>
-                                                    @if($value->is_active)
-                                                        <button class="btn btn-danger" wire:click="edit({{$value->id}},'deactivateModaltoggler')">
-                                                            <i class="bi bi-trash3"></i>
-                                                        </button>
-                                                    @endif
                                                     @break
                                                 @case("Deleted")
                                                     <button class="btn btn-primary" wire:click="issue({{$value->id}},'issueDeletedModaltoggler')">
@@ -169,47 +165,12 @@
                                                     <a class="btn btn-outline-primary my-1" target="_blank" href="/inspector/inspections/generate-report/{{$value->id}}">
                                                         Violation Report
                                                     </a>
-                                                    <?php 
-                                                        $violations = DB::table('inspection_violations as iv')
-                                                        ->select(
-                                                            'iv.id',
-                                                            'description',
-                                                            'remarks'
-                                                        )
-                                                        ->join('violations as v','v.id','iv.violation_id')
-                                                        ->where('inspection_id','=',$value->id)
-                                                        ->get()
-                                                        ->toArray();
-                                                    if(count($violations)<=0){
-                                                        echo '
-                                                            <button class="btn btn-outline-primary" wire:click="generate_cert('.$value->id.',\'certModaltoggler\')" >
-                                                                Certificate
-                                                            </button>';
-                                                    }elseif(count($violations)>0){
-                                                        $valid = true;
-                                                        foreach ($violations as $key => $value_violation) {
-                                                            if(!isset($value_violation->remarks)){
-                                                                $valid = false;
-                                                            }
-                                                        }
-                                                        if($valid){
-                                                            echo '
-                                                             <button class="btn btn-outline-primary" wire:click="generate_cert('.$value->id.',\'certModaltoggler\')" >
-                                                                Certificate
-                                                            </button>';
-                                                        }else{
-                                                        }
-                                                    }
-                                                    ?>
                                                     
                                                     <button class="btn btn-primary" wire:click="issue({{$value->id}},'issueCompleteModaltoggler')">
                                                         <i class="bi bi-file-earmark-text"></i>
                                                     </button>
                                                     @break
                                                 @case('Upcoming')
-                                                    <button type="button" class="btn btn-primary" wire:click="add('addModaltoggler',{{$value->business_id}})">
-                                                        Add Inspection
-                                                    </button>
                                                     @break
                                             @endswitch
                                         </td>
