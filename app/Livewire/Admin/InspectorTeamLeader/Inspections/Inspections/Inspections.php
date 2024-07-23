@@ -264,15 +264,9 @@ class Inspections extends Component
         $city_mun = DB::table('citymun')
         ->where('citymunDesc','=','GENERAL SANTOS CITY (DADIANGAS)')
         ->first();
-        $this->brgy = DB::table('team_target_barangays as ttb')
-            ->select(
-                'b.brgyDesc',
-                'b.id'
-                )
-            ->join('brgy as b','b.id','ttb.brgy_id')
-            ->join('inspector_teams as it','ttb.inspector_team_id','it.id')
-            ->where('it.team_leader_id','=',$session['id'])
-            ->orderby('brgyDesc','asc')
+        $this->brgy = DB::table('brgy')
+            ->where('citymunCode','=',$city_mun->citymunCode)
+            ->orderBy('brgyDesc','asc')
             ->get()
             ->toArray();
 
