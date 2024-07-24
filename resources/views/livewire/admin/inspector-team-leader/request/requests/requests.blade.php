@@ -204,25 +204,25 @@
                                                     <a class="btn btn-outline-primary" target="_blank" href="/inspector-team-leader/request/generate-request-pdf/{{$value->hash}}/{{$value->request_date}}/{{$value->expiration_date}}">
                                                         <i class="bi bi-file-earmark-font"></i>
                                                     </a>
-                                                    <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
+                                                    <!-- <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
                                                         <i class="bi bi-trash3"></i>
-                                                    </button>
+                                                    </button> -->
                                                     @break
                                                 @case("Accepted")
                                                     <a class="btn btn-primary" target="_blank"  wire:click="add({{$value->id}},'addModaltoggler')">
                                                         <i class="bi bi-calendar-plus"></i>
                                                     </a>
-                                                    <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
+                                                    <!-- <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
                                                         <i class="bi bi-trash3"></i>
-                                                    </button>
+                                                    </button> -->
                                                     @break
                                                 @case("Declined")
                                                     <a class="btn btn-primary" target="_blank" wire:click="reissue_request({{$value->id}},'reIssueRequestModaltoggler')">
                                                         <i class="bi bi-send-check"></i>
                                                     </a>
-                                                    <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
+                                                    <!-- <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
                                                         <i class="bi bi-trash3"></i>
-                                                    </button>
+                                                    </button> -->
                                                     @break
                                                 @case("Deleted")
                                                     @break
@@ -233,9 +233,9 @@
                                                     <a class="btn btn-outline-primary" target="_blank" href="/inspector-team-leader/request/generate-request-pdf/{{$value->hash}}/{{$value->request_date}}/{{$value->expiration_date}}">
                                                         <i class="bi bi-file-earmark-font"></i>
                                                     </a>
-                                                    <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
+                                                    <!-- <button class="btn btn-danger" wire:click="edit({{$value->id}},'deleteModaltoggler')">
                                                         <i class="bi bi-trash3"></i>
-                                                    </button>
+                                                    </button> -->
                                                     @break
                                                 @case("Completed")
                                                     @break

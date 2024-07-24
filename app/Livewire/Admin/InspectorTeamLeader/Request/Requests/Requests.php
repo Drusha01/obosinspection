@@ -1423,6 +1423,29 @@ class Requests extends Component
             return;
         }
     }
+    public function save_decline($id,$modal_id){
+        $status = DB::table('request_status')
+        ->where('name','=',"Declined")
+        ->first();
+        if(DB::table('request_inspections as ri')
+            ->join('request_status as rs','ri.status_id','rs.id')
+            ->where('ri.id','=',$id)
+            ->update([
+                'status_id'=>$status->id,
+            ])
+        ){
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'success',
+                title             									: 'Successfully deleted!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#',
+            );
+            $this->dispatch('openModal',$modal_id);
+            return;
+        }
+    }
 
     public function add($id,$modal_id){
         $this->business_categories = DB::table('business_category')
