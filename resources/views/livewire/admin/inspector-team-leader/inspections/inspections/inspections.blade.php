@@ -1230,11 +1230,29 @@
                                                                 }
                                                             ?>
                                                         </td>
-                                                        <td class="text-center">
+                                                        <td class="align-middle text-center">
+                                                        <?php
+                                                            if(DB::table('inspection_violation_validated_contents')
+                                                                ->where('inspection_violation_id','=',$value['id'])
+                                                                ->first()
+                                                            ){
+                                                                echo '
+                                                                <button class="btn btn-primary "wire:click="view_violation_validated_proof('.$value['id'].',\'ValidatedProofModaltoggler\')"> 
+                                                                    <i class="bi bi-search"></i>
+                                                                </button>';
+                                                            }else{
+                                                                echo '
+                                                                <button class="btn btn-warning "wire:click="view_violation_validated_proof('.$value['id'].',\'ValidatedProofModaltoggler\')"> 
+                                                                    <i class="bi bi-search"></i>
+                                                                </button>';
+                                                            }
+                                                        ?>
+                                                        </td>
+                                                        <!-- <td class="text-center">
                                                             <button class="btn btn-primary "wire:click="view_violation_validated_proof({{$value['id']}},'ValidatedProofModaltoggler')"> 
                                                                 <i class="bi bi-search"></i>
                                                             </button>
-                                                        </td>
+                                                        </td> -->
                                                     </tr>
                                                 @empty
                                                     <tr>
