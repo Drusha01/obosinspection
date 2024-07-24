@@ -151,9 +151,9 @@
                                                         <i class="bi bi-play-circle"></i>
                                                     </button>
                                                     @if($value->is_active)
-                                                        <button class="btn btn-danger" wire:click="edit({{$value->id}},'deactivateModaltoggler')">
+                                                        <!-- <button class="btn btn-danger" wire:click="edit({{$value->id}},'deactivateModaltoggler')">
                                                             <i class="bi bi-trash3"></i>
-                                                        </button>
+                                                        </button> -->
                                                     @endif
                                                     @break
                                                 @case("On-going")
@@ -167,9 +167,9 @@
                                                         <i class="bi bi-file-earmark-text"></i>
                                                     </button>
                                                     @if($value->is_active)
-                                                        <button class="btn btn-danger" wire:click="edit({{$value->id}},'deactivateModaltoggler')">
+                                                        <!-- <button class="btn btn-danger" wire:click="edit({{$value->id}},'deactivateModaltoggler')">
                                                             <i class="bi bi-trash3"></i>
-                                                        </button>
+                                                        </button> -->
                                                     @endif
                                                     @break
                                                 @case("Deleted")
