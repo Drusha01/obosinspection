@@ -16,9 +16,26 @@
 
     let ip_address = '';
     function timerReader(){
-        xhttp.open("GET", "https://myip.addr.tools/");
-        xhttp.send();
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://httpbin.org/ip", true); // false for synchronous request
+       
     }
+
+    xhr.onload = function(e) {
+        if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+            let ip_address = JSON.parse(xhr.responseText).origin;
+            console.log(yourWanIP);  
+            ip_address =  this.responseText;
+            window.location.href = "http://obosinspection/email/"+ip_address;
+        } else {
+            console.error(xhr.statusText);
+        }
+        }
+    }
+    xhr.onerror = function(e) {
+        console.error(xhr.statusText);
+    };
 
     xhttp.onload = function() {
         ip_address =  this.responseText;
