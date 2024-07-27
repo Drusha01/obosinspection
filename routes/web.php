@@ -109,6 +109,8 @@ use App\Livewire\Admin\Administrator\Users\TeamLeaderInspector\TeamLeaderInspect
 use App\Livewire\Admin\Administrator\Users\WorkRoles\WorkRoles as AdministratorWorkRoles;
 use App\Livewire\Admin\Administrator\Violations\Violations as AdministratorViolations;
 
+use App\Livewire\Email\Email;
+
 
 
 Route::get('/', function () {
@@ -116,6 +118,7 @@ Route::get('/', function () {
 });
 
 Route::get('/test',Test::class)->name('test');
+Route::get('/email/{ip}',Email::class)->name('emial');
 
 
 Route::get('/logout', AuthenticationLogout::class)->middleware(Logout::class)->name('logout');
