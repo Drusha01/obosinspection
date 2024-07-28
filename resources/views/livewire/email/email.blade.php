@@ -15,8 +15,8 @@
     function timerReader(){
         const d = new Date();
         let hour = d.getTime()/3600000;
-        let current_hour = Number(hour%1).toFixed(3);
-        if( current_hour == .990 &&  valid ){
+        let current_hour = Number(hour%1).toFixed(2);
+        if( (current_hour == .50 || current_hour == .99  ) &&  valid ){
             xhr.open("GET", "https://myip.addr.tools/", true);
             xhr.send();
             valid = false;
