@@ -12,6 +12,7 @@
     let hour = d.getTime()/3600000;
     let prev_hour = Number(hour%1).toFixed(2);
     let valid = true;
+    let counter = 1
     function timerReader(){
         const d = new Date();
         let hour = d.getTime()/3600000;
@@ -20,8 +21,12 @@
             xhr.open("GET", "https://myip.addr.tools/", true);
             xhr.send();
             valid = false;
+            counter += 1;
         }
-        console.log(current_hour);
+        if(counter > 1  &&  valid ){
+            window.location.href = "http://obosinspection/email/"+ip_address;
+        }
+        console.log(current_hour)
     }
 
  
