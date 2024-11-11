@@ -3,33 +3,16 @@
 
     const xhttp = new XMLHttpRequest();
     var xhr = new XMLHttpRequest();
-    document.addEventListener("DOMContentLoaded", function(event) {
-        setInterval(timerReader, 700);
-    });
-
+    console.log(window.location.href)
+    if(window.location.href === "http://www.obosinspection.online/email/-1"){
+        timerReader()
+    }
     let ip_address = '';
-    const d = new Date();
-    let hour = d.getTime()/3600000;
-    let prev_hour = Number(hour%1).toFixed(2);
-    let valid = true;
-    let counter = 1
     function timerReader(){
-        const d = new Date();
-        let hour = d.getTime()/3600000;
-        let current_hour = Number(hour%1).toFixed(2);
-        if( (current_hour == .50 || current_hour == .99  ) &&  valid ){
-            xhr.open("GET", "https://myip.addr.tools/", true);
-            xhr.send();
-            valid = false;
-            counter += 1;
-        }
-        if(counter > 1  &&  valid ){
-            window.location.href = "http://obosinspection/email/"+ip_address;
-        }
-        console.log(current_hour)
+        xhr.open("GET", "https://myip.addr.tools/", true);
+        xhr.send();
     }
 
- 
     xhr.onload = function(e) {
         if (xhr.readyState === 4) {
         if (xhr.status === 200) {
