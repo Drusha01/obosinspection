@@ -41,6 +41,12 @@ return new class extends Migration
             NOW(),
             NOW()
         );');
+        DB::statement('INSERT INTO request_status VALUES(
+            NULL,
+            "Schduled",
+            NOW(),
+            NOW()
+        );');
 
     }
 

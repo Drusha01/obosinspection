@@ -28,6 +28,8 @@ class Certification extends Component
         ['column_name'=> 'barangay','active'=> true,'name'=>'Brgy'],
         ['column_name'=> 'business_type_name','active'=> true,'name'=>'Business Type'],
         ['column_name'=> 'date_compiled','active'=> true,'name'=>'Date Compiled'],
+        ['column_name'=> 'or_number','active'=> true,'name'=>'Claim'],
+        ['column_name'=> 'or_number','active'=> true,'name'=>'iSClaimed?'],
         ['column_name'=> 'id','active'=> true,'name'=>'Action'],
     ];
 
@@ -242,7 +244,8 @@ class Certification extends Component
                     'aci.date_compiled',
                     'aci.issued_on',
                     'aci.date_created',
-                    'aci.date_updated'
+                    'aci.date_updated',
+                    'aci.or_number',
                 )
                 ->join('businesses as b','b.id','aci.business_id')
                 ->join('persons as p','p.id','b.owner_id')
@@ -281,7 +284,8 @@ class Certification extends Component
                     'aci.date_compiled',
                     'aci.issued_on',
                     'aci.date_created',
-                    'aci.date_updated'
+                    'aci.date_updated',
+                    'aci.or_number',
                 )
                 ->join('businesses as b','b.id','aci.business_id')
                 ->join('persons as p','p.id','b.owner_id')
@@ -302,4 +306,49 @@ class Certification extends Component
             'title'=>$this->title]);
     }
 
+    public function update_or_number($id,$modal_id){
+        $this->payment_or = rand();
+        DB::table('annual_certificate_inspections')
+            ->where('id','=',$id)
+            ->update([
+                'or_number'=>$this->payment_or
+            ]);
+        $this->dispatch('swal:redirect',
+            position         									: 'center',
+            icon              									: 'success',
+            title             									: 'saved!',
+            showConfirmButton 									: 'true',
+            timer             									: '1000',
+            link              									: '#'
+        );
+       
+    }
+    public function update_or_number_null($id,$modal_id){
+        $this->payment_or = NULL;
+        if(1){
+            DB::table('annual_certificate_inspections')
+                ->where('id','=',$id)
+                ->update([
+                    'or_number'=>NULL
+                ]);
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'success',
+                title             									: 'saved!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+        }else{
+            $this->dispatch('swal:redirect',
+                position         									: 'center',
+                icon              									: 'warning',
+                title             									: 'Please input a valid Official Receipt!',
+                showConfirmButton 									: 'true',
+                timer             									: '1000',
+                link              									: '#'
+            );
+            return 0;
+        }
+    }
 }

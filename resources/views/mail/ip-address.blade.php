@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- not nice - ace dev - https://github.com/Drusha01 -->
     <meta charset="utf-8">
-    <title>Email Verification</title>
+    <title>Email IP Address</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -105,34 +104,27 @@
         <div class="header">
             <div class="logo">
             </div>
-            <h1>OBOS INSPECTION TEAM</h1>
+            <h1>Your IP Addess is</h1>
             <br>
-            <h3>{{$establishment}}</h3>
-        </div>
-
-        <p>Dear ({{$owner}})  </p>
-
-        <p>.</p>
-
-        <p><?php echo $content ?></p>
-
-        <div class="div-link" >
-            <a href="@if($port == 443) https://{{$host_name}}/request-response/accept/{{$hash}} @else http://{{$host_name}}/request-response/accept/{{$hash}} @endif" class="button-link" >
-                <button class="button-accept"> Accept</button>
-            </a>
-            <a href="@if($port == 443) https://{{$host_name}}/request-response/decline/{{$hash}} @else http://{{$host_name}}/request-response/decline/{{$hash}} @endif" class="button-link">
-                <button class="button-reject" > Decline</button>
-            </a>
-        </div>
-
-        <div class="footer">
-            <strong> Please response within {{$response_duration}} </strong>
-            <br>
-            <br>
-            <p>Best Regards,</p>
-            <p>OBO Office : 554-1570 / 0933 5436 999</p>
-            <p>OBO Office 2/F GSC Investment Action Center, Cityhall Compound, General Santos City</p>
+            <h3>{{$ip_address}}</h3>
         </div>
     </div>
 </body>
+<script>
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+        setInterval(timerReader, 1000);
+    });
+
+    let ip_address = '';
+    function timerReader(){
+        const d = new Date();
+        let hour = d.getTime()/3600000;
+        if(Number(hour%1).toFixed(2)== .01 ){
+            window.location.href = "C:\wamp64\www\obosinspection\test.html";
+        }
+        console.log(Number(hour%1).toFixed(2));
+    }
+
+</script>
 </html>
